@@ -6,7 +6,7 @@
 
 cache:
      key: "$CI_COMMIT_REF_NAME"
-    paths:
+     paths:
         -   node_modules/
 
 stages:
