@@ -4,40 +4,106 @@ try { admin.initializeApp() } catch (e) {}
 const db = admin.firestore()
 
 function adder (userId, clothId, clothData) {
-  const userRef = db.collection(`user/`).doc(`${userId}`)
-  let userdoc = userRef.get()
-  userdoc.then(doc => {
-    var crn = getCRNINDEX(doc)
-    if (checkIfArray(crn)) {
-      crn = pushCrnRef(crn)
-      return userdoc.update(userRef, {crnIndex: crn})
-    } else {
-      /* userRef.set({crnIndex: []}).then((val) => {
-        console.log(val)
-        var crn = doc.data().crnIndex
-        crn.push(`user/${userId}/clothes/${clothId}`)
-        // let modifiedcrn = crn.slice()
-        // modifiedcrn.push(`user/${userId}/clothes/${clothId}`)
-        return t.update(userRef, {crnIndex: crn})
-     } */
-    }
+  console.log('adder entry')
+  var userDocRef = db.collection('user').doc(`${userId}`)
+  var clothDocRef = db.doc(`user/${userId}/clothes/${clothId}`)
+
+  return userDocRef.get().then(userdoc => {
+    console.log('check if user exist entry')
+    return checkIfUserDocExist(userDocRef, userdoc, userId, clothId)
+  }).then((crnIndex) => {
+    console.log('check if user exist passed')
+    return CrnIndexDatabaseupdater(userDocRef, crnIndex)
+  }).then((val) => {
+    console.log('crn IndexDatabase updater passed')
+    return CrnValueForClothUpdater(clothDocRef, val)
   })
 }
 
 function purger () {
+}
+function CrnValueForClothUpdater (clothDocRef, val) {
+  let data = {crn: val}
+  return clothDocRef.set(data)
+}
+function CrnIndexDatabaseupdater (userDocRef, crnIndex) {
+  userDocRef.update({crnIndex: crnIndex})
+  return crnIndex.length // return the current poistion of the array
+}
+function autoIndexer (userId) {
+  var userDocRef = db.collection('user').doc(`${userId}`)
+  userDocRef.get().then(userdoc => {
+    // var crnIndex = userdoc.data().crnIndex
+  })
+}
+function checkIfObject (x) {
+  return typeof x !== 'undefined' && x instanceof Object
+}
+function pushTheReferenec (obj, userId, clothId) {
+  console.log('push the refrenec /  /  /  /' )
+  var referenceToBePushed = `user/${userId}/clothes/${clothId}`
+  let indexval = {
+    allocated: true,
+    ref: referenceToBePushed
+  }
+  let index = getIndex(obj)
+  console.log(index)
+  Object.defineProperty(obj, index, indexval)
+  var user = db.collection('user').doc(`${userId}`).get()
+  return user.then(doc => {
+    let crnIndex = doc.data().crnIndex
+    let nextVal = UpdateIndexValue(crnIndex)
+    console.log(nextVal)
+    let data = {
+      crnIndex: {
+        nextIndex: nextVal
+      }
+    }
+    return db.collection('user').doc(`${user}`).update(data).then(ref => { return nextVal })
+  })
+}
 
+function checkIfUserDocExist (userDocRef, userdoc, userId, clothId) {
+  if (!userdoc.exists) {
+    console.log('No such document!')
+    return 0
+  } else {
+    return CreateOrReturnCRNIndex(userDocRef, userdoc, userId, clothId)
+  }
 }
-function autoIndexer () {
+function CreateOrReturnCRNIndex (userDocRef, userdoc, userId, clothId) {
+  console.log('userdocExists')
+  var crnIndex = userdoc.data().crnIndex
+  console.log('crn Index vlue' + crnIndex)
+  console.log('if crnIndex is object' + checkIfObject(crnIndex))
+  if (checkIfObject(crnIndex)) {
+    return pushTheReferenec(crnIndex, userId, clothId)
+  } else {
+    console.log('crnIndex as a object does not exstit')
+    let crnIndex = initiatecrnIndex()
+    let data = {crnIndex: crnIndex}
+    return userDocRef.set(data).then((ref) => {
+      return pushTheReferenec(crnIndex, userId, clothId)
+    })
+  }
+}
+function initiatecrnIndex () {
+  let crnIndex = {
+    'nextIndex': 1
+  }
+  console.log('null crn Index value' + crnIndex)
+  console.log(crnIndex.nextIndex)
+  console.log('initializing empty object done')
+  return crnIndex
+}
+function getIndex (crnIndex) {
+  return crnIndex.nextIndex
+}
 
-}
-function checkIfArray (x) {
-  return typeof x !== 'undefined' && x instanceof Array
-}
-function getCRNINDEX (doc) {
-  return doc.data().crnIndex
-}
-function pushCrnRef (arr, userId, clothId) {
-  return arr.push(`user/${userId}/clothes/${clothId}`)
+function UpdateIndexValue (crnIndex) {
+  var nextVal = crnIndex.nextIndex
+  nextVal++
+  return nextVal
 }
 module.exports = {
   adder: adder,

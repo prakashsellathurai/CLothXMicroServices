@@ -4,7 +4,6 @@ const CRNHandler = require('../utils/CRNmaintenanceEngine')
 const CONSTANTS = require('../environment/CONSTANTS')
 const CLOTHES_PATH = CONSTANTS.CLOTH_WILDCARD
 
-
 module.exports = function () {
   return functions.firestore.document(CLOTHES_PATH).onCreate((cloth, context) => {
     const clothdata = cloth.data()
