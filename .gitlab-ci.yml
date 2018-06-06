@@ -19,7 +19,6 @@ deployment:
   <<: *node
   script:
      - npm run deploy
-  tags:
-     - deployment
+
   only:
      - master
