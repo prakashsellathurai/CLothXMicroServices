@@ -13,11 +13,13 @@ stages:
     - deployment
 
 deployment:
-    stage: deployment
-    environment:
-        name: production
-      <<: *node
-    script:
-    - npm run deploy
-    tags:
-    - deployment
+  stage: deployment
+  environment:
+    name: production
+  <<: *node
+  script:
+     - npm run deploy
+  tags:
+     - deployment
+  only:
+     - master
