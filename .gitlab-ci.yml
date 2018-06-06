@@ -1,0 +1,23 @@
+.node: &node
+image: node:8.11.1
+  before_script:
+    - npm install
+    - npm install -g firebase-tools
+
+cache:
+     key: "$CI_COMMIT_REF_NAME"
+    paths:
+        -   node_modules/
+
+stages:
+    - deployment
+
+deployment:
+    stage: deployment
+    environment:
+        name: production
+      <<: *node
+    script:
+    - npm run deploy
+    tags:
+    - deployment

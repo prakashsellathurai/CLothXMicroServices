@@ -5,7 +5,8 @@
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "predeploy": "firebase use clothxnet --token $FIREBASE_TOKEN $CI_ENVIRONMENT_SLUG",
+    "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_TOKEN",
     "logs": "firebase functions:log"
   },
   "dependencies": {
