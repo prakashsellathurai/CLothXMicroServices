@@ -54,12 +54,7 @@ function pushTheReferenec (obj, userId, clothId) {
     let crnIndex = doc.data().crnIndex
     let nextVal = UpdateIndexValue(crnIndex)
     console.log(nextVal)
-    let data = {
-      crnIndex: {
-        nextIndex: nextVal
-      }
-    }
-    return db.collection('user').doc(`${user}`).update(data).then(ref => {
+    return db.collection('user').doc(`${userId}`).update({'crnIndex.nextIndex': nextVal}).then(ref => {
       console.log('crnIndex updated')
       return nextVal
     }).catch((err) => { console.log(err) })
