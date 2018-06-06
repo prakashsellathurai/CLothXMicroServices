@@ -40,7 +40,7 @@ function checkIfObject (x) {
   return typeof x !== 'undefined' && x instanceof Object
 }
 function pushTheReferenec (obj, userId, clothId) {
-  console.log('push the refrenec /  /  /  /' )
+  console.log('push the refrenec /  /  /  /')
   var referenceToBePushed = `user/${userId}/clothes/${clothId}`
   let indexval = {
     allocated: true,
@@ -59,7 +59,10 @@ function pushTheReferenec (obj, userId, clothId) {
         nextIndex: nextVal
       }
     }
-    return db.collection('user').doc(`${user}`).update(data).then(ref => { return nextVal })
+    return db.collection('user').doc(`${user}`).update(data).then(ref => {
+      console.log('crnIndex updated')
+      return nextVal
+    }).catch((err) => { console.log(err) })
   })
 }
 
@@ -101,6 +104,7 @@ function getIndex (crnIndex) {
 }
 
 function UpdateIndexValue (crnIndex) {
+  console.log('index value updated')
   var nextVal = crnIndex.nextIndex
   nextVal++
   return nextVal
