@@ -27,7 +27,7 @@ function CrnValueForClothUpdater (clothDocRef, val) {
   return clothDocRef.set(data)
 }
 function CrnIndexDatabaseupdater (userDocRef, crnIndex) {
-  userDocRef.update({crnIndex: crnIndex})
+  userDocRef.update({'crnIndex': `${crnIndex}`})
   return crnIndex.length // return the current poistion of the array
 }
 function autoIndexer (userId) {
@@ -48,17 +48,26 @@ function pushTheReferenec (obj, userId, clothId) {
   }
   let index = getIndex(obj)
   console.log(index)
-  Object.defineProperty(obj, index, indexval)
+  Object.defineProperty(obj, 
+index, indexval)
   var user = db.collection('user').doc(`${userId}`).get()
   return user.then(doc => {
     let crnIndex = doc.data().crnIndex
     let nextVal = UpdateIndexValue(crnIndex)
+    Object.defineProperty(obj, index, indexval)
     console.log(nextVal)
-    return db.collection('user').doc(`${userId}`).update({'crnIndex.nextIndex': nextVal}).then(ref => {
+    let data = { 'crnIndex.nextIndex': nextVal }
+    // console.log(data.crnIndex.nextIndex)
+    console.log('before updationf nextIndex')
+    return nextVal
+  }).then((nextVal) => {
+    return db.collection('user').doc(`${userId}`).update({
+      'crnIndex.nextIndex': `${nextVal}`
+    }).then(ref => {
       console.log('crnIndex updated')
       return nextVal
     }).catch((err) => { console.log(err) })
-  })
+  }).catch(err => { console.log('err at push the reference' + err) })
 }
 
 function checkIfUserDocExist (userDocRef, userdoc, userId, clothId) {
@@ -87,7 +96,7 @@ function CreateOrReturnCRNIndex (userDocRef, userdoc, userId, clothId) {
 }
 function initiatecrnIndex () {
   let crnIndex = {
-    'nextIndex': 1
+    nextIndex: 1
   }
   console.log('null crn Index value' + crnIndex)
   console.log(crnIndex.nextIndex)
