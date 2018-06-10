@@ -1,23 +1,21 @@
 var admin = require('firebase-admin')
 var functions = require('firebase-functions')
-
-var crnAdder = require('../../utils/crn/oncreate')
-admin.initializeApp(functions.config())
 var firestore = admin.firestore()
 
-var OncreateNewClothes = functions.firestore
-  .document('user/{userId}/clothes/{clothId}')
-  .onCreate((snap, context) => {
+var crnAdder = require('../../utils/crn/ondelete')
+var OndeleteClothes = functions.firestore
+  .document('user/{userId}/clothes/{clothId}').onDelete((snap, context) => {
+    const deletedcloth = snap.data()
     // local variables
     const userId = context.params.userId
     const clothId = context.params.clothId
+    const crn = deletedcloth.crn
 
     // db refrerences
     var userRef = firestore.collection('user').doc(userId)
     var clothRef = firestore.collection(`user/${userId}/clothes/`).doc(`${clothId}`)
     var crnContentref = firestore.collection(`user/${userId}/crnContent/`)
 
-    return crnAdder.OncreateHandler(userId, clothId, userRef, clothRef, crnContentref)
+    return crnAdder.ondeleteHandler(userRef, clothRef, crnContentref, crn, userId, clothId)
   })
-
-module.exports = OncreateNewClothes
+module.exports = OndeleteClothes
