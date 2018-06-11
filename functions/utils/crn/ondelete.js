@@ -14,11 +14,14 @@ function pushTodeletedIndexes (userRef, crn) {
     return UpdateCrnIndex(userRef, deletedIndex)
   })
 }
+function removeDuplicates (arr) {
+  return [...new Set(arr)]
+}
 function isArray (o) {
   return Object.prototype.toString.call(o) === '[object Array]'
 }
 function UpdateCrnIndex (userRef, deletedIndex) {
-  return userRef.set({'crnIndex': {'deletedIndex': deletedIndex}}, { merge: true })
+  return userRef.set({'crnIndex': {'deletedIndex': removeDuplicates(deletedIndex)}}, { merge: true })
 }
 function CheckDeletedIndex (crnIndex) {
   return (_has(crnIndex, 'deletedIndex'))

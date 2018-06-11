@@ -17,12 +17,15 @@ function _has (object, key) {
   return object ? hasOwnProperty.call(object, key) : false
 }
 let val = crnAssigner(crnIndex)
-let value = popPositionFromDeletedIndex([1,2,4,4,5], 5) 
+let value = popPositionFromDeletedIndex([1, 2, 4, 4, 5, 1, 1, 1, 1, 1, 2], 5)
 console.log(value)
+function removeDuplicates (arr) {
+  return [...new Set(arr)]
+}
 function popPositionFromDeletedIndex (array, position) {
   var index = array.indexOf(position)
   if (index > -1) {
     array.splice(index, 1)
   }
-  return array
+  return removeDuplicates(array)
 }

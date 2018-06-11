@@ -7,38 +7,45 @@ function OncreateHandler (userId, clothId, userRef, clothRef, crnContentref) {
     return UpdateCRNIndex(userRef, position)
   })
 }
-
 function popPositionFromDeletedIndex (array, position) {
-  var index = array.indexOf(position)
+  var index = findElement(array, position)
   if (index > -1) {
     array.splice(index, 1)
   }
   return array
 }
-function removeDuplicates (arr) {
-  let uniqueArray = []
-  for (let i = 0; i < arr.length; i++) {
-    if (uniqueArray.indexOf(arr[i]) === -1) {
-      uniqueArray.push(arr[i])
-    }
+// Function to implement search operation
+function findElement (arr, key) {
+  var i
+  for (i = 0; i < arr.length; i++) {
+    if (arr[i] === key) { return i }
   }
-  return uniqueArray
+
+  return undefined
+}
+function removeDuplicates (arr) {
+  return [...new Set(arr)]
 }
 // update crnIndex
 function UpdateCRNIndex (userRef, position) {
-  return GetCRNINDEX(userRef).then((crnIndex, deletedIndex) => {
-    if (isUndefined(deletedIndex)) { return userRef.update({ 'crnIndex.nextIndexPointer': position + 1 }) } else {
-      let updatedDeletedIndex = popPositionFromDeletedIndex(deletedIndex, position)
-      console.log(updatedDeletedIndex)
-      return userRef.set({'crnIndex.nextIndexPointer': position + 1, 'crnIndex.deletedIndex': updatedDeletedIndex})
+  return GetCRNINDEX(userRef).then((crnIndex) => {
+    let updatedDeletedIndex = (isUndefined(crnIndex.deletedIndex)) ? popPositionFromDeletedIndex(crnIndex.deletedIndex, position) : []
+    if (isUndefined(updatedDeletedIndex)) { return userRef.update({ 'crnIndex.nextIndexPointer': position + 1 }) } else {
+      return userRef.set({'crnIndex': { 'nextIndexPointer': position + 1, 'deletedIndex': removeDuplicates(updatedDeletedIndex) }}, { merge: true })
     }
   })
 }
 // get crnIndex
 function GetCRNINDEX (userRef) {
   return userRef.get().then((doc) => {
-    return (doc.data().crnIndex, (_has(doc.data().deletedIndex)) ? doc.data().deletedIndex : [])
+    // console.log(Array.isArray(extractCrnIndex(doc).deletedIndex) ? (extractCrnIndex(doc).deletedIndex) : [])
+    let deletedIndex = Array.isArray(extractCrnIndex(doc).deletedIndex) ? (extractCrnIndex(doc).deletedIndex) : []
+    let nextIndexPointer = extractCrnIndex(doc).nextIndexPointer
+    return { nextIndexPointer, deletedIndex }
   })
+}
+function extractCrnIndex (doc) {
+  return doc.data().crnIndex
 }
 // Add crnContent Entry to crnContent
 function AddCRNContentEntry (crnContentref, clothRefPath, position) {
