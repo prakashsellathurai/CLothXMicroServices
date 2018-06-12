@@ -1,3 +1,22 @@
+
+var admin = require('firebase-admin')
+
+var serviceAccount = require('../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://clothxnet.firebaseio.com'
+
+})
+
+// test data for DI
+var firestore = admin.firestore()
+var userId = 'ZPnEUNe3l7NR0LYFj0dH'
+var clothId = 'Jd99Et9iQdiKzTcDBtZq' // Math.random().toString(36).substr(2, 19)
+var userRef = firestore.collection('user').doc(userId)
+var clothRef = firestore.collection(`user/${userId}/clothes`).doc(`${clothId}`)
+var crnContentref = firestore.collection(`user/${userId}/crnContent`)
+
 // *****************************************************  ***********************************************************************************
 // *****************************************************************************************************************************************
 // get next pointer related functions
@@ -57,17 +76,17 @@ function popPositionFromDeletedIndex (array, position) {
   if (index > -1) {
     array.splice(index, 1)
   }
-  return array
+  return removeDuplicates(array)
 }
 function removeDuplicates (arr) {
   return [...new Set(arr)]
 }
 // update crnIndex
-function UpdateCRNIndex (userRef, crnContentref, addedCRnContententry) {
+function UpdateCRNIndex (userRef, crnContentref) {
   return GetCRNINDEX(userRef).then((crnIndex) => {
     let [deletedIndex, nextIndexpointer] = crnIndexParser(crnIndex)
     return nextIndexPointerController(crnContentref).then((position) => {
-      let updatedDeletedIndex = (!isUndefined(deletedIndex)) ? popPositionFromDeletedIndex(deletedIndex, addedCRnContententry) : undefined
+      let updatedDeletedIndex = (!isUndefined(deletedIndex)) ? popPositionFromDeletedIndex(deletedIndex, position) : undefined
       if (isUndefined(updatedDeletedIndex)) { return nextIndexPointerPLUSPLUS(userRef, position) } else { return REFREShCRNINDEX(userRef, position, updatedDeletedIndex) }
     })
   })
@@ -76,7 +95,7 @@ function nextIndexPointerController (crnContentref) {
   return crnContentref.get().then(snap => { return snap.size })
 }
 function nextIndexPointerPLUSPLUS (userRef, position) {
-  return userRef.update({ 'crnIndex.nextIndexPointer': position + 1 })
+  return userRef.update({ 'crnIndex.nextIndexPointer': position  })
 }
 function REFREShCRNINDEX (userRef, nextIndexPointer, updatedDeletedIndex) {
   return userRef.set({'crnIndex': { 'nextIndexPointer': nextIndexPointer + 1, 'deletedIndex': removeDuplicates(updatedDeletedIndex) }}, { merge: true })
@@ -96,10 +115,17 @@ function extractCrnIndex (doc) {
 // *********************************************************************************************************************************
 // --------------------------------------------------------------------------------------------------------------------------------
 // =================================>>>>>>>>>>> coreHAndler <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<=======================
-module.exports.OncreateHandler = function OncreateHandler (userRef, clothRef, crnContentref) {
+function OncreateHandler (userRef, clothRef, crnContentref) {
   return GetOrIntializeCRNINDEX(userRef) /* get or initialize CRNINDEX */
     .then((crnIndex) => { return crnAllocator(crnIndex) /* aloocate crn */ })
     .then((positionToassign) => { return AssignNextPointerToClothId(clothRef, positionToassign) })
     .then((assignedposition) => { return AddCRNContentEntry(crnContentref, clothRef.path, assignedposition) })
-    .then((addedCRnContententry) => { return UpdateCRNIndex(userRef, crnContentref, addedCRnContententry) })
+    .then((addedCRnContententry) => { return UpdateCRNIndex(userRef, crnContentref) })
 }
+
+// test runner *********************************************** /\******************************************************************
+let promise = []
+for (let index = 0; index < 10; index++) {
+  promise.push(OncreateHandler(userRef, firestore.collection(`user/${userId}/clothes`).doc(`${index}`), crnContentref))
+}
+Promise.all(promise)

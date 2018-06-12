@@ -17,7 +17,7 @@ var OncreateNewClothes = functions.firestore
     var clothRef = firestore.collection(`user/${userId}/clothes/`).doc(`${clothId}`)
     var crnContentref = firestore.collection(`user/${userId}/crnContent/`)
 
-    return crnAdder.OncreateHandler(userId, clothId, userRef, clothRef, crnContentref)
+    return crnAdder.OncreateHandler(userRef, clothRef, crnContentref)
   })
 
 module.exports = OncreateNewClothes
