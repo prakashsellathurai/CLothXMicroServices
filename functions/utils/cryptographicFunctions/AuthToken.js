@@ -1,5 +1,5 @@
 var jwt = require('jwt-simple')
-var Constants = require('../environment/CONSTANTS')
+var Constants = require('../../environment/CONSTANTS')
 var secret = Constants.SECRET_TOKEN
 
 function encode (phoneNumber, password, sid) { // encodes the json data

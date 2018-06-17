@@ -2,11 +2,9 @@ var dbFunctions = require('../firestore/CRUD/db')
 function validateHeader (postedInfo, res) {
   if (!(postedInfo.phoneNumber && postedInfo.password && postedInfo.sid)) {
     res.json({ isError: true, error: 'Authentication info not provided refusing to accept' })
-  } else
+  } else if (!postedInfo.sid) { res.json({isError: true, error: 'sid not provided'}) } else
   if (!postedInfo.phoneNumber) { res.json({ isError: true, error: 'phonenumber Not Provided' }) } else
-  if (!postedInfo.password) { res.json({isError: true, error: 'password not provided'}) } else
-  if (!postedInfo.sid) { res.json({isError: true, error: 'sid not provided'}) }
-
+  if (!postedInfo.password) { res.json({isError: true, error: 'password not provided'}) }
   return true
 }
 function parseHeaders (req) {
