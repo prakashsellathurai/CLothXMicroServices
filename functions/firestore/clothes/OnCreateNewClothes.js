@@ -2,7 +2,7 @@ var admin = require('firebase-admin')
 var functions = require('firebase-functions')
 
 var crnAdder = require('../../utils/crn/oncreate')
-admin.initializeApp(functions.config())
+
 var firestore = admin.firestore()
 
 var OncreateNewClothes = functions.firestore
