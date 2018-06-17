@@ -1,14 +1,12 @@
 var functions = require('firebase-functions')
-var admin = require('firebase-admin')
-var firestore = admin.firestore()
-
 const express = require('express')
 const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
 const app = express()
 
-var AuthTokenProvider = require('../../Auth/AuthToken')
+var AuthTokenProvider = require('../../utils/cryptographicFunctions/AuthToken')
+var dbFun = require('../../firestore/CRUD/db')
 
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }))
@@ -32,8 +30,21 @@ function AddEmployeeRequestHandler (req, res) {
   if (isUndefined(token)) {
     res.json({isError: true, error: 'AuthToken Not provided server refused to accept the operation'})
   } else {
-    let AuthInfo = decodeToken(token)
-    
+    AuthTokenvalidator(token, res)
+  }
+}
+function AuthTokenvalidator (token, res) {
+  let AuthInfo = decodeToken(token)
+  if (IsAuthInfoValid(AuthInfo, res)) {
+
+  }
+}
+function IsAuthInfoValid (AuthInfo, res) {
+  let phonenumber = AuthInfo.phonenumber
+  let sid = AuthInfo.sid
+  let password = AuthInfo.password
+  if (!phonenumber) { res.json({isError: true, error: 'phonenumber is not provided'}) } else if (!sid) { res.json({isError: true, error: 'sid not provided'}) } else if (password) { res.json({isError: true, error: 'password not provided'}) } else if (!dbFun.checkIfStoreExist()) {
+    res.json({isError: true, error: 'sd is not registeredi'})
   }
 }
 function parseToken (req) {

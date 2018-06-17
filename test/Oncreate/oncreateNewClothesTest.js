@@ -95,7 +95,7 @@ function nextIndexPointerController (crnContentref) {
   return crnContentref.get().then(snap => { return snap.size })
 }
 function nextIndexPointerPLUSPLUS (userRef, position) {
-  return userRef.update({ 'crnIndex.nextIndexPointer': position  })
+  return userRef.update({ 'crnIndex.nextIndexPointer': position })
 }
 function REFREShCRNINDEX (userRef, nextIndexPointer, updatedDeletedIndex) {
   return userRef.set({'crnIndex': { 'nextIndexPointer': nextIndexPointer + 1, 'deletedIndex': removeDuplicates(updatedDeletedIndex) }}, { merge: true })

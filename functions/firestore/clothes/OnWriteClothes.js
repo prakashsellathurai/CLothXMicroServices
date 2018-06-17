@@ -1,7 +1,6 @@
 var admin = require('firebase-admin')
 var functions = require('firebase-functions')
 
-
 var firestore = admin.firestore()
 
 var crnDelete = require('../../utils/crn/ondelete')
@@ -24,7 +23,7 @@ exports.OnwriteClothes = functions.firestore
     var clothRef = firestore.collection(`user/${userId}/clothes/`).doc(`${clothId}`)
     var crnContentref = firestore.collection(`user/${userId}/crnContent/`)
     // perform desired operations ...
- return routeTheOP(newDocument, oldDocument, userRef, clothRef, crnContentref, userId, clothId)
+    return routeTheOP(newDocument, oldDocument, userRef, clothRef, crnContentref, userId, clothId)
   })
 function IsExist (document) {
   return document !== false || document !== null || document !== undefined

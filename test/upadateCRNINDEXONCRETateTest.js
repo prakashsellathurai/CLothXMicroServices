@@ -21,7 +21,7 @@ function UpdateCRNIndex (userRef, position) {
 // get crnIndex
 function GetCRNINDEX (userRef) {
   return userRef.get().then((doc) => {
-// console.log(Array.isArray(extractCrnIndex(doc).deletedIndex) ? (extractCrnIndex(doc).deletedIndex) : [])
+    // console.log(Array.isArray(extractCrnIndex(doc).deletedIndex) ? (extractCrnIndex(doc).deletedIndex) : [])
     let deletedIndex = Array.isArray(extractCrnIndex(doc).deletedIndex) ? (extractCrnIndex(doc).deletedIndex) : []
     let nextIndexPointer = extractCrnIndex(doc).nextIndexPointer
     return { nextIndexPointer, deletedIndex }

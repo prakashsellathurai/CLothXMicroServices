@@ -65,7 +65,7 @@ function removeDuplicates (arr) {
 // update crnIndex
 function UpdateCRNIndex (userRef, crnContentref, addedCRnContententry) {
   return GetCRNINDEX(userRef).then((crnIndex) => {
-    let [deletedIndex, nextIndexpointer] = crnIndexParser(crnIndex)  
+    let [deletedIndex, nextIndexpointer] = crnIndexParser(crnIndex)
     return nextIndexPointerController(crnContentref).then((position) => {
       let updatedDeletedIndex = (!isUndefined(deletedIndex)) ? popPositionFromDeletedIndex(deletedIndex, addedCRnContententry) : undefined
       if (isUndefined(updatedDeletedIndex)) { return nextIndexPointerPLUSPLUS(userRef, position) } else { return REFREShCRNINDEX(userRef, position, updatedDeletedIndex) }
