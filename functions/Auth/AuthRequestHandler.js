@@ -41,7 +41,7 @@ function checkTheDatabase (sid, phoneNumber, password, res) {
   } else {
     return getEmployeeeData(sid, phoneNumber).then((employeeDoc) => {
       if (!employeeDoc.exists) {
-        res.json({ isError: true, error: 'phoneNumber (phoneNumber doesnot exists)  does not exists' })
+        res.json({ isError: true, error: `phonenumber doesn't exists` })
       } else {
         let hashedPassword = hashPassword(password)
         if (employeeDoc.data().password !== hashedPassword) {
@@ -56,6 +56,13 @@ function checkTheDatabase (sid, phoneNumber, password, res) {
             return getstoreData(sid).then((storedata) => {
               return saveToken(token).then((employeeDoc) => {
                 res.json({isError: false, error: null, role: employeeDoc.data().role, token: employeeDoc.data().token, type: storedata.data().type})
+                res.json({ isError: false,
+                  role: employeeDoc.data().role,
+                  token: employeeDoc.data().token,
+                  type: storedata.data().type,
+                  phoneNumber: phoneNumber,
+                  sid: sid,
+                  name: employeeDoc.data().name })
               })
             })
           }
