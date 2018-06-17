@@ -55,7 +55,6 @@ function checkTheDatabase (sid, phoneNumber, password, res) {
           } else {
             return getstoreData(sid).then((storedata) => {
               return saveToken(token).then((employeeDoc) => {
-                res.json({isError: false, error: null, role: employeeDoc.data().role, token: employeeDoc.data().token, type: storedata.data().type})
                 res.json({ isError: false,
                   role: employeeDoc.data().role,
                   token: employeeDoc.data().token,
