@@ -11,7 +11,7 @@ var dbFun = require('../../firestore/testdb')
 AddShopapp.disable('x-powered-by')
 // respond to post request '/'
 AddShopapp.post('/', (req, res) => AddEmployeeRequestHandler(req, res))
-
+AddShopapp.post('', (req, res) => AddEmployeeRequestHandler(req, res))
 // Add middleware to authenticate requests
 
 // Expose Express API as a single Cloud Function:
