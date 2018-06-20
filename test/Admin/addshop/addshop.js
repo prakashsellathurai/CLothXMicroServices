@@ -1,25 +1,24 @@
 
-
 var functions = require('firebase-functions')
 const express = require('express')
 
-const app = express()
+const AddShopapp = express()
 
 var AuthTokenProvider = require('../../../functions/utils/cryptographicFunctions/AuthToken')
 var dbFun = require('../../firestore/testdb')
 
 // disable this header to eliminate targetted attacks
-app.disable('x-powered-by')
+AddShopapp.disable('x-powered-by')
 // respond to post request '/'
-app.post('/', (req, res) => AddEmployeeRequestHandler(req, res))
+AddShopapp.post('/', (req, res) => AddEmployeeRequestHandler(req, res))
 
 // Add middleware to authenticate requests
 
 // Expose Express API as a single Cloud Function:
-app.listen(3030,()=>{
+AddShopapp.listen(3030, () => {
   console.log('listennvevnvn;vnle')
 })
-module.exports = functions.https.onRequest(app)
+module.exports = functions.https.onRequest(AddShopapp)
 
 // request handling code
 function AddEmployeeRequestHandler (req, res) {
