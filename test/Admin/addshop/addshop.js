@@ -1,19 +1,13 @@
+
+
 var functions = require('firebase-functions')
 const express = require('express')
-const compression = require('compression')
-const cors = require('cors')
-const helmet = require('helmet')
+
 const app = express()
 
-var AuthTokenProvider = require('../../utils/cryptographicFunctions/AuthToken')
-var dbFun = require('../../firestore/CRUD/db')
+var AuthTokenProvider = require('../../../functions/utils/cryptographicFunctions/AuthToken')
+var dbFun = require('../../firestore/testdb')
 
-// Automatically allow cross-origin requests
-app.use(cors({ origin: true }))
-// allow gzip compression
-app.use(compression())
-// use helmet for safety
-app.use(helmet())
 // disable this header to eliminate targetted attacks
 app.disable('x-powered-by')
 // respond to post request '/'
@@ -22,6 +16,9 @@ app.post('/', (req, res) => AddEmployeeRequestHandler(req, res))
 // Add middleware to authenticate requests
 
 // Expose Express API as a single Cloud Function:
+app.listen(3030,()=>{
+  console.log('listennvevnvn;vnle')
+})
 module.exports = functions.https.onRequest(app)
 
 // request handling code
@@ -53,12 +50,12 @@ function IsAuthInfoValid (AuthInfo, res) {
   let password = AuthInfo.password
   if (!phonenumber) res.json({isError: true, error: 'phonenumber is not provided'})
   else if (!sid) res.json({isError: true, error: 'sid not provided'})
-  else if (password) res.json({isError: true, error: 'password not provided'})
+  else if (!password) res.json({isError: true, error: 'password not provided'})
   else if (!dbFun.checkIfStoreExist()) res.json({isError: true, error: 'sid is not registered'})
   else return true
 }
 function parseToken (req) {
-  return req.headers.currentusertoken
+  return req.headers.currentusertoken  // change to lower cas4
 }
 function decodeToken (token) {
   return AuthTokenProvider.decode(token)

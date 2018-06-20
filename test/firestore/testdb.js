@@ -1,6 +1,14 @@
 
-var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
+var cryptoFunctions = require('../../functions/utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
+
+var serviceAccount = require('../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://clothxnet.firebaseio.com'
+
+})
 var firestore = admin.firestore()
 function getEmployeeeData (sid, employeeID) {
   return firestore.collection(`stores/${sid}/employees`).doc(`${employeeID}`).get()
