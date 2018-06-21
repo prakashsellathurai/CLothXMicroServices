@@ -5,10 +5,9 @@ const cors = require('cors')
 const helmet = require('helmet')
 const appEmployee = express()
 
-var AuthTokenProvider = require('../../utils/cryptographicFunctions/AuthToken')
-var dbFun = require('../../firestore/CRUD/db')
-var SendMessage = require('../../utils/message/SendMessage')
-
+var AuthTokenProvider = require('../../../utils/cryptographicFunctions/AuthToken')
+var dbFun = require('../../../firestore/CRUD/db')
+var SendMessage = require('../../../utils/message/SendMessage')
 
 // Automatically allow cross-origin requests
 appEmployee.use(cors({ origin: true }))

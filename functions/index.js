@@ -6,7 +6,7 @@ try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
 var OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
 var OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
 var app = require('./Auth/Auth')
-var addEmployee = require('./firestore/store/addemployee')
+var addEmployee = require('./firestore/store/employee/addemployee')
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore')
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
