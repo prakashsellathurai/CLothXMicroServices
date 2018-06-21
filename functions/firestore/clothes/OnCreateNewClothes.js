@@ -6,16 +6,16 @@ var crnAdder = require('../../utils/crn/oncreate')
 var firestore = admin.firestore()
 
 var OncreateNewClothes = functions.firestore
-  .document('user/{userId}/clothes/{clothId}')
+  .document('stores/{storeId}/clothes/{clothId}')
   .onCreate((snap, context) => {
     // local variables
-    const userId = context.params.userId
+    const storeId = context.params.storeId
     const clothId = context.params.clothId
 
     // db refrerences
-    var userRef = firestore.collection('user').doc(userId)
-    var clothRef = firestore.collection(`user/${userId}/clothes/`).doc(`${clothId}`)
-    var crnContentref = firestore.collection(`user/${userId}/crnContent/`)
+    var userRef = firestore.collection('stores').doc(storeId)
+    var clothRef = firestore.collection(`stores/${storeId}/clothes/`).doc(`${clothId}`)
+    var crnContentref = firestore.collection(`stores/${storeId}/crnContent/`)
 
     return crnAdder.OncreateHandler(userRef, clothRef, crnContentref)
   })
