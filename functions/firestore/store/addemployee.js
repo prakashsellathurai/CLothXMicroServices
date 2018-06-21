@@ -74,6 +74,6 @@ function ReqObjectToEmployeeExtracter (reqObject) {
     role: reqObject.role,
     password: reqObject.password,
     isEmployee: true,
-    timestamp: reqObject.timestamp
+    timestamp: new Date()
   }
 }
