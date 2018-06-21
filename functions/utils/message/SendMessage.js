@@ -30,6 +30,6 @@ module.exports = function (PhoneNumber, Message) {
     route: '4',
     country: '91',
     sms:
-       [ { message: 'hello world', to: [ '9843158807' ] } ] }))
+       [ { message: Message, to: [ PhoneNumber ] } ] }))
   req.end()
 }
