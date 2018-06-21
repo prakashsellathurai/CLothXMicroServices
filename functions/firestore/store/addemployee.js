@@ -42,6 +42,8 @@ function AuthTokenvalidator (token, res, reqObject) {
   if (IsAuthInfoValid(AuthInfo, res)) {
     let employeeDetails = ReqObjectToEmployeeExtracter(reqObject)
     let employeePhoneNumber = reqObject.phonenumber
+    let token = AuthTokenProvider.encode(employeePhoneNumber, reqObject.password, AuthInfo.sid)
+    employeeDetails.token = token
     return dbFun.AddEmployee(AuthInfo.sid, employeePhoneNumber, employeeDetails).then(() => {
       res.json({isError: false, msg: 'employee added successfully'})
     })
@@ -71,6 +73,7 @@ function ReqObjectToEmployeeExtracter (reqObject) {
     name: reqObject.name,
     role: reqObject.role,
     password: reqObject.password,
+    isEmployee: true,
     timestamp: reqObject.timestamp
   }
 }
