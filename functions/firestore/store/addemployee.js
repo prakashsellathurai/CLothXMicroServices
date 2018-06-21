@@ -7,6 +7,8 @@ const appEmployee = express()
 
 var AuthTokenProvider = require('../../utils/cryptographicFunctions/AuthToken')
 var dbFun = require('../../firestore/CRUD/db')
+var SendMessage = require('../../utils/message/SendMessage')
+
 
 // Automatically allow cross-origin requests
 appEmployee.use(cors({ origin: true }))
@@ -45,6 +47,8 @@ function AuthTokenvalidator (token, res, reqObject) {
     let token = AuthTokenProvider.encode(employeePhoneNumber, reqObject.password, AuthInfo.sid)
     employeeDetails.token = token
     return dbFun.AddEmployee(AuthInfo.sid, employeePhoneNumber, employeeDetails).then(() => {
+      let Message = `Hello ${reqObject.name} your password is ${reqObject.password}`
+      SendMessage(employeePhoneNumber, Message)
       res.json({isError: false, msg: 'employee added successfully'})
     })
   }

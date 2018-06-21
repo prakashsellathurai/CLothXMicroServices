@@ -6,7 +6,7 @@ var options = {
   'port': null,
   'path': '/api/v2/sendsms',
   'headers': {
-    'authkey': '218768ACR9sivBp5b2a9c86',
+    'authkey': '187762AxiHe71B5b2bf557',
     'content-type': 'application/json'
   }
 }
@@ -24,9 +24,9 @@ var req = http.request(options, function (res) {
   })
 })
 
-req.write(JSON.stringify({ sender: 'SOCKET',
+req.write(JSON.stringify({ sender: 'CLOTHX',
   route: '4',
   country: '91',
   sms:
-   [ { message: 'Message1', to: [ '9843158807' ] } ] }))
+   [ { message: 'hello world', to: [ '9843158807' ] } ] }))
 req.end()
