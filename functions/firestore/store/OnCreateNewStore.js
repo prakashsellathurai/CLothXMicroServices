@@ -9,7 +9,6 @@ var OncreateNewStore = functions.firestore
     const ownerName = snap.data().ownerName
     const contactNumber = snap.data().contactNo
     const Password = snap.data().ownerPassword
-    const regNo = snap.data().regNo
     const storeName = snap.data().storeName
     sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, contactNumber, Password))
   })
