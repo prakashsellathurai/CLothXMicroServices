@@ -16,11 +16,11 @@ var OncreateNewStore = functions.firestore
       doc.docs.forEach(doc => {
         ownerphoneNumber = doc.id
         sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, ownerphoneNumber, Password))
-        sendMessage(ownerphoneNumber, `your store ${storeName} sid ${storeId} has been registered successfully to clothx net with phone number ${contactNumber} and password ${Password}`)
+        sendMessage(ownerphoneNumber, `your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${contactNumber} and password ${Password}`)
       })
     })
   })
 function htmlMessage (storeName, storeId, contactNumber, Password) {
-  return `<p>your store ${storeName} sid ${storeId} has been registered successfully to clothx net with phone number ${contactNumber} and password ${Password} </p>`
+  return `<p>your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${contactNumber} and password ${Password} </p>`
 }
 module.exports = OncreateNewStore
