@@ -56,8 +56,11 @@ function generateAuthToken (sid, phoneNumber, password, res) {
     })
   }
 }
-function storeEmployee  (sid, EmployeePhoneNUmber, employeeDetails) {
+function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
   return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).set(employeeDetails)
+}
+function GetOwner (sid) {
+  return firestore.collection(`stores/${sid}/employees/`).where('role', '==', 'owner').get()
 }
 function saveToken (token) {
   let payload = cryptoFunctions.decryptHash(token)
@@ -75,5 +78,6 @@ module.exports = {
   checkIfStoreExist: checkIfStoreDocExist,
   getStoreData: getstoreData,
   checkIfEmployeeExist: checkIfEmployeeExist,
-  AddEmployee: storeEmployee
+  AddEmployee: storeEmployee,
+  GetOwner: GetOwner
 }

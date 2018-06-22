@@ -4,18 +4,18 @@ var firestore = admin.firestore()
 
 var crnAdder = require('../../utils/crn/ondelete')
 var OndeleteClothes = functions.firestore
-  .document('user/{userId}/clothes/{clothId}').onDelete((snap, context) => {
+  .document('stores/{storeId}/clothes/{clothId}').onDelete((snap, context) => {
     const deletedcloth = snap.data()
     // local variables
-    const userId = context.params.userId
+    const storeId = context.params.storeId
     const clothId = context.params.clothId
     const crn = deletedcloth.crn
 
     // db refrerences
-    var userRef = firestore.collection('user').doc(userId)
-    var clothRef = firestore.collection(`user/${userId}/clothes/`).doc(`${clothId}`)
-    var crnContentref = firestore.collection(`user/${userId}/crnContent/`)
+    var StoreRef = firestore.collection('stores').doc(storeId)
+    var clothRef = firestore.collection(`stores/${storeId}/clothes/`).doc(`${clothId}`)
+    var crnContentref = firestore.collection(`stores/${storeId}/crnContent/`)
 
-    return crnAdder.ondeleteHandler(userRef, clothRef, crnContentref, crn, userId, clothId)
+    return crnAdder.ondeleteHandler(StoreRef, clothRef, crnContentref, crn, storeId, clothId)
   })
 module.exports = OndeleteClothes

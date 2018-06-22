@@ -13,11 +13,11 @@ var OncreateNewClothes = functions.firestore
     const clothId = context.params.clothId
 
     // db refrerences
-    var userRef = firestore.collection('stores').doc(storeId)
+    var StoreRef = firestore.collection('stores').doc(storeId)
     var clothRef = firestore.collection(`stores/${storeId}/clothes/`).doc(`${clothId}`)
     var crnContentref = firestore.collection(`stores/${storeId}/crnContent/`)
 
-    return crnAdder.OncreateHandler(userRef, clothRef, crnContentref)
+    return crnAdder.OncreateHandler(StoreRef, clothRef, crnContentref)
   })
 
 module.exports = OncreateNewClothes
