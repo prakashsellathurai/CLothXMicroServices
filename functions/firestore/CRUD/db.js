@@ -61,7 +61,7 @@ function encryptThepasswordOnce (sid, EmployeePhoneNUmber, password) {
   return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword}) 
 }
 function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
-  employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
+ // employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
   return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).set(employeeDetails)
 }
 function GetOwner (sid) {
