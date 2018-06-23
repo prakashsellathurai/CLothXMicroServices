@@ -58,10 +58,10 @@ function generateAuthToken (sid, phoneNumber, password, res) {
 }
 function encryptThepasswordOnce (sid, EmployeePhoneNUmber, password) {
   let hashedpassword = cryptoFunctions.hashPassword(password)
-  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword}) 
+  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword})
 }
 function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
- // employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
+  employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
   return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).set(employeeDetails)
 }
 function GetOwner (sid) {
