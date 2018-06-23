@@ -3,7 +3,6 @@ var functions = require('firebase-functions')
 var dbFun = require('../CRUD/db')
 var sendEmail = require('../../utils/Mail/sendmail')
 var sendMessage = require('../../utils/message/SendMessage')
-var crypto = require('../../utils/cryptographicFunctions')
 var OncreateNewStore = functions.firestore
   .document('stores/{storeId}').onCreate((snap, context) => {
     const storeId = context.params.storeId
