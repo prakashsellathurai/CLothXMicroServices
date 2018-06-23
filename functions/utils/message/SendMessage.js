@@ -5,7 +5,7 @@ module.exports = function (PhoneNumber, Message) {
   var options = {
     'method': 'POST',
     'hostname': 'api.msg91.com',
-    'port': null,
+    'port': 80,
     'path': '/api/v2/sendsms',
     'headers': {
       'authkey': Constants.MSG_91_API_KEY,

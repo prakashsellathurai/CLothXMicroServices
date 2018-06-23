@@ -15,10 +15,17 @@ var OncreateNewStore = functions.firestore
     return dbFun.GetOwner(storeId).then(doc => {
       return doc.docs.forEach(doc => {
         ownerphoneNumber = doc.id
+<<<<<<< HEAD
         //   return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password).then(() => { // encrypt the password sha 256
         sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, ownerphoneNumber, Password))
         sendMessage(ownerphoneNumber, `your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${ownerphoneNumber} and password ${Password}`)
       //  })
+=======
+        return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password).then(() => { // encrypt the password sha 256
+          sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, ownerphoneNumber, Password))
+          sendMessage(ownerphoneNumber, `your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${contactNumber} and password ${Password}`)
+        })
+>>>>>>> 67ebbfb... on create new store now support return value
       })
     })
   })
