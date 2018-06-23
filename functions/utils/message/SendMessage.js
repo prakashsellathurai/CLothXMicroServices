@@ -24,6 +24,9 @@ module.exports = function (PhoneNumber, Message) {
       var body = Buffer.concat(chunks)
       console.log(body.toString())
     })
+    req.on('error', function (err) {
+      console.log(err)
+    })
   })
 
   req.write(JSON.stringify({ sender: 'CLOTHX',
