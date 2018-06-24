@@ -8,8 +8,11 @@ var OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
 var app = require('./Auth/Auth')
 var addEmployee = require('./firestore/store/employee/addemployee')
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore')
+
+
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
 exports.Login = app
 exports.Addemployee = addEmployee
 exports.OnCreateNewStore = OncreateNewStore
+

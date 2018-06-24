@@ -47,8 +47,9 @@ function AuthTokenvalidator (token, res, reqObject) {
     employeeDetails.token = token
     return dbFun.AddEmployee(AuthInfo.sid, employeePhoneNumber, employeeDetails).then(() => {
       let Message = `Hello ${reqObject.name} your password is ${reqObject.password}`
-      SendMessage(employeePhoneNumber, Message)
-      res.json({isError: false, msg: 'employee added successfully'})
+      return SendMessage(employeePhoneNumber, Message).then(val => {
+        res.json({isError: false, msg: 'employee added successfully'})
+      })
     })
   }
 }

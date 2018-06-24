@@ -16,8 +16,11 @@ var OncreateNewStore = functions.firestore
       return doc.docs.forEach(doc => {
         ownerphoneNumber = doc.id
         return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password).then(() => { // encrypt the password sha 256
-          sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, ownerphoneNumber, Password))
-          sendMessage(ownerphoneNumber, `your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${ownerphoneNumber} and password ${Password}`)
+          return sendEmail(email, 'confirmation mail from clothxnet', `hello ${ownerName}`, htmlMessage(storeName, storeId, ownerphoneNumber, Password))
+            .then((value) => {
+              return sendMessage(ownerphoneNumber, `your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${ownerphoneNumber} and password ${Password}`)
+                .then((resove) => { return resove })
+            })
         })
       })
     })
