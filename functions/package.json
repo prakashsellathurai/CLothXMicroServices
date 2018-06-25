@@ -12,11 +12,13 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.7.0",
     "@sendgrid/mail": "^6.2.1",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "crypto-js": "^3.1.9-1",
     "express": "^4.16.3",
+    "firebase": "^5.1.0",
     "firebase-admin": "^5.12.1",
     "firebase-functions": "^1.0.3",
     "helmet": "^3.12.1",
