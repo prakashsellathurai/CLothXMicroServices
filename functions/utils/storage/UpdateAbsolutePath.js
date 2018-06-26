@@ -1,7 +1,7 @@
-
+var CONTANTS = require('../../environment/CONSTANTS')
 var admin = require('firebase-admin')
 var firestore = admin.firestore()
-var storage = admin.storage().bucket()
+var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
 // If this  is removed the code will crash and you will die alone
 
 module.exports = function updateAbsoluteFileStoragePAth (sid) {
