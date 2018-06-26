@@ -70,7 +70,7 @@ module.exports = functions.firestore.document('stores/{storeId}')
   .onCreate((snap, context) => {
     var storeId, email, ownerName, Password, storeName// loacl variables
     [storeId, email, ownerName, Password, storeName] = ParseSnapAndContext(snap, context) // parse values
-    try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
-      return CoreHandler(storeId, email, ownerName, Password, storeName)
-    } catch (e) { console.log(e) } // this one is useless
+    // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
+    return CoreHandler(storeId, email, ownerName, Password, storeName)
+    // } catch (e) { console.log(e) } // this one is useless
   })
