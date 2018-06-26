@@ -1,15 +1,6 @@
-//= ===================================== IMPORTS ===============================================//
-var functions = require('firebase-functions')
-var dbFun = require('../CRUD/db')
-var sendEmail = require('../../utils/Mail/sendmail')
-var sendMessage = require('../../utils/message/SendMessage')
-var UpdateAbsolutePathHandler = require('../../utils/storage/UpdateAbsolutePath')
-// ++++++++++++++++++++++++++++++++++++++++++++++++BUNDLED MODULE ====================================
-// ===================================================================================================
-// ============script runs whenever a new store is added under the location /stores/{sid}=============
-// ===================================================================================================
-// ===================================================================================================
-// ======================================HELPER FUNCTIONS=============================================
+
+
+
 function ParseSnapAndContext (snap, context) {
   return [context.params.storeId,
     snap.data().email,
@@ -21,7 +12,7 @@ function GetPhoneNumber (storeId) {
   return dbFun.GetOwner(storeId).then(doc => extractDocID(doc))
 }
 function extractDocID (doc) {
-  return doc.docs.forEach(doc => { if (doc.exists) return doc.id })
+  return doc.docs.forEach(doc => doc.id)
 }
 function PassEncryptHandler (storeId, ownerphoneNumber, Password) {
   return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password)
@@ -37,11 +28,11 @@ function htmlMessage (storeName, storeId, ownerphoneNumber, Password) {
   return `<p>your store ${storeName} /storeId ${storeId} has been registered successfully to clothx net with phone number ${ownerphoneNumber} and password ${Password} </p>`
 }
 /*
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-===============================SMS ============================================================
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-*/
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ===============================SMS ============================================================
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  */
 function SMSHAndler (ownerphoneNumber, storeName, storeId, Password) {
   return sendMessage(ownerphoneNumber, textMessage(storeName, storeId, ownerphoneNumber, Password))
 }
@@ -75,14 +66,3 @@ function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
         })
     })
 }
-// ==================================================================================================
-// =====================================export module================================================
-module.exports = functions.firestore.document('stores/{storeId}')
-  .onCreate((snap, context) => {
-    var storeId, email, ownerName, Password, storeName// loacl variables
-    [storeId, email, ownerName, Password, storeName] = ParseSnapAndContext(snap, context) // parse values
-    // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
-    // return CoreHandler(storeId, email, ownerName, Password, storeName)
-    // } catch (e) { console.log(e) } // this one is useless
-    return LameCoreHandler(storeId, email, ownerName, Password, storeName) // i hate this function
-  })
