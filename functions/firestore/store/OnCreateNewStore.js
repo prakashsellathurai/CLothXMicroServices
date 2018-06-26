@@ -66,7 +66,7 @@ function CoreHandler (storeId, email, ownerName, Password, storeName) {
 }
 function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
   return UpdateAbsolutePathHandler(storeId)
-    .then(() => GetPhoneNumber(storeId))
+    .then(() => { return GetPhoneNumber(storeId) })
     .then((ownerphoneNumber) => {
       return PassEncryptHandler(storeId, ownerphoneNumber, Password)
         .then((encryptThePAssword) => {

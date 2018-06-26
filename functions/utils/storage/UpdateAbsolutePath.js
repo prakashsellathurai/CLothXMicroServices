@@ -38,7 +38,7 @@ function UpdateUrlData (sid, logoUrl, imageUrl, uploads) {
   }})
 }
 function getuploadedfilePath (sid) {
-  return firestore.collection(`stores`).doc(`${sid}`).get().then((snap) => {
+  return firestore.collection('stores').doc(`${sid}`).get().then((snap) => {
     return snap.data().uploads
   })
 }
