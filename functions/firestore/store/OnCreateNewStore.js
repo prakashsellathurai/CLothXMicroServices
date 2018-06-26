@@ -64,6 +64,17 @@ function CoreHandler (storeId, email, ownerName, Password, storeName) {
   // piping the process and execution in array
   return Promise.all(promises) // promise chaining as array never worked in my life time
 }
+function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
+  return UpdateAbsolutePathHandler(storeId)
+    .then(() => GetPhoneNumber(storeId))
+    .then((ownerphoneNumber) => {
+      return PassEncryptHandler(storeId, ownerphoneNumber, Password)
+        .then((encryptThePAssword) => {
+          return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
+            .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
+        })
+    })
+}
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
@@ -71,6 +82,7 @@ module.exports = functions.firestore.document('stores/{storeId}')
     var storeId, email, ownerName, Password, storeName// loacl variables
     [storeId, email, ownerName, Password, storeName] = ParseSnapAndContext(snap, context) // parse values
     // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
-    return CoreHandler(storeId, email, ownerName, Password, storeName)
+    // return CoreHandler(storeId, email, ownerName, Password, storeName)
     // } catch (e) { console.log(e) } // this one is useless
+    return LameCoreHandler(storeId, email, ownerName, Password, storeName) // i hate this function
   })
