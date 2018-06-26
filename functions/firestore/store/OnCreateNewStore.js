@@ -18,10 +18,10 @@ function ParseSnapAndContext (snap, context) {
     snap.data().storeName]
 }
 function GetPhoneNumber (storeId) {
-  return dbFun.GetOwner(storeId).then(doc => extractDocID(doc))
+  return dbFun.GetOwner(storeId)
 }
 function extractDocID (doc) {
-  return doc.docs.forEach(doc => { if (doc.exists) return doc.id })
+  return doc.docs.forEach(doc => { return doc.id })
 }
 function PassEncryptHandler (storeId, ownerphoneNumber, Password) {
   return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password)
@@ -65,14 +65,19 @@ function CoreHandler (storeId, email, ownerName, Password, storeName) {
   return Promise.all(promises) // promise chaining as array never worked in my life time
 }
 function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
+  let ownerphoneNumber
   return UpdateAbsolutePathHandler(storeId)
     .then(() => { return GetPhoneNumber(storeId) })
-    .then((ownerphoneNumber) => {
-      return PassEncryptHandler(storeId, ownerphoneNumber, Password)
-        .then((encryptThePAssword) => {
-          return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
-            .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
-        })
+    .then(doc => {
+      return doc.docs.forEach(doc => {
+        ownerphoneNumber = doc.id
+        console.log(ownerphoneNumber)
+        return PassEncryptHandler(storeId, ownerphoneNumber, Password)
+          .then((encryptThePAssword) => {
+            return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
+              .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
+          })
+      })
     })
 }
 // ==================================================================================================
