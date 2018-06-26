@@ -71,7 +71,6 @@ function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
     .then(doc => {
       return doc.docs.forEach(doc => {
         ownerphoneNumber = doc.id
-        console.log(ownerphoneNumber)
         return PassEncryptHandler(storeId, ownerphoneNumber, Password)
           .then((encryptThePAssword) => {
             return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)

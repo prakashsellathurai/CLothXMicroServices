@@ -50,6 +50,9 @@ function AuthTokenvalidator (token, res, reqObject) {
       return SendMessage(employeePhoneNumber, Message).then(val => {
         res.json({isError: false, msg: 'employee added successfully'})
       })
+    }).catch((err) => {
+      console.log(err)
+      // res.json({isError: false, msg: 'employee added successfully'})
     })
   }
 }
