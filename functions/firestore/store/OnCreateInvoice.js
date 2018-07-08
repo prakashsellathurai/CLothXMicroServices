@@ -19,21 +19,16 @@ function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
   let promises = []
   for (let index = 0; index < crnArray.length; index++) {
     console.log('for loop index = ' + index)
-
     promises.push(FindclothWithCRn(sid, crnArray[index]).then(clothesDoc => {
       console.log('for loop after index = ' + index)
       let ClothDocDAta = clothesDoc.data()
       let SizeIndexToBeupdated = MApSizeArray(sizeArray[index])
       let quantityToReduce = quantityArray[index]
       let intialSizeArray = ClothDocDAta.size
-      let intialSize = ClothDocDAta.size[SizeIndexToBeupdated]
+      let intialSize = ClothDocDAta.size[`${sizeArray[index]}`]
       let reducedSize = intialSize - quantityToReduce
       console.log(reducedSize)
-      if (reducedSize < 0 || isNaN(reducedSize) || reducedSize === undefined || reducedSize === null) {
-        console.error('size tried to reduce less than 0')
-      } else {
-        reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArray[index])
-      }
+      return (checkReducedSizeINtegrity(reducedSize)) ? console.error('size tried to reduce less than 0') : reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArray[index])
     }))
   }
   console.log('end Of FOR LOOP')
@@ -75,4 +70,7 @@ function FindclothWithCRn (storeId, crn) {
       })
     })
   })
+}
+function checkReducedSizeINtegrity (reducedSize) {
+  return reducedSize < 0 || isNaN(reducedSize) || reducedSize === undefined || reducedSize === null
 }

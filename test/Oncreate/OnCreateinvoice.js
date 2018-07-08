@@ -20,7 +20,7 @@ function OncreateInvoice (sid, soldClothesData) {
 }
 function CrawlTheDAtaArray (sid, crnArray, quantityArray, sizeArray) {
   let promises = []
-  for (let index = 0; index <= crnArray.length; index++) {
+  for (let index = 0; index < crnArray.length; index++) {
     console.log('for loop index = ' + index)
 
     promises.push(FindclothWithCRn(sid, crnArray[index]).then(clothesDoc => {
@@ -29,7 +29,8 @@ function CrawlTheDAtaArray (sid, crnArray, quantityArray, sizeArray) {
       let SizeIndexToBeupdated = MApSizeArray(sizeArray[index])
       let quantityToReduce = quantityArray[index]
       let intialSizeArray = ClothDocDAta.size
-      let intialSize = ClothDocDAta.size[SizeIndexToBeupdated]
+      let intialSize = ClothDocDAta.size[`${sizeArray[index]}`]
+      console.log(ClothDocDAta.size[`${sizeArray[index]}`])
       let reducedSize = intialSize - quantityToReduce
       console.log(reducedSize)
       if (reducedSize < 0) {
@@ -42,6 +43,7 @@ function CrawlTheDAtaArray (sid, crnArray, quantityArray, sizeArray) {
   console.log('end Of FOR LOOP')
   return Promise.all(promises).then(() => console.log('success'))
 }
+
 function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArrayElement) {
   console.log(`${clothId} having ${intialSizeArray} having index ${SizeIndexToBeupdated} value = ${intialSizeArray[SizeIndexToBeupdated]} is reduced to ${reducedSize}`)
   intialSizeArray[SizeIndexToBeupdated] = reducedSize
@@ -51,12 +53,14 @@ function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intia
   console.log(`{size : ${update.size} }`)
 
   return new Promise(resolve => {
-    firestore.collection(`stores/${storeId}/clothes`).doc(`${clothId}`).update(update)
+    GetClothDoc(storeId, clothId).update(update)
     console.log('=======================================END OF OPERATION +++++++++++++++++++')
     resolve()
   })
 }
-
+function GetClothDoc (storeId, clothId) {
+  return firestore.collection(`stores/${storeId}/clothes`).doc(`${clothId}`)
+}
 function MApSizeArray (sizeArrayElement) { // S,M,L,XL,2XL,3XL
   switch (sizeArrayElement) {
     case 'S' : return 0
@@ -81,4 +85,4 @@ function FindclothWithCRn (storeId, crn) {
     })
   })
 }
-CrawlTheDAtaArray(1000, [1, 1, 2, 3], [1, 2, 3, 4], ['XL', 'M', 'L', 'S'])
+CrawlTheDAtaArray(1000, [3], [1], ['XL'])
