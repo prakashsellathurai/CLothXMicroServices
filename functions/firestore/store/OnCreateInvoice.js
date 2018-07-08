@@ -17,7 +17,7 @@ module.exports = functions.firestore
 
 function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
   let promises = []
-  for (let index = 0; index <= crnArray.length; index++) {
+  for (let index = 0; index < crnArray.length; index++) {
     console.log('for loop index = ' + index)
 
     promises.push(FindclothWithCRn(sid, crnArray[index]).then(clothesDoc => {
