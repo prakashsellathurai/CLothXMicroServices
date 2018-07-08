@@ -32,18 +32,18 @@ function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
       if (reducedSize < 0) {
         console.error('size tried to reduce less than 0')
       } else {
-        reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray)
+        reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArray[index])
       }
     }))
   }
   console.log('end Of FOR LOOP')
   return Promise.all(promises).then(() => console.log('success'))
 }
-function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intialSizeArray) {
+function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArrayElement) {
   console.log(`${clothId} having ${intialSizeArray} having index ${SizeIndexToBeupdated} value = ${intialSizeArray[SizeIndexToBeupdated]} is reduced to ${reducedSize}`)
   intialSizeArray[SizeIndexToBeupdated] = reducedSize
-
-  let update = { size: intialSizeArray }
+  let update = {}
+  update[`size.${sizeArrayElement}`] = reducedSize
   console.log(`reduced Size is updateObject is `)
   console.log(`{size : ${update.size} }`)
 
