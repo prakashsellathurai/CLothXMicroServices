@@ -22,21 +22,17 @@ function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
     promises.push(FindclothWithCRn(sid, crnArray[index]).then(clothesDoc => {
       console.log('for loop after index = ' + index)
       let ClothDocDAta = clothesDoc.data()
-      let SizeIndexToBeupdated = MApSizeArray(sizeArray[index])
       let quantityToReduce = quantityArray[index]
-      let intialSizeArray = ClothDocDAta.size
       let intialSize = ClothDocDAta.size[`${sizeArray[index]}`]
       let reducedSize = intialSize - quantityToReduce
       console.log(reducedSize)
-      return (checkReducedSizeINtegrity(reducedSize)) ? console.error('size tried to reduce less than 0') : reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArray[index])
+      return (checkReducedSizeINtegrity(reducedSize)) ? console.error('size tried to reduce less than 0') : reduceStock(sid, clothesDoc.id, reducedSize, sizeArray[index])
     }))
   }
   console.log('end Of FOR LOOP')
   return Promise.all(promises).then(() => console.log('success'))
 }
-function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArrayElement) {
-  console.log(`${clothId} having ${intialSizeArray} having index ${SizeIndexToBeupdated} value = ${intialSizeArray[SizeIndexToBeupdated]} is reduced to ${reducedSize}`)
-  intialSizeArray[SizeIndexToBeupdated] = reducedSize
+function reduceStock (storeId, clothId, reducedSize, sizeArrayElement) {
   let update = {}
   update[`size.${sizeArrayElement}`] = reducedSize
   console.log(`reduced Size is updateObject is `)
@@ -47,17 +43,6 @@ function reduceStock (storeId, clothId, SizeIndexToBeupdated, reducedSize, intia
     console.log('=======================================END OF OPERATION +++++++++++++++++++')
     resolve()
   })
-}
-
-function MApSizeArray (sizeArrayElement) { // S,M,L,XL,2XL,3XL
-  switch (sizeArrayElement) {
-    case 'S' : return 0
-    case 'M' : return 1
-    case 'L' : return 2
-    case 'XL' : return 3
-    case '2XL': return 4
-    case '3Xl' : return 5
-  }
 }
 
 function FindclothWithCRn (storeId, crn) {
