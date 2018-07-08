@@ -29,7 +29,7 @@ function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
       let intialSize = ClothDocDAta.size[SizeIndexToBeupdated]
       let reducedSize = intialSize - quantityToReduce
       console.log(reducedSize)
-      if (reducedSize < 0) {
+      if (reducedSize < 0 || isNaN(reducedSize) || reducedSize === undefined || reducedSize === null) {
         console.error('size tried to reduce less than 0')
       } else {
         reduceStock(sid, clothesDoc.id, SizeIndexToBeupdated, reducedSize, intialSizeArray, sizeArray[index])
