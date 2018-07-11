@@ -10,19 +10,24 @@ var transporter = nodemailer.createTransport({
   }
 })
 function sendmail (toEmail, subject, text, html) {
-  var mailOptions = {
-    from: '<hello@clothx.net>', // sender address (who sends)
-    to: toEmail, // list of receivers (who receives)
-    subject: subject, // Subject line
-    text: text, // plaintext body
-    html: html// html body
-  }
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      return console.log(error)
+  return new Promise(function (resolve, reject) {
+    var mailOptions = {
+      from: '<hello@clothx.net>', // sender address (who sends)
+      to: toEmail, // list of receivers (who receives)
+      subject: subject, // Subject line
+      text: text, // plaintext body
+      html: html// html body
     }
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        reject(error)
+        return console.log(error)
+      }
 
-    console.log('Message sent: ' + info.response)
+      console.log('Message sent: ' + info.response)
+      resolve(info.response)
+    })
   })
 }
+
 module.exports = sendmail
