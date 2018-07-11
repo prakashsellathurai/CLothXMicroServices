@@ -5,6 +5,9 @@ var firestore = admin.firestore()
 function getEmployeeeData (sid, employeeID) {
   return firestore.collection(`stores/${sid}/employees`).doc(`${employeeID}`).get()
 }
+function GetClothDoc (storeId, clothId) {
+  return firestore.collection(`stores/${storeId}/clothes`).doc(`${clothId}`)
+}
 function checkIfEmployeeExist (sid, employeeId) {
   return getEmployeeeData(sid, employeeId).then((employeeDoc) => {
     return (employeeDoc.exists)
@@ -58,7 +61,7 @@ function generateAuthToken (sid, phoneNumber, password, res) {
 }
 function encryptThepasswordOnce (sid, EmployeePhoneNUmber, password) {
   let hashedpassword = cryptoFunctions.hashPassword(password)
-  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword}) 
+  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword})
 }
 function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
   employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
@@ -66,6 +69,9 @@ function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
 }
 function GetOwner (sid) {
   return firestore.collection(`stores/${sid}/employees/`).where('role', '==', 'owner').get()
+}
+function GetClothCollection (storeId) {
+  return firestore.collection(`stores/${storeId}/clothes`).get()
 }
 function saveToken (token) {
   let payload = cryptoFunctions.decryptHash(token)
@@ -85,5 +91,7 @@ module.exports = {
   checkIfEmployeeExist: checkIfEmployeeExist,
   AddEmployee: storeEmployee,
   GetOwner: GetOwner,
-  encryptThePasswordOnCreate: encryptThepasswordOnce
+  encryptThePasswordOnCreate: encryptThepasswordOnce,
+  GetClothCollection: GetClothCollection,
+  GetClothDoc: GetClothDoc
 }

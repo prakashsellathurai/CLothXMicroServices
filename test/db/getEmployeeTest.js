@@ -9,6 +9,18 @@ admin.initializeApp({
 })
 var firestore = admin.firestore()
 function GetOwner (sid) {
-  return firestore.collection(`stores/${sid}/employees/`).where('role', '==', 'owner')
+  return firestore.collection(`stores/${sid}/employees/`).where('role', '==', 'owner').get()
 }
-GetOwner(1000).then(data => console.log(data))
+
+function GetPhoneNumber (storeId) {
+  return GetOwner(storeId)
+}
+function extractDocID (doc) {
+  return doc.docs.forEach(doc => {
+    console.log(doc.id)
+    return doc.id
+  })
+}
+GetOwner(10025).then(doc => extractDocID(doc)).then(val => {
+  console.log(val)
+})

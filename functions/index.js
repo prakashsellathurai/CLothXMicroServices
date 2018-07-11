@@ -2,16 +2,21 @@
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
 try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
-// ======================== firetsore triggers ======================================== //
-const OncreateNewStore = require('./firestore/store/OnCreateNewStore')
-const OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
-const OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
-// +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
-const app = require('./https/Auth/Auth')
-const addEmployee = require('./https/employee/addemployee')
-// ------------------------- cloud function exports ----------------------------------- //
+
+var OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
+var OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
+var app = require('./Auth/Auth')
+var addEmployee = require('./firestore/store/employee/addemployee')
+var OncreateNewStore = require('./firestore/store/OnCreateNewStore')
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
 exports.Login = app
 exports.Addemployee = addEmployee
 exports.OnCreateNewStore = OncreateNewStore
+
+exports.oncreatenewclothes = OncreateNewClothes
+exports.ondeleteclothes = OndeleteClothes
+exports.login = app
+exports.addemployee = addEmployee
+exports.oncreatenewstore = OncreateNewStore
+exports.oncreatenewinvoice = OnCreateNewInvoice
