@@ -1,3 +1,15 @@
+
+var admin = require('firebase-admin')
+
+var serviceAccount = require('../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://clothxnet.firebaseio.com'
+
+})
+var firestore = admin.firestore()
+// ======================================== rest of the app
 var createError = require('http-errors')
 var express = require('express')
 var path = require('path')

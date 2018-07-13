@@ -8,44 +8,48 @@ block content
         h2 Add store Form
       .row
         .col-md-8.order-md-1
-          h4.mb-3 Billing address
-          form.needs-validation(novalidate='',enctype='multipart/form-data',method='POST',action='/submit')
+          form.needs-validation(id='form',novalidate='',method='POST',action='/submit',enctype='multipart/form-data')
             .row
             .mb-3
-                label(for='shopname')
-                | Shop name
-                input#shopname.form-control(type="text", placeholder='', required)
+                label(for='storename')
+                | Store name
+                input#storename.form-control(type="text", placeholder='', required)
                 .invalid-feedback
-                  | shop is required
+                  | store name  is required
             .mb-3
                 label(for='ownername') Owner name
                 input#ownername.form-control(type='text', placeholder='', value='', required)
                 .invalid-feedback
                   | Valid first name is required.
             .mb-3
+                 label(for='mobileno')
+                 | Mobile No
+                 input#mobileno.form-control(type='tel', required)
+                 .invalid-feedback
+                  | mobile no is required
+            .mb-3
                 label(for='email')
                 | Email 
-                span.text-muted (Optional)
                 input#email.form-control(type='email', placeholder='you@example.com'. required)
-              .invalid-feedback
+                .invalid-feedback
                 | Please enter a valid email address for shipping updates.
             .mb-3 
-                 label(for='propriatorname')
+                 label(for='proprietorname')
                  | Propriator Name
-                 input#propriatorname.form-control(type="text", placeholder='')
+                 input#proprietorname.form-control(type="text", placeholder='')
             .mb-3
               label(for='address') Address
               input#address.form-control(type='text', placeholder='1234 Main St', required)
               .invalid-feedback
                 | Please enter your shipping address.
             .row
-              .col-md-5.mb-3
-                label(for='country') Country
-                select#country.custom-select.d-block.w-100(required)
+              .col-md-3.mb-3
+                label(for='district') District
+                select#district.custom-select.d-block.w-100(required)
                   option(value='') Choose...
-                  option India
+                  option coimbatore
                 .invalid-feedback
-                  | Please select a valid country.
+                  | Please provide a valid state.
               .col-md-4.mb-3
                 label(for='state') State
                 select#state.custom-select.d-block.w-100(required)
@@ -53,17 +57,20 @@ block content
                   option tamil nadu
                 .invalid-feedback
                   | Please provide a valid state.
-              .col-md-3.mb-3
+              .col-md-5.mb-3
+                label(for='country') Country
+                select#country.custom-select.d-block.w-100(required)
+                  option(value='') Choose...
+                  option India
+                .invalid-feedback
+                  | Please select a valid country.
+
+            .mb-3
                 label(for='zip') Zip
                 input#zip.form-control(type='text', placeholder='', required)
                 .invalid-feedback
                   | Zip code required.
-            .mb-3
-                 label(for='mobileno')
-                 | Mobile No
-                 input#mobileno.form-control(type='tel', required)
-                 .invalid-feedback
-                  | mobile no is required
+
             .mb-3
                  label(for='panno')
                  | Pan no
@@ -88,24 +95,41 @@ block content
                  label(for='noofusersrequired')
                  | Required No of users
                  input#noofusersrequired.form-control(type='number')
-            .mb-3
-                 label(for='coordinates')
-                 input#coordinates.btn.btn-primary.btn-lg.btn-block.form-control(type="button", onclick='getLocation()', value="set position")  
-                 p(id='geoloc')
-                 script.
-                    var x = document.getElementById("geoloc");
-                    function getLocation() {
-                    if (navigator.geolocation) {
-                    navigator.geolocation.watchPosition(showPosition);
-                    } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";}
-                    }
-                    function showPosition(position) {
-                      console.log(noofusersrequired)
-                    x.innerHTML="Latitude: " + position.coords.latitude +
-                    "<br>Longitude: " + position.coords.longitude;
-                    }
-            button.btn.btn-primary.btn-lg.btn-block(type='submit') Submit
+            style.
+                .thumb {
+                height: 75px;
+                border: 1px solid #000;
+                margin: 10px 5px 0 0;
+                }
+            input#files(type='file', name='files[]', multiple='')
+              output#list
+              script.
+                function handleFileSelect(evt) {
+                var files = evt.target.files; // FileList object
+                // Loop through the FileList and render image files as thumbnails.
+                for (var i = 0, f; f = files[i]; i++) {
+                // Only process image files.
+                if (!f.type.match('image.*')) {
+                continue;
+                }
+                var reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                return function(e) {
+                // Render thumbnail.
+                var span = document.createElement('span');
+                span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                '" title="', escape(theFile.name), '"/>'].join('');
+                document.getElementById('list').insertBefore(span, null);
+                };
+                })(f);
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+                }
+                }
+                document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+            input#submit.btn.btn-primary.btn-lg.btn-block(type='submit',value='Submit')
       footer.my-5.pt-5.text-muted.text-center.text-small
         p.mb-1 © 2017-2018 Company Name
         ul.list-inline

@@ -18,7 +18,7 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.urlencoded({
   extended: true
 }))
-
+app.use(bodyParser.json())
 app.post('', (req, res) => signupRequestHandler(req, res))
 app.post('/', (req, res) => signupRequestHandler(req, res))
 
@@ -33,6 +33,7 @@ function signupRequestHandler (req, res) {
   let postedData = ParsereqHeader(req)
   let OwnerInfo = ParseOwnerInfo(postedData)
   console.log(JSON.parse(JSON.stringify(req.body)))
+  console.log(postedData)
   /*
   return CountSize().then(count => {
     count = (req.body.regno) ? req.body.regno : count
