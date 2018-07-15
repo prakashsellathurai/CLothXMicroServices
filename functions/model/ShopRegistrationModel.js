@@ -1,0 +1,23 @@
+module.exports = {
+  storename: '',
+  ownername: '',
+  ownermobileno: '',
+  email: '',
+  proprietorname: '',
+  address: '',
+  country: '',
+  state: '',
+  district: '',
+  zip: '',
+  panno: '',
+  shopcontactno: '',
+  regno: '',
+  numberofbranches: '',
+  monthlyrevenue: '',
+  noofworkers: '',
+  noofusers: '',
+  verificationstatus: '',
+  createdat: '',
+  uploads: '',
+  coordinates: ''
+}
