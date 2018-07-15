@@ -81,7 +81,72 @@ function saveToken (token) {
     return getEmployeeeData(sid, phoneNumber)
   })
 }
-
+// ===================================================================== storeIndex related routines===========================================
+function CountSize () {
+  return GetStoreIndex().then(snap => {
+    if (snap.exists) return snap.data().storesCount
+    else {
+      return IntiatiateStoreIndex().then((snap) => {
+        return GetStoreIndex().then((snap) => snap.data().storesCount)
+      })
+    }
+  })
+}
+function IncStoreIndex () {
+  return CountSize().then(count => {
+    return firestore.collection('DbIndex').doc('stores').update({ storesCount: count + 1 })
+  })
+}
+function DecStoreIndex () {
+  return CountSize().then(count => {
+    return firestore.collection('DbIndex').doc('stores').update({ storesCount: count - 1 })
+  })
+}
+function GetStoreIndex () {
+  return firestore.collection('DbIndex').doc('stores').get()
+}
+function IntiatiateStoreIndex () {
+  return firestore.collection('DbIndex').doc('stores').set({ storesCount: 1000 }).then(() => { return 1000 })
+}
+// ======================================================END OF STORE INDEX ROUTINES ======================================
+// =======================================================db functions for store add / employee add ====================
+function createEmployee (sid, employeeDAta) {
+  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(RemoveUndefinedValues(employeeDAta))
+}
+function createStore (sid, postedData) {
+  postedData['sid'] = sid
+  return firestore.collection('stores').doc(`${sid}`).set(RemoveUndefinedValues(postedData))
+}
+function RemoveUndefinedValues (obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+function storeQueryBySid (sid) {
+  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
+    let promises = []
+    if (val.empty) {
+      return Promise.resolve([1000])
+    } else {
+      val.docs.forEach(doc => {
+        promises.push(doc.id)
+      })
+      return Promise.all(promises)
+    }
+  })
+}
+function checkIfsidExist (sid) {
+  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
+    let promises = []
+    val.docs.forEach(doc => {
+      promises.push(doc.id)
+    })
+    return Promise.all(promises)
+  }).then(arr => {
+    return arr.length > 0
+  })
+}
+function addstorelog (uuid, doc) {
+  return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
+}
 module.exports = {
   generateAuthToken: generateAuthToken,
   savetoken: saveToken,
@@ -93,5 +158,13 @@ module.exports = {
   GetOwner: GetOwner,
   encryptThePasswordOnCreate: encryptThepasswordOnce,
   GetClothCollection: GetClothCollection,
-  GetClothDoc: GetClothDoc
+  GetClothDoc: GetClothDoc,
+  createStore: createStore,
+  createEmployee: createEmployee,
+  IncStoreIndex: IncStoreIndex,
+  DecStoreIndex: DecStoreIndex,
+  storeQueryBySid: storeQueryBySid,
+  checkIfsidExist: checkIfsidExist,
+  CountSize: CountSize,
+  addstorelog: addstorelog
 }

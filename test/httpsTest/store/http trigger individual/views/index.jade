@@ -1,0 +1,132 @@
+.container
+      .py-5.text-center
+        img.d-block.mx-auto.mb-4(src='https://www.clothx.net/assets/images/logo.png', alt='', width='72', height='72')
+        h2 Add store Form
+      .row
+        .col-md-8.order-md-1
+          form.needs-validation(id='form',novalidate='',method='POST',action='/submit',enctype='multipart/form-data')
+            .row
+            .mb-3
+                label(for='storename')
+                | Store name
+                input#storename.form-control(type="text", placeholder='', required)
+                .invalid-feedback
+                  | store name  is required
+            .mb-3
+                label(for='ownername') Owner name
+                input#ownername.form-control(type='text', placeholder='', value='', required)
+                .invalid-feedback
+                  | Valid first name is required.
+            .mb-3
+                 label(for='mobileno')
+                 | Mobile No
+                 input#mobileno.form-control(type='tel', required)
+                 .invalid-feedback
+                  | mobile no is required
+            .mb-3
+                label(for='email')
+                | Email 
+                input#email.form-control(type='email', placeholder='you@example.com'. required)
+                .invalid-feedback
+                | Please enter a valid email address for shipping updates.
+            .mb-3 
+                 label(for='proprietorname')
+                 | Propriator Name
+                 input#proprietorname.form-control(type="text", placeholder='')
+            .mb-3
+              label(for='address') Address
+              input#address.form-control(type='text', placeholder='1234 Main St', required)
+              .invalid-feedback
+                | Please enter your shipping address.
+            .row
+              .col-md-3.mb-3
+                label(for='district') District
+                select#district.custom-select.d-block.w-100(required)
+                  option(value='') Choose...
+                  option coimbatore
+                .invalid-feedback
+                  | Please provide a valid state.
+              .col-md-4.mb-3
+                label(for='state') State
+                select#state.custom-select.d-block.w-100(required)
+                  option(value='') Choose...
+                  option tamil nadu
+                .invalid-feedback
+                  | Please provide a valid state.
+              .col-md-5.mb-3
+                label(for='country') Country
+                select#country.custom-select.d-block.w-100(required)
+                  option(value='') Choose...
+                  option India
+                .invalid-feedback
+                  | Please select a valid country.
+
+            .mb-3
+                label(for='zip') Zip
+                input#zip.form-control(type='text', placeholder='', required)
+                .invalid-feedback
+                  | Zip code required.
+
+            .mb-3
+                 label(for='panno')
+                 | Pan no
+                 input#panno.form-control(type="text")
+            .mb-3
+                 label(for='noofbranches')
+                 | No of  branches 
+                 input#noofbranches.form-control(type="number")
+            .mb-3
+                 label(for='shopcontactno')
+                 | Shop contact no
+                 input#shopcontactno.form-control(type='tel')
+            .mb-3
+                 label(for='monthlyrevenue')
+                 | Approx Mothly Revenue
+                 input#monthlyrevenue.form-control(type='number')
+            .mb-3
+                 label(for='noofworkers')
+                 | No of workers
+                 input#noofworkers.form-control(type='number')
+            .mb-3
+                 label(for='noofusersrequired')
+                 | Required No of users
+                 input#noofusersrequired.form-control(type='number')
+            input#submit.btn.btn-primary.btn-lg.btn-block(type='submit',value='Submit')
+      footer.my-5.pt-5.text-muted.text-center.text-small
+        p.mb-1 © 2017-2018 Company Name
+        ul.list-inline
+          li.list-inline-item
+            a(href='#') Privacy
+          li.list-inline-item
+            a(href='#') Terms
+          li.list-inline-item
+            a(href='#') Support
+    //
+      Bootstrap core JavaScript
+      ==================================================
+    // Placed at the end of the document so the pages load faster
+    script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+    script(src='/javascripts/main.js')
+    script.
+      window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\\/script>')
+    script.
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+      }, false);
+      });
+      }, false);
+      })();
+
+

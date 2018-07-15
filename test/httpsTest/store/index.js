@@ -1,52 +1,101 @@
-var admin = require('firebase-admin')
-var functions = require('firebase-functions')
-var firestore = admin.firestore()
-var SHA256 = require('crypto-js/sha256')
 
+var admin = require('firebase-admin')
+
+var serviceAccount = require('../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://clothxnet.firebaseio.com'
+
+})
+var SHA256 = require('../../../functions/node_modules/crypto-js/sha256')
+var firestore = admin.firestore()
+var bodyParser = require('body-parser')
 const express = require('express')
+const cors = require('cors')
 const app = express()
+app.use(cors({ origin: true }))
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+app.use(bodyParser.json())
 app.post('', (req, res) => signupRequestHandler(req, res))
 app.post('/', (req, res) => signupRequestHandler(req, res))
 
-module.exports = functions.https.onRequest(app)
+app.listen(8080, console.log('listening on 8080'))
+// creator note destroy the DbIndex to start from zero
+// module.exports = functions.https.onRequest(app)
 // request handler
 // ###############################################################################################
 // ++++++++++++++++++++++++++++++CORE HANDLER+++++====================================+
+
 function signupRequestHandler (req, res) {
   let postedData = ParsereqHeader(req)
   let OwnerInfo = ParseOwnerInfo(postedData)
+  console.log(JSON.parse(JSON.stringify(req.body)))
+  console.log(postedData)
+  /*
   return CountSize().then(count => {
-    count = (req.headers.regno) ? req.headers.regno : count
-    return createStore(count, postedData).then(() => {
-      return createEmployee(count, OwnerInfo).then((val) => {
-        return IncStoreIndex().then((val) => res.json({msg: 'StoreADDED SUCCESFULLY'}))
-      })
+    count = (req.body.regno) ? req.body.regno : count
+    return checkIfsidExist(count).then(val => {
+      if (!val) {
+        return createStore(count, postedData).then(() => {
+          return createEmployee(count, OwnerInfo).then((val) => {
+            return IncStoreIndex().then((val) => res.json({msg: 'StoreADDED SUCCESFULLY'}))
+          })
+        })
+      } else {
+        res.json({msg: 'store id already exist'})
+      }
     })
+  }) */
+}
+
+function storeQueryBySid (sid) {
+  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
+    let promises = []
+    if (val.empty) {
+      return Promise.resolve([1000])
+    } else {
+      val.docs.forEach(doc => {
+        promises.push(doc.id)
+      })
+      return Promise.all(promises)
+    }
+  })
+}
+
+function checkIfsidExist (sid) {
+  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
+    let promises = []
+    val.docs.forEach(doc => {
+      promises.push(doc.id)
+    })
+    return Promise.all(promises)
+  }).then(arr => {
+    return arr.length > 0
   })
 }
 // 000000000000000000000000000000000 REQUEST PARSER =======================================================
 function ParsereqHeader (req) {
   return {
-    email: req.headers.email,
-    mobileNo: req.headers.mobileno,
+    email: req.body.email,
+    mobileNo: req.body.ownermobileno,
     ownerPassword: Math.random().toString(36).slice(-8),
-    ownerName: req.headers.ownername,
-    propriatorName: req.headers.propriatorname,
-    storeName: req.headers.storename,
-    address: req.headers.address,
+    ownerName: req.body.ownername,
+    propriatorName: req.body.propriatorname,
+    storeName: req.body.storename,
+    address: req.body.address,
     createdAt: new Date(),
-    monthlyRevenue: req.headers.monthlyrevenue,
-    contactNo: req.headers.contactno,
-    noOfUsersRequired: req.headers.noofusersrequired,
-    noOfWorkersRequired: req.headers.noofworkersrequired,
-    noOfBranches: req.headers.noofbranches,
-    panNo: req.headers.panno,
-    regNo: req.headers.regno,
-
-    uploads: {
-      imagesPath: req.headers.imagespath,
-      logoPath: req.headers.logopath
-    }
+    monthlyRevenue: req.body.monthlyrevenue,
+    contactNo: req.body.contactno,
+    noOfUsers: req.body.noofusers,
+    noOfWorkers: req.body.noofworkers,
+    noOfBranches: req.body.noofbranches,
+    panNo: req.body.panno,
+    regNo: req.body.regno,
+    coordinates: req.body.coordinates,
+    uploads: req.body.uploads
   }
 }
 function ParseOwnerInfo (postedData) {
@@ -88,12 +137,12 @@ function IntiatiateStoreIndex () {
 // ======================================================END OF STORE INDEX ROUTINES ======================================
 // =======================================================db functions for store add / employee add ====================
 function createEmployee (sid, employeeDAta) {
-  return firestore.collection(`stores/${sid}/employee`).doc(`${employeeDAta.mobileNo}`).set(RemoveUndefinedValues(employeeDAta))
+  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(RemoveUndefinedValues(employeeDAta))
 }
 function createStore (sid, postedData) {
+  postedData['sid'] = sid
   return firestore.collection('stores').doc(`${sid}`).set(RemoveUndefinedValues(postedData))
 }
 function RemoveUndefinedValues (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
-
