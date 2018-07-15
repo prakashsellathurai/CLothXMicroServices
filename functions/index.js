@@ -10,7 +10,7 @@ var OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
 // +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
 const app = require('./http/Auth/Auth')
 const addEmployee = require('./http/employee/addemployee')
-const addstore = require('./http/store/addStore')
+const addstore = require('./http/store/ADD_STORE/index')
 // ------------------------- cloud function exports ----------------------------------- //
 exports.login = app
 exports.addemployee = addEmployee

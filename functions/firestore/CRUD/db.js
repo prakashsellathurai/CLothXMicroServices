@@ -144,6 +144,9 @@ function checkIfsidExist (sid) {
     return arr.length > 0
   })
 }
+function addstorelog (uuid, doc) {
+  return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
+}
 module.exports = {
   generateAuthToken: generateAuthToken,
   savetoken: saveToken,
@@ -162,5 +165,6 @@ module.exports = {
   DecStoreIndex: DecStoreIndex,
   storeQueryBySid: storeQueryBySid,
   checkIfsidExist: checkIfsidExist,
-  CountSize: CountSize
+  CountSize: CountSize,
+  addstorelog: addstorelog
 }
