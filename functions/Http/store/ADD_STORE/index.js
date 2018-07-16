@@ -10,13 +10,13 @@ const helmet = require('helmet')
 // debug
 const os = require('os')
 const fs = require('fs')
+const tmpdir = os.tmpdir()
 
 const dbFun = require('../../../firestore/CRUD/db')
 // ##################################################################
-const gcloud = require('@google-cloud/storage')({
-  projectId: 'clothxnet',
-  keyFilename: './../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json'
-})
+const gcloud = require('@google-cloud/storage')(
+  { projectId: 'clothxnet' }
+)
 const bucket = gcloud.bucket('clothxnet.appspot.com')
 // #########################################################################3
 // Automatically allow cross-origin requests
@@ -38,11 +38,18 @@ module.exports = functions.https.onRequest(app)
 function SubmitHandler (req, res) {
   const uuid = makeid()
   var storeObj = {}
+  const uploads = {}
   var busboy = new Busboy({ headers: req.headers })
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
     var location = `logs/AddStoreLogs/${uuid}/${fieldname}/${filename}`
     addUpload(storeObj, `${fieldname}`, location)
+    // Note: os.tmpdir() points to an in-memory file system on GCF
+    // Thus, any files in it must fit in the instance's memory.
+    console.log(`Processed file ${filename}`)
+    const filepath = path.join(tmpdir, filename)
+    uploads[fieldname] = filepath
     var fileStream = bucket.file(location).createWriteStream()
+    // file.pipe(fs.createWriteStream(filepath))
     file.on('data', function (data) {
       fileStream.write(data)
     })
@@ -61,13 +68,19 @@ function SubmitHandler (req, res) {
     storeObj[fieldname] = val
   })
   busboy.on('finish', function () {
-    console.log(req.rawBody)
+    /* for (const name in uploads) {
+      const file = uploads[name]
+      // fs.unlinkSync(file)
+    } */
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
-      console.log(storeObj)
       res.redirect('/addstore/success')
     })
   })
-  req.pipe(busboy)
+  if (req.rawBody) {
+    busboy.end(req.rawBody)
+  } else {
+    req.pipe(busboy)
+  }
 }
 function makeid () {
   var text = ''

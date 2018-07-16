@@ -52,12 +52,18 @@ app.post('/submit', (req, res) => {
   busboy.on('finish', function () {
     return addstorelog(uuid, storeObj).then(ref => {
       console.log(storeObj)
-      res.setHeader('Content-Type', 'text/html')
-      res.sendFile(path.join(__dirname, '/public/success.html'))
+      
+   res.redirect('/success')
       res.end()
     })
   })
-  req.pipe(busboy)
+  if (req.rawBody) {
+    busboy.end(req.rawBody);
+}
+else {
+    req.pipe(busboy);
+}
+ 
 })
 
 app.listen(PORT, console.log('listening on PORT ' + PORT))
