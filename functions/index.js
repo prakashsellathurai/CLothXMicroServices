@@ -8,8 +8,9 @@ const OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
 const OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
 const OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
 // +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
-const app = require('./http/Auth/Auth')
+
 const addEmployee = require('./http/employee/addemployee')
+const app = require('./http/Auth/Auth')
 const addstore = require('./http/store/ADD_STORE/index')
 // ------------------------- cloud function exports ----------------------------------- //
 
