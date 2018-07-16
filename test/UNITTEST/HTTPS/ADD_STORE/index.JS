@@ -14,12 +14,13 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://clothxnet.firebaseio.com'
 })
-
+app.use(express.static(path.join(__dirname, 'public')))
 var firestore = admin.firestore()
 var bucket = gcloud.bucket('clothxnet.appspot.com')
 // #########################################################################3
+app.get('', express.static(path.join(__dirname, 'public')))
 app.get('/', express.static(path.join(__dirname, 'public')))
-app.get('/success', (req, res) => {
+app.use('/success', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/success.html'))
 })
 app.post('/submit', (req, res) => {
@@ -38,28 +39,48 @@ app.post('/submit', (req, res) => {
       fileStream.end()
     })
   })
-  busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+  busboy.on('field', function (
+    fieldname,
+    val,
+    fieldnameTruncated,
+    valTruncated,
+    encoding,
+    mimetype
+  ) {
     storeObj[fieldname] = val
   })
   busboy.on('finish', function () {
     return addstorelog(uuid, storeObj).then(ref => {
       console.log(storeObj)
-      res.redirect('/success')
+      
+   res.redirect('/success')
       res.end()
     })
   })
-  req.pipe(busboy)
+  if (req.rawBody) {
+    busboy.end(req.rawBody);
+}
+else {
+    req.pipe(busboy);
+}
+ 
 })
 
 app.listen(PORT, console.log('listening on PORT ' + PORT))
 function makeid () {
   var text = ''
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (var i = 0; i < 10; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
+  var possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  for (var i = 0; i < 10; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
   return text
 }
 function addstorelog (uuid, doc) {
-  return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
+  return firestore
+    .collection('/DbIndex/stores/addstorelog')
+    .doc(uuid)
+    .set(RemoveUndefinedValues(doc))
 }
 function RemoveUndefinedValues (obj) {
   return JSON.parse(JSON.stringify(obj))
@@ -67,7 +88,8 @@ function RemoveUndefinedValues (obj) {
 function addUpload (obj, key, value) {
   if (!obj.hasOwnProperty(key)) {
     obj[key] = []
-  } if (!Array.isArray(obj[key])) {
+  }
+  if (!Array.isArray(obj[key])) {
     obj[key] = [obj[key]]
   }
   obj[key].push(value)

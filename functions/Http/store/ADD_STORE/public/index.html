@@ -14,6 +14,7 @@
     <link href="./assets/css/ie10-workaround.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
         crossorigin="anonymous">
+        <base href="https://us-central1-clothxnet.cloudfunctions.net/addstore">
 </head>
 
 <div class="container">
@@ -23,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 order-md-1">
-            <form  class="needs-validation" novalidate   name="form" method="POST" action="/submit" enctype="multipart/form-data">
+            <form  class="needs-validation" novalidate   name="form" method="POST" action="/addstore/submit" enctype="multipart/form-data">
                 <div class="row"></div>
                 <div class="mb-3">
                     <label for="storename"></label>Store name
@@ -33,7 +34,7 @@
                 <div class="mb-3">
                     <label for="ownername">Owner name</label>
                     <input class="form-control" name="ownername" type="text" placeholder="" value="" required />
-                    <div class="invalid-feedback">Valid first name is required.</div>
+                    <div class="invalid-feedback">Valid  name is required.</div>
                 </div>
                 <div class="mb-3">
                     <label for="mobileno"></label>Mobile No
@@ -43,7 +44,7 @@
                 <div class="mb-3">
                     <label for="email"></label>Email
                     <input class="form-control" name="email" type="email" />
-                    <div class="invalid-feedback">Please enter a valid email address for shipping updates.</div>
+                    <div class="invalid-feedback">Please enter a valid email address for  updates.</div>
                 </div>
                 <div class="mb-3">
                     <label for="proprietorname"></label>Propriator Name
@@ -52,7 +53,7 @@
                 <div class="mb-3">
                     <label for="address">Address</label>
                     <input class="form-control" name="address" type="text" placeholder="1234 Main St" required />
-                    <div class="invalid-feedback">Please enter your shipping address.</div>
+                    <div class="invalid-feedback">Please enter your  address.</div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 mb-3">
