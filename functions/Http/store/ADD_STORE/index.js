@@ -7,6 +7,10 @@ const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
 
+// debug
+const os = require('os')
+const fs = require('fs')
+
 const dbFun = require('../../../firestore/CRUD/db')
 // ##################################################################
 const gcloud = require('@google-cloud/storage')({
@@ -21,13 +25,14 @@ app.use(cors({ origin: true }))
 app.use(compression())
 // use helmet for safety
 app.use(helmet())
-
+app.use(express.static(path.join(__dirname, 'public')))
 app.get('/', express.static(path.join(__dirname, 'public')))
 app.get('/success', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/success.html'))
 )
 app.post('/submit', (req, res) => SubmitHandler(req, res))
 
+app.post('/mocktest', (req, res) => mockHAndler(req, res))
 module.exports = functions.https.onRequest(app)
 // ######################################################################################
 function SubmitHandler (req, res) {
@@ -56,10 +61,10 @@ function SubmitHandler (req, res) {
     storeObj[fieldname] = val
   })
   busboy.on('finish', function () {
+    console.log(req.rawBody)
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
       console.log(storeObj)
-      res.redirect('/success')
-      res.end()
+      res.redirect('/addstore/success')
     })
   })
   req.pipe(busboy)
@@ -81,4 +86,49 @@ function addUpload (obj, key, value) {
     obj[key] = [obj[key]]
   }
   obj[key].push(value)
+}
+// ########################################################################### mock hanlder for debugging ###################################
+function mockHAndler (req, res) {
+  if (req.method === 'POST') {
+    const busboy = new Busboy({ headers: req.headers })
+    const tmpdir = os.tmpdir()
+
+    // This object will accumulate all the fields, keyed by their name
+    const fields = {}
+
+    // This object will accumulate all the uploaded files, keyed by their name.
+    const uploads = {}
+
+    // This code will process each non-file field in the form.
+    busboy.on('field', (fieldname, val) => {
+      // TODO(developer): Process submitted field values here
+      console.log(`Processed field ${fieldname}: ${val}.`)
+      fields[fieldname] = val
+    })
+
+    // This code will process each file uploaded.
+    busboy.on('file', (fieldname, file, filename) => {
+      // Note: os.tmpdir() points to an in-memory file system on GCF
+      // Thus, any files in it must fit in the instance's memory.
+      console.log(`Processed file ${filename}`)
+      const filepath = path.join(tmpdir, filename)
+      uploads[fieldname] = filepath
+      file.pipe(fs.createWriteStream(filepath))
+    })
+
+    // This event will be triggered after all uploaded files are saved.
+    busboy.on('finish', () => {
+      // TODO(developer): Process uploaded files here
+      for (const name in uploads) {
+        const file = uploads[name]
+        fs.unlinkSync(file)
+      }
+      res.send()
+    })
+
+    req.pipe(busboy)
+  } else {
+    // Return a "method not allowed" error
+    res.status(405).end()
+  }
 }
