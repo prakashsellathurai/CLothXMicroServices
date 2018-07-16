@@ -6,14 +6,16 @@ try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
 const OncreateNewStore = require('./firestore/store/OnCreateNewStore')
 const OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
 const OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
-var OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
+const OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
 // +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
 const app = require('./http/Auth/Auth')
 const addEmployee = require('./http/employee/addemployee')
 const addstore = require('./http/store/ADD_STORE/index')
 // ------------------------- cloud function exports ----------------------------------- //
-exports.login = app
+
 exports.addemployee = addEmployee
+exports.login = app
+
 exports.addstore = addstore
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
