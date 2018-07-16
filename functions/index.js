@@ -1,17 +1,17 @@
 
-const admin = require('firebase-admin')
-const functions = require('firebase-functions')
+var admin = require('firebase-admin')
+var functions = require('firebase-functions')
 try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
 // ======================== firetsore triggers ======================================== //
-const OncreateNewStore = require('./firestore/store/OnCreateNewStore')
-const OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
-const OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
-const OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
+var OncreateNewStore = require('./firestore/store/OnCreateNewStore')
+var OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes')
+var OndeleteClothes = require('./firestore/clothes/OnDeleteClothes')
+var OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice')
 // +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
 
-const addEmployee = require('./http/employee/addemployee')
-const app = require('./http/Auth/Auth')
-const addstore = require('./http/store/ADD_STORE/index')
+var addEmployee = require('./http/employee/addemployee')
+var app = require('./http/Auth/Auth')
+var addstore = require('./http/store/ADD_STORE/index')
 // ------------------------- cloud function exports ----------------------------------- //
 
 exports.addemployee = addEmployee
