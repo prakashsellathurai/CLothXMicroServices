@@ -1,6 +1,6 @@
 const functions = require('firebase-functions')
 const express = require('express')
-const app = express()
+const addstore = express()
 const path = require('path')
 const Busboy = require('busboy')
 const compression = require('compression')
@@ -20,20 +20,20 @@ const gcloud = require('@google-cloud/storage')(
 const bucket = gcloud.bucket('clothxnet.appspot.com')
 // #########################################################################3
 // Automatically allow cross-origin requests
-app.use(cors({ origin: true }))
+addstore.use(cors({ origin: true }))
 // allow gzip compression
-app.use(compression())
+addstore.use(compression())
 // use helmet for safety
-app.use(helmet())
-app.use(express.static(path.join(__dirname, 'public')))
-app.get('/', express.static(path.join(__dirname, 'public')))
-app.get('/success', (req, res) =>
+addstore.use(helmet())
+addstore.use(express.static(path.join(__dirname, 'public')))
+addstore.get('/', express.static(path.join(__dirname, 'public')))
+addstore.get('/success', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/success.html'))
 )
-app.post('/submit', (req, res) => SubmitHandler(req, res))
+addstore.post('/submit', (req, res) => SubmitHandler(req, res))
 
-app.post('/mocktest', (req, res) => mockHAndler(req, res))
-module.exports = functions.https.onRequest(app)
+addstore.post('/mocktest', (req, res) => mockHAndler(req, res))
+module.exports = functions.https.onRequest(addstore)
 // ######################################################################################
 function SubmitHandler (req, res) {
   const uuid = makeid()
