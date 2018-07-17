@@ -18,7 +18,6 @@ exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
 exports.OnCreateNewStore = OncreateNewStore
 exports.oncreatenewinvoice = OnCreateNewInvoice
-exports.addemployee = addEmployee
 exports.login = app
-
+exports.addemployee = addEmployee
 exports.addstore = addstore
