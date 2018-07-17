@@ -14,7 +14,7 @@
     <link href="./assets/css/ie10-workaround.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
         crossorigin="anonymous">
-        <base href="https://us-central1-clothxnet.cloudfunctions.net/addstore">
+    <base href="https://us-central1-clothxnet.cloudfunctions.net/addstore">
 </head>
 
 <div class="container">
@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 order-md-1">
-            <form  class="needs-validation" novalidate   name="form" method="POST" action="/addstore/submit" enctype="multipart/form-data">
+            <form class="needs-validation" novalidate name="form" method="POST" action="/addstore/submit" enctype="multipart/form-data">
                 <div class="row"></div>
                 <div class="mb-3">
                     <label for="storename"></label>Store name
@@ -34,26 +34,30 @@
                 <div class="mb-3">
                     <label for="ownername">Owner name</label>
                     <input class="form-control" name="ownername" type="text" placeholder="" value="" required />
-                    <div class="invalid-feedback">Valid  name is required.</div>
+                    <div class="invalid-feedback">Valid name is required.</div>
                 </div>
                 <div class="mb-3">
                     <label for="mobileno"></label>Mobile No
-                    <input class="form-control" name="mobileno" type="tel" required />
+                    <input class="form-control" name="ownermobileno" type="tel" required />
                     <div class="invalid-feedback">mobile no is required</div>
                 </div>
                 <div class="mb-3">
                     <label for="email"></label>Email
                     <input class="form-control" name="email" type="email" />
-                    <div class="invalid-feedback">Please enter a valid email address for  updates.</div>
+                    <div class="invalid-feedback">Please enter a valid email address for updates.</div>
                 </div>
                 <div class="mb-3">
                     <label for="proprietorname"></label>Propriator Name
                     <input class="form-control" name="proprietorname" type="text" placeholder="" />
                 </div>
                 <div class="mb-3">
+                    <label for="storetype"></label>Store Type
+                    <input class="form-control" name="storetype" type="text" />
+                </div>
+                <div class="mb-3">
                     <label for="address">Address</label>
                     <input class="form-control" name="address" type="text" placeholder="1234 Main St" required />
-                    <div class="invalid-feedback">Please enter your  address.</div>
+                    <div class="invalid-feedback">Please enter your address.</div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 mb-3">
@@ -92,7 +96,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="noofbranches"></label>No of branches
-                    <input class="form-control" name="noofbranches" type="number" />
+                    <input class="form-control" name="numberofbranches" type="number" />
                 </div>
                 <div class="mb-3">
                     <label for="shopcontactno"></label>Shop contact no
@@ -102,6 +106,7 @@
                     <label for="monthlyrevenue"></label>Approx Mothly Revenue
                     <input class="form-control" name="monthlyrevenue" type="number" />
                 </div>
+
                 <div class="mb-3">
                     <label for="noofworkers"></label>No of workers
                     <input class="form-control" name="noofworkers" type="number" />
@@ -120,151 +125,151 @@
                     <input class="form-control" name="images" id="images" type="file" multiple/>
                     <output id="list"></output>
                 </div>
-                <input class="btn btn-primary btn-lg btn-block" id="submit"type="submit" />
+                <input class="btn btn-primary btn-lg btn-block" id="submit" type="submit" />
             </form>
         </div>
     </div>
 </div>
 <script>
     function handleFileSelect(evt) {
-    var files = evt.target.files;
+        var files = evt.target.files;
 
-    // Loop through the FileList and render image files as thumbnails.
-    for (var i = 0, f; f = files[i]; i++) {
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
 
-      // Only process image files.
-      if (!f.type.match('image.*')) {
-        continue;
-      }
+            // Only process image files.
+            if (!f.type.match('image.*')) {
+                continue;
+            }
 
-      var reader = new FileReader();
+            var reader = new FileReader();
 
-      // Closure to capture the file information.
-      reader.onload = (function(theFile) {
-        return function(e) {
-          // Render thumbnail.
-          var span = document.createElement('span');
-          span.innerHTML = 
-          [
-            '<div class="row text-center text-lg-left">'+
-            '<div class="col-lg-3 col-md-4 col-xs-6">'+
-                    '<span onclick="removeImage(this);"  class="close">&times;</span>'+
-                        '<img  class=" img-responsive " style="height: 75px; width: 150px; border: 1px solid #000; margin: 5px" src="'+ 
-            e.target.result,
-            '" title="', escape(theFile.name), 
-            '"/>'+
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    // Render thumbnail.
+                    var span = document.createElement('span');
+                    span.innerHTML =
+                        [
+                            '<div class="row text-center text-lg-left">' +
+                            '<div class="col-lg-3 col-md-4 col-xs-6">' +
+                            '<span onclick="removeImage(this);"  class="close">&times;</span>' +
+                            '<img  class=" img-responsive " style="height: 75px; width: 150px; border: 1px solid #000; margin: 5px" src="' +
+                            e.target.result,
+                            '" title="', escape(theFile.name),
+                            '"/>' +
 
-            '</div>'+
-            '</div>'
-          ].join('');
-          
-          document.getElementById('list').insertBefore(span, null);
-        };
-      })(f);
+                            '</div>' +
+                            '</div>'
+                        ].join('');
 
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(f);
+                    document.getElementById('list').insertBefore(span, null);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
     }
-  }
 
-  document.getElementById('images').addEventListener('change', handleFileSelect, false);
+    document.getElementById('images').addEventListener('change', handleFileSelect, false);
 </script>
 <script>
-    
+
     function handlelogoSelect(evt) {
-    var files = evt.target.files;
+        var files = evt.target.files;
 
-    // Loop through the FileList and render image files as thumbnails.
-    for (var i = 0, f; f = files[i]; i++) {
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
 
-      // Only process image files.
-      if (!f.type.match('image.*')) {
-        continue;
-      }
-
-      var reader = new FileReader();
-
-      // Closure to capture the file information.
-      reader.onload = (function(theFile) {
-        return function(e) {
-          // Render thumbnail.
-          var span = document.createElement('span');
-          span.innerHTML = 
-          [
-            '<div class="row text-center text-lg-left">'+
-            '<div class="col-lg-3 col-md-4 col-xs-6">'+
-                    '<span onclick="removeImage(this);" class="close">&times;</span>'+
-                        '<img  class=" img-responsive " style="height: 75px; width: 150px; border: 1px solid #000; margin: 5px" src="'+ 
-            e.target.result,
-            '" title="', escape(theFile.name), 
-            '"/>'+
-
-            '</div>'+
-            '</div>'
-          ].join('');
-          document.getElementById('logolist').insertBefore(span, null);
-        };
-      })(f);
-
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(f);
-    }
-  }
-  document.getElementById('logo').addEventListener('change', handlelogoSelect, false);
-  function removeElement(elementId) {
-    // Removes an element from the document
-    var element = document.getElementById(elementId);
-    element.parentNode.removeChild(element);
-}
-function removeImage(el){
-  var title =  $(el).next().attr('title')
-  var logo = document.getElementById('logo').files[0].name;
-  var images = []
-  let array =  document.getElementById('images').files
-
-  for(let index = 0; index < array.length; index++) {
-      const element = array[index];
-         if(element === title ) {
-          console.log(element.name)
-      }
-  }
-
-  if (title === logo) {
-    document.getElementById('logo')
-  } 
-
-  console.log(title.toString())
-   $(el).next().remove()
-    $(el).prev().remove()
-        $(el).remove()
-}
-function handleclick(evt){
-    confirm('click ok to submit')
-} 
-document.getElementById('submit').addEventListener('click', handleclick, false);
-</script>
- <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function() {
-      'use strict';
-
-      window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
+            // Only process image files.
+            if (!f.type.match('image.*')) {
+                continue;
             }
-            form.classList.add('was-validated');
-          }, false);
-        });
-      }, false);
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    // Render thumbnail.
+                    var span = document.createElement('span');
+                    span.innerHTML =
+                        [
+                            '<div class="row text-center text-lg-left">' +
+                            '<div class="col-lg-3 col-md-4 col-xs-6">' +
+                            '<span onclick="removeImage(this);" class="close">&times;</span>' +
+                            '<img  class=" img-responsive " style="height: 75px; width: 150px; border: 1px solid #000; margin: 5px" src="' +
+                            e.target.result,
+                            '" title="', escape(theFile.name),
+                            '"/>' +
+
+                            '</div>' +
+                            '</div>'
+                        ].join('');
+                    document.getElementById('logolist').insertBefore(span, null);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    }
+    document.getElementById('logo').addEventListener('change', handlelogoSelect, false);
+    function removeElement(elementId) {
+        // Removes an element from the document
+        var element = document.getElementById(elementId);
+        element.parentNode.removeChild(element);
+    }
+    function removeImage(el) {
+        var title = $(el).next().attr('title')
+        var logo = document.getElementById('logo').files[0].name;
+        var images = []
+        let array = document.getElementById('images').files
+
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            if (element === title) {
+                console.log(element.name)
+            }
+        }
+
+        if (title === logo) {
+            document.getElementById('logo')
+        }
+
+        console.log(title.toString())
+        $(el).next().remove()
+        $(el).prev().remove()
+        $(el).remove()
+    }
+    function handleclick(evt) {
+        confirm('click ok to submit')
+    }
+    document.getElementById('submit').addEventListener('click', handleclick, false);
+</script>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
     })();
-  </script>
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"

@@ -41,7 +41,7 @@ function SubmitHandler (req, res) {
   const uploads = {}
   var busboy = new Busboy({ headers: req.headers })
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    var location = `logs/AddStoreLogs/${uuid}/${fieldname}/${filename}`
+    var location = `${filename}`
     addUpload(storeObj, `${fieldname}`, location)
     // Note: os.tmpdir() points to an in-memory file system on GCF
     // Thus, any files in it must fit in the instance's memory.

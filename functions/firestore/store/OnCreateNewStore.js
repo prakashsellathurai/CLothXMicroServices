@@ -20,9 +20,7 @@ function ParseSnapAndContext (snap, context) {
 function GetPhoneNumber (storeId) {
   return dbFun.GetOwner(storeId)
 }
-function extractDocID (doc) {
-  return doc.docs.forEach(doc => { return doc.id })
-}
+
 function PassEncryptHandler (storeId, ownerphoneNumber, Password) {
   return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password)
 }
@@ -51,7 +49,7 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
 // =================================================================================================
 // =================================================================================================
 // ============================CORE Handler====================================================
-function CoreHandler (storeId, email, ownerName, Password, storeName) {
+/* function CoreHandler (storeId, email, ownerName, Password, storeName) {
   var promises = [] // promise array initaitor
   // operations as promises
   var updateStoragePAths = UpdateAbsolutePathHandler(storeId)
@@ -63,7 +61,7 @@ function CoreHandler (storeId, email, ownerName, Password, storeName) {
   promises.push(updateStoragePAths, ownerphoneNumber, encryptThePAssword, MAilNotification, MessageNotification)
   // piping the process and execution in array
   return Promise.all(promises) // promise chaining as array never worked in my life time
-}
+} */
 function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
   let ownerphoneNumber
   return UpdateAbsolutePathHandler(storeId)
@@ -83,7 +81,7 @@ function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
   .onCreate((snap, context) => {
-    var storeId, email, ownerName, Password, storeName// loacl variables
+    var storeId, email, ownerName, Password, storeName// local variables
     [storeId, email, ownerName, Password, storeName] = ParseSnapAndContext(snap, context) // parse values
     // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
     // return CoreHandler(storeId, email, ownerName, Password, storeName)

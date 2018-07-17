@@ -1,7 +1,9 @@
-
+// uncomment this while production
 var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
 var firestore = admin.firestore()
+var storeModel = require('../../model/store')
+
 function getEmployeeeData (sid, employeeID) {
   return firestore.collection(`stores/${sid}/employees`).doc(`${employeeID}`).get()
 }
@@ -15,7 +17,7 @@ function checkIfEmployeeExist (sid, employeeId) {
 }
 
 function getstoreData (sid) {
-  return firestore.collection('stores').doc(`${sid}`).get()
+  return firestore.collection('stores').doc(`${sid}`).get().then((resolvedvalue) => resolvedvalue.data())
 }
 
 function checkIfStoreDocExist (sid) {
@@ -84,7 +86,7 @@ function saveToken (token) {
 // ===================================================================== storeIndex related routines===========================================
 function CountSize () {
   return GetStoreIndex().then(snap => {
-    if (snap.exists) return snap.data().storesCount
+    if (snap.exists && snap.data().storesCount) return snap.data().storesCount
     else {
       return IntiatiateStoreIndex().then((snap) => {
         return GetStoreIndex().then((snap) => snap.data().storesCount)
@@ -106,19 +108,22 @@ function GetStoreIndex () {
   return firestore.collection('DbIndex').doc('stores').get()
 }
 function IntiatiateStoreIndex () {
-  return firestore.collection('DbIndex').doc('stores').set({ storesCount: 1000 }).then(() => { return 1000 })
+  return firestore.collection('DbIndex').doc('stores').set({ storesCount: 1001 }).then(() => { return 1001 })
 }
 // ======================================================END OF STORE INDEX ROUTINES ======================================
 // =======================================================db functions for store add / employee add ====================
 function createEmployee (sid, employeeDAta) {
-  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(RemoveUndefinedValues(employeeDAta))
+  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(employeeDAta)
 }
-function createStore (sid, postedData) {
-  postedData['sid'] = sid
-  return firestore.collection('stores').doc(`${sid}`).set(RemoveUndefinedValues(postedData))
+function createStoreByStoreLog (storelog) {
+  return CountSize().then((sid) => {
+    return createStore(sid, storeModel.MapStoreLog(sid, storelog))
+      .then((ref) => IncStoreIndex())
+      .then(() => sid)
+  })
 }
-function RemoveUndefinedValues (obj) {
-  return JSON.parse(JSON.stringify(obj))
+function createStore (sid, StructuredStoredata) {
+  return firestore.collection('stores').doc(`${sid}`).set(StructuredStoredata)
 }
 function storeQueryBySid (sid) {
   return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
@@ -147,6 +152,9 @@ function checkIfsidExist (sid) {
 function addstorelog (uuid, doc) {
   return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
 }
+function RemoveUndefinedValues (obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
 module.exports = {
   generateAuthToken: generateAuthToken,
   savetoken: saveToken,
@@ -159,7 +167,7 @@ module.exports = {
   encryptThePasswordOnCreate: encryptThepasswordOnce,
   GetClothCollection: GetClothCollection,
   GetClothDoc: GetClothDoc,
-  createStore: createStore,
+  createStoreByStoreLog: createStoreByStoreLog,
   createEmployee: createEmployee,
   IncStoreIndex: IncStoreIndex,
   DecStoreIndex: DecStoreIndex,
