@@ -14,11 +14,11 @@ var app = require('./http/Auth/Auth')
 var addstore = require('./http/store/ADD_STORE/index')
 // ------------------------- cloud function exports ----------------------------------- //
 
-exports.addemployee = addEmployee
-exports.login = app
-
-exports.addstore = addstore
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
 exports.OnCreateNewStore = OncreateNewStore
 exports.oncreatenewinvoice = OnCreateNewInvoice
+exports.addemployee = addEmployee
+exports.login = app
+
+exports.addstore = addstore
