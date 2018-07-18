@@ -4,7 +4,10 @@ var firestore = admin.firestore()
 var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
 // If this  is removed the code will crash and you will die alone
 
-module.exports = function updateAbsoluteFileStoragePAth (sid) {
+module.exports = {
+  updateAbsoluteFileStoragePAth: updateAbsoluteFileStoragePAth
+}
+function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
     let logoPath = uploads.logo
     let imagesPath = uploads.images

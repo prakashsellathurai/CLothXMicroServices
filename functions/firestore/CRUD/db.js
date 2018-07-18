@@ -1,7 +1,9 @@
 // uncomment this while production
 var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
+const settings = {timestampsInSnapshots: true}
 var firestore = admin.firestore()
+firestore.settings(settings)
 var storeModel = require('../../model/store')
 
 function getEmployeeeData (sid, employeeID) {
@@ -21,11 +23,13 @@ function getstoreData (sid) {
 }
 
 function checkIfStoreDocExist (sid) {
-  return getstoreData(sid).then((doc) => {
+  return firestore.collection('stores').doc(`${sid}`).get().then((doc) => {
     return (doc.exists)
   })
 }
+function checkIfSIdExist (sid) {
 
+}
 function generateAuthToken (sid, phoneNumber, password, res) {
   if (!checkIfStoreDocExist(sid)) {
     res.json({ isError: true, error: 'sid (store id doesnot exists)  does not exists' })

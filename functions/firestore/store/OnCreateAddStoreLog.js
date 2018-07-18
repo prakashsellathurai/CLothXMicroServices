@@ -11,7 +11,10 @@ module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid
     var uuid, storelog// local variables
     [uuid, storelog] = ParseSnapAndContext(snap, context) // parse values
     Preprocessor(uuid, storelog)
-      .then((LamHandlerArgArr) => LameCoreHandler(...LamHandlerArgArr))
+      .then((LamHandlerArgArr) => {
+        console.log(...LamHandlerArgArr)
+        return LameCoreHandler(...LamHandlerArgArr)
+      })
     // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
     // return CoreHandler(storeId, email, ownerName, Password, storeName)
     // } catch (e) { console.log(e) } // this one is useless
