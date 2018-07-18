@@ -41,6 +41,7 @@ function htmlMessage (storeName, storeId, ownerphoneNumber, Password) {
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 function SMSHAndler (ownerphoneNumber, storeName, storeId, Password) {
+  console.log('message sent to ' + ownerphoneNumber)
   return sendMessage(ownerphoneNumber, textMessage(storeName, storeId, ownerphoneNumber, Password))
 }
 function textMessage (storeName, storeId, ownerphoneNumber, Password) {
