@@ -1,9 +1,9 @@
 // uncomment this while production
 var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
-const settings = {timestampsInSnapshots: true}
+// const settings = {timestampsInSnapshots: true}
 var firestore = admin.firestore()
-firestore.settings(settings)
+// firestore.settings(settings)
 var storeModel = require('../../model/store')
 
 function getEmployeeeData (sid, employeeID) {
