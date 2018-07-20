@@ -10,7 +10,7 @@ module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid
   .onCreate((snap, context) => {
     var uuid, storelog// local variables
     [uuid, storelog] = ParseSnapAndContext(snap, context) // parse values
-    Preprocessor(uuid, storelog)
+    return Preprocessor(uuid, storelog)
       .then((LamHandlerArgArr) => {
         console.log(...LamHandlerArgArr)
         return LameCoreHandler(...LamHandlerArgArr)
@@ -86,7 +86,7 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
 /* function CoreHandler (storeId, email, ownerName, Password, storeName) {
     var promises = [] // promise array initaitor
     // operations as promises
-    var updateStoragePAths = UpdateAbsolutePathHandler(storeId)
+    var updateStoragePAths = UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
     var ownerphoneNumber = GetPhoneNumber(storeId)
     var encryptThePAssword = PassEncryptHandler(storeId, ownerphoneNumber, Password)
     var MAilNotification = EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
@@ -99,7 +99,7 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
 function LameCoreHandler (storeId, email, ownerName, storeName) {
   let ownerphoneNumber
   let Password = generalUtils.PasswordGenerator(6)
-  return UpdateAbsolutePathHandler(storeId)
+  return UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
     .then(() => { return GetPhoneNumber(storeId) })
     .then(doc => {
       return doc.docs.forEach(doc => {
