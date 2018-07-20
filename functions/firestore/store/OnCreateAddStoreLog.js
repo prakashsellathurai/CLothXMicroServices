@@ -40,7 +40,7 @@ function PrepareTheData (storelog) {
     })
 }
 function extractTheProcessingData (storedID, storeData) {
-  return [storedID, storeData.email, storeData.ownerName, storeData.storeName]
+  return [storedID, storeData.email, storeData.ownerName, storeData.storeName, storeData.ownerMobileNo]
 }
 function HandleFilemove (storedID) {
   return storedID
@@ -96,18 +96,16 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
     // piping the process and execution in array
     return Promise.all(promises) // promise chaining as array never worked in my life time
   } */
-function LameCoreHandler (storeId, email, ownerName, storeName) {
-  let ownerphoneNumber
+function LameCoreHandler (storeId, email, ownerName, storeName, ownerMobileNo) {
   let Password = generalUtils.PasswordGenerator(6)
   return UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
     .then(() => { return GetPhoneNumber(storeId) })
     .then(doc => {
       return doc.docs.forEach(doc => {
-        ownerphoneNumber = doc.id
-        return PassEncryptHandler(storeId, ownerphoneNumber, Password)
+        return PassEncryptHandler(storeId, ownerMobileNo, Password)
           .then((encryptThePAssword) => {
-            return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
-              .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
+            return EmailHAndler(email, ownerName, storeName, storeId, ownerMobileNo, Password)
+              .then((result) => SMSHAndler(ownerMobileNo, storeName, storeId, Password))
           })
       })
     })
