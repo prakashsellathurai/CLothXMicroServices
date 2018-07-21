@@ -4,10 +4,12 @@ var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
 function HandleFilemove (uuid, sid, imagelocationArr, logolocationarr) {
   let promises = []
   for (let index = 0; index < logolocationarr.length; index++) {
-    promises.push(storage.file(`/DbIndex/stores/addstorelog/${uuid}/logo/${logolocationarr[index]}`).move(`stores/${sid}/logo/${logolocationarr[index]}`))
+    console.log(logolocationarr[index])
+    promises.push(storage.file(`/logs/addstore/${uuid}/logo/${logolocationarr[index]}`).move(`stores/${sid}/logo/${logolocationarr[index]}`))
   }
   for (let index = 0; index < imagelocationArr.length; index++) {
-    promises.push(storage.file(`/DbIndex/stores/addstorelog/${uuid}/images/${imagelocationArr[index]}`).move(`stores/${sid}/images/${imagelocationArr[index]}`))
+    console.log(imagelocationArr[index])
+    promises.push(storage.file(`/logs/addstore/${uuid}/images/${imagelocationArr[index]}`).move(`stores/${sid}/images/${imagelocationArr[index]}`))
   }
   return Promise.all(promises)
 }
