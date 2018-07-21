@@ -43,10 +43,6 @@ function PrepareTheData (storelog) {
 function extractTheProcessingData (storedID, storeData) {
   return [storedID, storeData.email, storeData.ownerName, storeData.storeName, storeData.ownerMobileNo]
 }
-function HandleFilemove (uuid, storedID) {
-  return storedID
-}
-
 // ###################################### Preprocessor ends ####################
 /*
 ######################################################################
