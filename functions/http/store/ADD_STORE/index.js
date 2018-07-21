@@ -76,7 +76,7 @@ function SubmitHandler (req, res) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
-    storeObj[uuid] = uuid
+    storeObj['uuid'] = uuid
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
       res.redirect('/addstore/success')
     })
