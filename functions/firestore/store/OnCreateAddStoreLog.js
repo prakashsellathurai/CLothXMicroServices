@@ -5,6 +5,7 @@ var sendEmail = require('../../utils/Mail/sendmail')
 var sendMessage = require('../../utils/message/SendMessage')
 var UpdateAbsolutePathHandler = require('../../utils/storage/UpdateAbsolutePath')
 var generalUtils = require('../../utils/cryptographicFunctions/general')
+var logToStoreLogistics = require('../../utils/storage/logistics/logToStorelogistics')
 // ==================================MAin HANDLER ================================================ //
 module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid}')
   .onCreate((snap, context) => {
@@ -25,8 +26,8 @@ function Preprocessor (uuid, storelog) {
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
-      HandleFilemove(storedID)
-      return LamHandlerArgArr
+      return logToStoreLogistics.HandleFileMove(uuid, `${storedID}`, `${storelog.images}`, `${storelog.logo}`) // storelog data is what added in the DbIndex
+        .then(() => LamHandlerArgArr) // they are location from log data)
     })
 }
 function ParseSnapAndContext (snap, context) {

@@ -12,6 +12,9 @@ const os = require('os')
 const fs = require('fs')
 const tmpdir = os.tmpdir()
 
+// custom
+var uploadedFiles = []
+
 const dbFun = require('../../../firestore/CRUD/db')
 // ##################################################################
 const gcloud = require('@google-cloud/storage')(
@@ -41,7 +44,7 @@ function SubmitHandler (req, res) {
   const uploads = {}
   var busboy = new Busboy({ headers: req.headers })
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    var location = `logs/addstore/${uuid}/${filename}`
+    var location = `logs/addstore/${uuid}/${fieldname}/${filename}`
     addUpload(storeObj, `${fieldname}`, `${filename}`)
     // Note: os.tmpdir() points to an in-memory file system on GCF
     // Thus, any files in it must fit in the instance's memory.
@@ -49,6 +52,7 @@ function SubmitHandler (req, res) {
     const filepath = path.join(tmpdir, filename)
     uploads[fieldname] = filepath
     var fileStream = bucket.file(location).createWriteStream()
+    uploadedFiles.push(location)
     // file.pipe(fs.createWriteStream(filepath))
     file.on('data', function (data) {
       fileStream.write(data)
@@ -72,11 +76,10 @@ function SubmitHandler (req, res) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
-    return dbFun.AbsoluteCreateStore(storeObj)
-      .then((sid) => dbFun.addstorelog(sid, storeObj))
-      .then(ref => {
-        res.redirect('/addstore/success')
-      })
+    storeObj[uuid] = uuid
+    return dbFun.addstorelog(uuid, storeObj).then(ref => {
+      res.redirect('/addstore/success')
+    })
   })
   if (req.rawBody) {
     busboy.end(req.rawBody)
