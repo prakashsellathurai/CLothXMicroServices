@@ -25,7 +25,7 @@ function Preprocessor (uuid, storelog) {
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
-      HandleFilemove(storedID)
+      // HandleFilemove(storedID)
       return LamHandlerArgArr
     })
 }

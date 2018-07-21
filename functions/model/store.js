@@ -22,7 +22,7 @@ function storeModel (sid, storelog) {
     monthlyRevenue: storelog.monthlyrevenue,
     noOfWorkers: storelog.noofworkers,
     noOfUsersRequired: storelog.noofusersrequired,
-    uploads: { images: storelog.images, logo: storelog.logo },
+    uploads: { relativePath: { images: storelog.images, logo: storelog.logo } },
     coordinates: {
       accuracy: storelog.accuracy,
       geoPoint: storelog.geopoint
