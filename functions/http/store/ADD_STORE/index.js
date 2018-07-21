@@ -41,7 +41,7 @@ function SubmitHandler (req, res) {
   const uploads = {}
   var busboy = new Busboy({ headers: req.headers })
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    var location = `logs/addstore/${filename}`
+    var location = `logs/addstore/${uuid}/${filename}`
     addUpload(storeObj, `${fieldname}`, `${filename}`)
     // Note: os.tmpdir() points to an in-memory file system on GCF
     // Thus, any files in it must fit in the instance's memory.
@@ -72,9 +72,11 @@ function SubmitHandler (req, res) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
-    return dbFun.addstorelog(uuid, storeObj).then(ref => {
-      res.redirect('/addstore/success')
-    })
+    return dbFun.AbsoluteCreateStore(storeObj)
+      .then((sid) => dbFun.addstorelog(sid, storeObj))
+      .then(ref => {
+        res.redirect('/addstore/success')
+      })
   })
   if (req.rawBody) {
     busboy.end(req.rawBody)

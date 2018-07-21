@@ -25,7 +25,7 @@ function Preprocessor (uuid, storelog) {
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
-      // HandleFilemove(storedID)
+      HandleFilemove(storedID)
       return LamHandlerArgArr
     })
 }
@@ -42,7 +42,7 @@ function PrepareTheData (storelog) {
 function extractTheProcessingData (storedID, storeData) {
   return [storedID, storeData.email, storeData.ownerName, storeData.storeName, storeData.ownerMobileNo]
 }
-function HandleFilemove (storedID) {
+function HandleFilemove (uuid, storedID) {
   return storedID
 }
 

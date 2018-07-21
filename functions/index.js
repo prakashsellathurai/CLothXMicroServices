@@ -14,7 +14,7 @@ var login = require('./http/Auth/Auth.js')
 var addstore = require('./http/store/ADD_STORE/index.js')
 // ------------------------- cloud function exports ----------------------------------- //
 
-exports.OnCreateNewStoreLog = OncreateNewStoreLog
+// exports.OnCreateNewStoreLog = OncreateNewStoreLog
 exports.OncreateNewClothes = OncreateNewClothes
 exports.OndeleteClothes = OndeleteClothes
 exports.OnCreateNewStore = OncreateNewStore

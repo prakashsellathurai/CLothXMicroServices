@@ -32,7 +32,7 @@ function checkIfSIdExist (sid) {
 }
 function generateAuthToken (sid, phoneNumber, password, res) {
   if (!checkIfStoreDocExist(sid)) {
-    res.json({ isError: true, error: 'sid (store id doesnot exists)  does not exists' })
+    res.json({ isError: true, error: 'sid  does not exists' })
   } else {
     return getEmployeeeData(sid, phoneNumber).then((employeeDoc) => {
       if (!employeeDoc.exists) {
@@ -126,6 +126,13 @@ function createStoreByStoreLog (storelog) {
       .then(() => sid)
   })
 }
+function AbsoluteCreateStore (storedata) {
+  return CountSize().then((sid) => {
+    return createStore(sid, storeModel.MapStoreLog(sid, storelog))
+      .then((ref) => IncStoreIndex())
+      .then(() => sid)
+}
+}
 function createStore (sid, StructuredStoredata) {
   return firestore.collection('stores').doc(`${sid}`).set(StructuredStoredata)
 }
@@ -178,5 +185,6 @@ module.exports = {
   storeQueryBySid: storeQueryBySid,
   checkIfsidExist: checkIfsidExist,
   CountSize: CountSize,
-  addstorelog: addstorelog
+  addstorelog: addstorelog,
+  AbsoluteCreateStore : AbsoluteCreateStore
 }
