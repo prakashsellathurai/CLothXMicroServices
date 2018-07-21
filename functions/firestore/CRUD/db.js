@@ -128,10 +128,10 @@ function createStoreByStoreLog (storelog) {
 }
 function AbsoluteCreateStore (storedata) {
   return CountSize().then((sid) => {
-    return createStore(sid, storeModel.MapStoreLog(sid, storelog))
+    return createStore(sid, storeModel.MapStoreLog(sid, storedata))
       .then((ref) => IncStoreIndex())
       .then(() => sid)
-}
+  })
 }
 function createStore (sid, StructuredStoredata) {
   return firestore.collection('stores').doc(`${sid}`).set(StructuredStoredata)
@@ -186,5 +186,5 @@ module.exports = {
   checkIfsidExist: checkIfsidExist,
   CountSize: CountSize,
   addstorelog: addstorelog,
-  AbsoluteCreateStore : AbsoluteCreateStore
+  AbsoluteCreateStore: AbsoluteCreateStore
 }
