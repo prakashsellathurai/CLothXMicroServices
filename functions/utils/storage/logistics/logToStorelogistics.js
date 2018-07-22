@@ -3,13 +3,15 @@ var admin = require('firebase-admin')
 var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
 function HandleFilemove (uuid, sid, imagelocationArr, logolocationarr) {
   let promises = []
-  for (let index = 0; index < logolocationarr.length; index++) {
-    console.log(logolocationarr[index])
-    promises.push(storage.file(`/logs/addstore/${uuid}/logo/${logolocationarr[index]}`).move(`stores/${sid}/logo/${logolocationarr[index]}`))
+  console.log(imagelocationArr, logolocationarr)
+  for (const iterator of logolocationarr) {
+    console.log(iterator)
+    promises.push(storage.file(`/logs/addstore/${uuid}/logo/${iterator}`).move(`stores/${sid}/logo/${iterator}`))
   }
-  for (let index = 0; index < imagelocationArr.length; index++) {
-    console.log(imagelocationArr[index])
-    promises.push(storage.file(`/logs/addstore/${uuid}/images/${imagelocationArr[index]}`).move(`stores/${sid}/images/${imagelocationArr[index]}`))
+
+  for (const iterator of imagelocationArr) {
+    console.log(iterator)
+    promises.push(storage.file(`/logs/addstore/${uuid}/images/${iterator}`).move(`stores/${sid}/images/${iterator}`))
   }
   return Promise.all(promises)
 }
