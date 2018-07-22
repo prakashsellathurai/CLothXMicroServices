@@ -69,7 +69,7 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[`${fieldname}`] = `${val}`
+    storeObj[`${fieldname}`] = isNumeric(`${val}`)
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
@@ -149,4 +149,15 @@ function mockHAndler (req, res) {
     // Return a "method not allowed" error
     res.status(405).end()
   }
+}
+function isNumeric (n) {
+  if (!isNaN(n) && !isBlank(n)) {
+    return Number(n)
+  } else {
+    return n
+  }
+}
+
+function isBlank (str) {
+  return (!str || /^\s*$/.test(str))
 }
