@@ -12,6 +12,9 @@ const os = require('os')
 const fs = require('fs')
 const tmpdir = os.tmpdir()
 
+// custom
+var uploadedFiles = []
+
 const dbFun = require('../../../firestore/CRUD/db')
 // ##################################################################
 const gcloud = require('@google-cloud/storage')(
@@ -41,14 +44,15 @@ function SubmitHandler (req, res) {
   const uploads = {}
   var busboy = new Busboy({ headers: req.headers })
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    var location = `logs/AddStoreLogs/${uuid}/${fieldname}/${filename}`
-    addUpload(storeObj, `${fieldname}`, location)
+    var location = `logs/addstore/${uuid}/${fieldname}/${filename}`
+    addUpload(storeObj, `${fieldname}`, `${filename}`)
     // Note: os.tmpdir() points to an in-memory file system on GCF
     // Thus, any files in it must fit in the instance's memory.
     console.log(`Processed file ${filename}`)
     const filepath = path.join(tmpdir, filename)
     uploads[fieldname] = filepath
     var fileStream = bucket.file(location).createWriteStream()
+    uploadedFiles.push(location)
     // file.pipe(fs.createWriteStream(filepath))
     file.on('data', function (data) {
       fileStream.write(data)
@@ -65,13 +69,15 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[fieldname] = val
+    storeObj[fieldname] = (isNaN(Number(val)) || Number(val) === 0) ? val : Number(val)
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
+
+    storeObj['uuid'] = uuid
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
       res.redirect('/addstore/success')
     })
@@ -144,4 +150,15 @@ function mockHAndler (req, res) {
     // Return a "method not allowed" error
     res.status(405).end()
   }
+}
+function isNumeric (n) {
+  if (!isNaN(n) && !isBlank(n)) {
+    return Number(n)
+  } else {
+    return n
+  }
+}
+
+function isBlank (str) {
+  return (!str || /^\s*$/.test(str))
 }
