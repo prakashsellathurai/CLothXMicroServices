@@ -69,7 +69,7 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[fieldname] = val
+    storeObj[`${fieldname}`] = `${val}`
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
