@@ -9,8 +9,8 @@ module.exports = {
 }
 function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
-    let logoPath = uploads.logo
-    let imagesPath = uploads.images
+    let logoPath = uploads.relativePath.logo
+    let imagesPath = uploads.relativePath.images
     if (uploads.relativePath) {
       logoPath = uploads.relativePath.logo
       imagesPath = uploads.relativePath.images
