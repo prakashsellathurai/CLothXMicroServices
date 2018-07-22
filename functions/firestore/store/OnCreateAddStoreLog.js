@@ -9,10 +9,7 @@ var logToStoreLogistics = require('../../utils/storage/logistics/logToStorelogis
 // ==================================MAin HANDLER ================================================ //
 module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid}')
   .onCreate((snap, context) => {
-    var uuid, storelog// local variables
-    [uuid, storelog] = ParseSnapAndContext(snap, context) // parse values
-    console.log(snap.data())
-    return Preprocessor(uuid, storelog)
+    return Preprocessor(context.params.uuid, snap.data())
       .then((LamHandlerArgArr) => {
         console.log(...LamHandlerArgArr)
         return LameCoreHandler(...LamHandlerArgArr)
@@ -31,9 +28,7 @@ function Preprocessor (uuid, storelog) {
         .then(() => LamHandlerArgArr) // they are location from log data)
     })
 }
-function ParseSnapAndContext (snap, context) {
-  return [context.params.uuid, snap.data()]
-}
+
 function PrepareTheData (storelog) {
   return dbFun.createStoreByStoreLog(storelog)
     .then(storedID => {
