@@ -69,13 +69,14 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[`${fieldname}`] = isNumeric(`${val}`)
+    storeObj[fieldname] = val
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
+   
     storeObj['uuid'] = uuid
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
       res.redirect('/addstore/success')
