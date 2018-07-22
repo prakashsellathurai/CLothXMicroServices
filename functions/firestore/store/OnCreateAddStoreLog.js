@@ -21,11 +21,13 @@ module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid
   })
   // ########################### preprocessor #############################
 function Preprocessor (uuid, storelog) {
+  let imagesFileName = storelog.images
+  let logoFileName = storelog.logo
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
       console.log(storelog)
-      return logToStoreLogistics.HandleFileMove(uuid, storedID, storelog.images, storelog.logo) // storelog data is what added in the DbIndex
+      return logToStoreLogistics.HandleFileMove(uuid, storedID, imagesFileName, logoFileName) // storelog data is what added in the DbIndex
         .then(() => LamHandlerArgArr) // they are location from log data)
     })
 }
