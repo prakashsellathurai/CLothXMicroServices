@@ -9,7 +9,7 @@ var logToStoreLogistics = require('../../utils/storage/logistics/logToStorelogis
 // ==================================MAin HANDLER ================================================ //
 module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid}')
   .onCreate((snap, context) => {
-    return Preprocessor(context.params.uuid, snap.data())
+    return Preprocessor(context.params.uuid, snap.data(), snap.data().images, snap.data().logo)
       .then((LamHandlerArgArr) => {
         console.log(...LamHandlerArgArr)
         return LameCoreHandler(...LamHandlerArgArr)
@@ -20,9 +20,7 @@ module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid
     // i hate this function
   })
   // ########################### preprocessor #############################
-function Preprocessor (uuid, storelog) {
-  let imagesFileName = storelog.images
-  let logoFileName = storelog.logo
+function Preprocessor (uuid, storelog, imagesFileName, logoFileName) {
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
