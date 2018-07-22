@@ -69,14 +69,14 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[fieldname] = val
+    storeObj[fieldname] = (!isNaN(val) && !val === '') ? parseInt(val) : val
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
       const file = uploads[name]
       // fs.unlinkSync(file)
     } */
-   
+
     storeObj['uuid'] = uuid
     return dbFun.addstorelog(uuid, storeObj).then(ref => {
       res.redirect('/addstore/success')
