@@ -69,7 +69,7 @@ function SubmitHandler (req, res) {
     encoding,
     mimetype
   ) {
-    storeObj[fieldname] = (!isNaN(val) && !val === '') ? parseInt(val) : val
+    storeObj[fieldname] = (isNaN(Number(val)) || Number(val) === 0) ? val : Number(val)
   })
   busboy.on('finish', function () {
     /* for (const name in uploads) {
