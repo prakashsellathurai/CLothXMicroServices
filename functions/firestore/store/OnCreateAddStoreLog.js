@@ -24,6 +24,7 @@ function Preprocessor (uuid, storelog) {
   return PrepareTheData(storelog)
     .then((LamHandlerArgArr) => {
       let storedID = LamHandlerArgArr[0]
+      console.log(storelog)
       return logToStoreLogistics.HandleFileMove(uuid, storedID, storelog.images, storelog.logo) // storelog data is what added in the DbIndex
         .then(() => LamHandlerArgArr) // they are location from log data)
     })

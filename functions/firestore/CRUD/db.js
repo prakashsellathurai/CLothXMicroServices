@@ -27,9 +27,7 @@ function checkIfStoreDocExist (sid) {
     return (doc.exists)
   })
 }
-function checkIfSIdExist (sid) {
 
-}
 function generateAuthToken (sid, phoneNumber, password, res) {
   if (!checkIfStoreDocExist(sid)) {
     res.json({ isError: true, error: 'sid  does not exists' })

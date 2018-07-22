@@ -151,14 +151,3 @@ function mockHAndler (req, res) {
     res.status(405).end()
   }
 }
-function isNumeric (n) {
-  if (!isNaN(n) && !isBlank(n)) {
-    return Number(n)
-  } else {
-    return n
-  }
-}
-
-function isBlank (str) {
-  return (!str || /^\s*$/.test(str))
-}
