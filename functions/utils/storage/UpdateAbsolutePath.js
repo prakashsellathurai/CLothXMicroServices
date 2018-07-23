@@ -10,7 +10,7 @@ module.exports = {
 function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
     let logoPath = (typeof uploads.logo !== 'undefined') ? uploads.logo : (typeof uploads.relativePath.logo !== 'undefined') ? uploads.relativePath.logo : undefined
-    let imagesPath = (typeof uploads.!== 'undefined') ? uploads.images : (typeof uploads.relativePath.images!== 'undefined') ? uploads.relativePath.images : undefined
+    let imagesPath = (typeof uploads.images !== 'undefined') ? uploads.images : (typeof uploads.relativePath.images !== 'undefined') ? uploads.relativePath.images : undefined
     let logoUrl = ''
     let imageUrl = []
     let promises = []
