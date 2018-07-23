@@ -9,24 +9,23 @@ module.exports = {
 }
 function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
-    let logoPath = uploads.relativePath.logo
-    let imagesPath = uploads.relativePath.images
-    if (uploads.relativePath) {
-      logoPath = uploads.relativePath.logo
-      imagesPath = uploads.relativePath.images
-    } // this is how a idiot handles a control flow
+    let logoPath = (uploads.logo) ? uploads.logo : (uploads.relativePath.logo) ? uploads.relativePath.logo : undefined
+    let imagesPath = (uploads.images) ? uploads.images : (uploads.relativePath.images) ? uploads.relativePath.images : undefined
     let logoUrl = ''
     let imageUrl = []
     let promises = []
-    let logoPromise = storage.file(logoPath).getMetadata().then(val => { logoUrl = UrlLifyData(val) })
-    promises.push(logoPromise)
-    imagesPath.forEach(image => {
-      let imageRef = storage.file(image).getMetadata().then(Url => imageUrl.push(UrlLifyData(Url)))
-      promises.push(imageRef)
-    })
-    return Promise.all(promises).then(() => {
-      UpdateUrlData(sid, logoUrl, imageUrl, uploads)
-    })
+    if (typeof logoPath === 'undefined' && typeof imagesPath === 'undefined') {
+      console.log('imagePath and logopath are undefined')
+      return Promise.resolve()
+    } else {
+      let logoPromise = storage.file(logoPath).getMetadata().then(val => { logoUrl = UrlLifyData(val) })
+      promises.push(logoPromise)
+      imagesPath.forEach(image => {
+        let imageRef = storage.file(image).getMetadata().then(Url => imageUrl.push(UrlLifyData(Url)))
+        promises.push(imageRef)
+      })
+      return Promise.all(promises).then(() => UpdateUrlData(sid, logoUrl, imageUrl, uploads))
+    }
   })
 }
 function UrlLifyData (metadata) {
