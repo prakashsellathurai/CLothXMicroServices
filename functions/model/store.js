@@ -10,7 +10,7 @@ function storeModel (sid, storelog) {
     ownerName: storelog.ownername,
     ownerMobileNo: storelog.ownermobileno,
     propriatorName: storelog.proprietorname,
-    storeType: storelog.storetype,
+    type: storelog.storetype,
     address: storelog.address,
     district: storelog.district,
     state: storelog.state,

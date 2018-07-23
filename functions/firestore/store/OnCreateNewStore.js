@@ -65,12 +65,11 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
   return Promise.all(promises) // promise chaining as array never worked in my life time
 } */
 function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerPhoneNumber) {
-  let ownerphoneNumber
-  return  saveOwner(storeId, ownerName, ownerPhoneNumber, Password)
+  return saveOwner(storeId, ownerName, ownerPhoneNumber, Password)
     .then(() => SMSHAndler(ownerPhoneNumber, storeName, storeId, Password))
     .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
-    .then(()=> UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
-  }
+    .then(() => UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
+}
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
