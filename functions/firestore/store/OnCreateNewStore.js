@@ -66,11 +66,11 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
 } */
 function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerPhoneNumber) {
   let ownerphoneNumber
-  return UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
-    .then(() => saveOwner(storeId, ownerName, ownerPhoneNumber, Password))
+  return  saveOwner(storeId, ownerName, ownerPhoneNumber, Password)
     .then(() => SMSHAndler(ownerPhoneNumber, storeName, storeId, Password))
     .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
-}
+    .then(()=> UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
+  }
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
