@@ -1,6 +1,10 @@
 var admin = require('firebase-admin')
 var functions = require('firebase-functions')
-try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
+try {
+  admin.initializeApp(functions.config())
+} catch (e) {
+  console.error(e)
+}
 // ======================== firetsore triggers ======================================== //
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore.js')
 var OncreateNewStoreLog = require('./firestore/store/OnCreateAddStoreLog')
