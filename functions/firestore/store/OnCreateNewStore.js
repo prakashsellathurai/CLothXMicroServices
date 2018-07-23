@@ -15,7 +15,8 @@ function ParseSnapAndContext (snap, context) {
   return [context.params.storeId,
     snap.data().email,
     snap.data().ownerName,
-    snap.data().storeName]
+    snap.data().storeName,
+    snap.data().ownerMobileNo]
 }
 function GetPhoneNumber (storeId) {
   return dbFun.GetOwner(storeId)
@@ -63,30 +64,22 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
   // piping the process and execution in array
   return Promise.all(promises) // promise chaining as array never worked in my life time
 } */
-function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
+function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerPhoneNumber) {
   let ownerphoneNumber
   return UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
-    .then(() => { return GetPhoneNumber(storeId) })
-    .then(doc => {
-      return doc.docs.forEach(doc => {
-        ownerphoneNumber = doc.id
-        return saveOwner(storeId, ownerName, ownerphoneNumber, Password)
-          .then((encryptThePAssword) => {
-            return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
-              .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
-          })
-      })
-    })
+    .then(() => saveOwner(storeId, ownerName, ownerPhoneNumber, Password))
+    .then(() => SMSHAndler(ownerPhoneNumber, storeName, storeId, Password))
+    .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
 }
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
   .onCreate((snap, context) => {
-    var storeId, email, ownerName, storeName// local variables
-    [storeId, email, ownerName, storeName] = ParseSnapAndContext(snap, context) // parse values
+    var storeId, email, ownerName, storeName, ownerPhoneNumber// local variables
+    [storeId, email, ownerName, storeName, ownerPhoneNumber] = ParseSnapAndContext(snap, context) // parse values
     // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
     // return CoreHandler(storeId, email, ownerName, Password, storeName)
     // } catch (e) { console.log(e) } // this one is useless
     let Password = utils.PasswordGenerator(6)
-    return LameCoreHandler(storeId, email, ownerName, Password, storeName) // i hate this function
+    return LameCoreHandler(storeId, email, ownerName, Password, storeName, ownerPhoneNumber) // i hate this function
   })

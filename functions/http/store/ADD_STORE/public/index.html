@@ -95,27 +95,31 @@
                     <input class="form-control" name="panno" type="text" />
                 </div>
                 <div class="mb-3">
-                    <label for="noofbranches"></label>No of branches
+                    <label for="noofbranches">No of branches</label>
                     <input class="form-control" name="numberofbranches" type="number" />
                 </div>
                 <div class="mb-3">
-                    <label for="shopcontactno"></label>Shop contact no
+                    <label for="shopcontactno">Shop contact no</label>
                     <input class="form-control" name="shopcontactno" type="number" />
                 </div>
                 <div class="mb-3">
-                    <label for="monthlyrevenue"></label>Approx Mothly Revenue
+                    <label for="monthlyrevenue">Approx Mothly Revenue</label>
                     <input class="form-control" name="monthlyrevenue" type="number" />
                 </div>
 
                 <div class="mb-3">
-                    <label for="noofworkers"></label>No of workers
+                    <label for="noofworkers">No of workers</label>
                     <input class="form-control" name="noofworkers" type="number" />
                 </div>
                 <div class="mb-3">
-                    <label for="noofusersrequired"></label>Required No of users
+                    <label for="noofusersrequired">Required No of users</label>
                     <input class="form-control" name="noofusersrequired" type="number" />
                 </div>
-                
+                <div class="mb-3">
+                    <label for="coordinates">Coordinates</label>
+                    <button class="form-control btn-primary btn-lg btn-block" id="coordinates" name="coordinates" type="button" value='' onclick="getLocationConstant()
+                    ">Set Position</button>
+                </div>
                 <div class="mb-3">
                     <label for="logo">Logo</label>
                     <input class="form-control" type="file" id="logo" name="logo" />
@@ -132,6 +136,28 @@
     </div>
 </div>
 <script>
+    function getLocationConstant() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+        } else {
+            alert("Your browser or device doesn't support Geolocation");
+        }
+    }
+    function onGeoError(event) {
+        alert("Error code " + event.code + ". " + event.message);
+    }
+    // If we have a successful location update
+    function onGeoSuccess(event) {
+        document.getElementById("coordinates").value = {
+            accuracy: event.coords.accuracy,
+            geoPoint: {
+                Latitude: event.coords.latitude,
+                Longitude: event.coords.longitude
+            }
+        }
+
+    }
+
     function handleFileSelect(evt) {
         var files = evt.target.files;
 
