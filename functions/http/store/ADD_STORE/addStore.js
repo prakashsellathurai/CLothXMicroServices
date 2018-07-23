@@ -1,29 +1,60 @@
-var functions = require('firebase-functions')
+const functions = require('firebase-functions')
 const express = require('express')
+const addstore = express()
+const path = require('path')
+const Busboy = require('busboy')
 const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
-var bodyParser = require('body-parser')
-var SHA256 = require('../../node_modules/crypto-js/sha256')
-var dbFun = require('../../firestore/CRUD/db')
 
-const app = express()
-app.use(bodyParser.urlencoded({
-  extended: true
-}))
+// debug
+const os = require('os')
+const fs = require('fs')
+const tmpdir = os.tmpdir()
+
+// custom
+var uploadedFiles = []
+
+const dbFun = require('../../../firestore/CRUD/db')
+// ##################################################################
+const gcloud = require('@google-cloud/storage')(
+  { projectId: 'clothxnet' }
+)
+const bucket = gcloud.bucket('clothxnet.appspot.com')
+// #########################################################################3
 // Automatically allow cross-origin requests
-app.use(cors({ origin: true }))
+addstore.use(cors({ origin: true }))
 // allow gzip compression
-app.use(compression())
+addstore.use(compression())
 // use helmet for safety
-app.use(helmet())
-// disable this header to eliminate targetted attacks
-app.disable('x-powered-by')
-app.post('', (req, res) => signupRequestHandler(req, res))
-app.post('/', (req, res) => signupRequestHandler(req, res))
+addstore.use(helmet())
+addstore.use(express.static(path.join(__dirname, 'public')))
+addstore.get('/', express.static(path.join(__dirname, 'public')))
+addstore.get('/success', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/success.html'))
+)
+addstore.post('/submit', (req, res) => SubmitHandler(req, res))
+function SubmitHandler (req, res) {
+  var storeObj = {}
+  const uploads = {}
+  var busboy = new Busboy({ headers: req.headers })
+  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
-module.exports = functions.https.onRequest(app)
+  })
+  busboy.on('field', function (
+    fieldname,
+    val,
+    fieldnameTruncated,
+    valTruncated,
+    encoding,
+    mimetype
+  ) {
+    storeObj[fieldname] = (isNaN(Number(val)) || Number(val) === 0) ? val : Number(val)
+  })
+  busboy.on('finish', function () {
 
+  })
+}
 // creator note destroy the DbIndex to start from zero
 // module.exports = functions.https.onRequest(app)
 // request handler
@@ -78,4 +109,14 @@ function ParseOwnerInfo (postedData) {
     role: 'owner',
     mobileNo: postedData.mobileNo
   }
+}
+
+function makeid () {
+  var text = ''
+  var possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  for (var i = 0; i < 10; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return text
 }

@@ -30,6 +30,13 @@ function storeModel (sid, storelog) {
     createdAt: new Date()
   }
 }
+function EmployeeModel (employeeData) {
+  return {
+    name: employeeData.name,
+    password: employeeData.password,
+    role: employeeData.role
+  }
+}
 function structureTheobject (sid, obj) {
   for (var key in obj) {
     obj[key] = writeItORNullStringIt(obj[key])
