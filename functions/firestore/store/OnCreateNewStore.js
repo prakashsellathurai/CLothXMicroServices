@@ -65,7 +65,7 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
 } */
 function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
   let ownerphoneNumber
-  return UpdateAbsolutePathHandler(storeId)
+  return UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId)
     .then(() => { return GetPhoneNumber(storeId) })
     .then(doc => {
       return doc.docs.forEach(doc => {
