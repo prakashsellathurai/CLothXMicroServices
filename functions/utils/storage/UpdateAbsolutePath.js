@@ -1,7 +1,7 @@
-var CONTANTS = require('../../environment/CONSTANTS')
+var CONSTANTS = require('../../environment/CONSTANTS')
 var admin = require('firebase-admin')
 var firestore = admin.firestore()
-var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
+var storage = admin.storage().bucket(CONSTANTS.STORAGE_BUCKET)
 // If this  is removed the code will crash and you will die alone
 
 module.exports = {
@@ -20,30 +20,43 @@ function updateAbsoluteFileStoragePAth (sid) {
       return Promise.resolve()
     } else {
       logoPath.forEach(logo => {
-        let logoPromise = storage.file(logo).getMetadata().then(val => { logoUrl = UrlLifyData(val) })
+        let logoPromise = storage
+          .file(logo)
+          .getSignedUrl(CONSTANTS.GET_SIGNED_URL_SETTINGS)
+          .then(signedUrls => { logoUrl = signedUrls[0]; return 0 })
+          .catch(err => console.log('get signed url error' + 'Error Info ' + err))
         promises.push(logoPromise)
       })
       imagesPath.forEach(image => {
-        let imageRef = storage.file(image).getMetadata().then(Url => imageUrl.push(UrlLifyData(Url)))
+        let imageRef = storage
+          .file(image)
+          .getSignedUrl(CONSTANTS.GET_SIGNED_URL_SETTINGS)
+          .then(signedUrls => imageUrl.push(signedUrls[0]))
+          .catch(err => console.log('get signed url error' + 'Error Info ' + err))
         promises.push(imageRef)
       })
-      return Promise.all(promises).then(() => UpdateUrlData(sid, logoUrl, imageUrl, uploads))
+      return Promise.all(promises).then(() =>
+        UpdateUrlData(sid, logoUrl, imageUrl, uploads)
+      )
     }
   })
 }
-function UrlLifyData (metadata) {
-  return 'https://firebasestorage.googleapis.com/v0/b/' + encodeURIComponent(metadata[0].bucket) + '/o/' +
-encodeURIComponent(metadata[0].name) +
-'?alt=media&token=' + metadata[0].metadata.firebaseStorageDownloadTokens
-}
+
 function UpdateUrlData (sid, logoUrl, imageUrl, uploads) {
-  return firestore.collection('stores').doc(`${sid}`).update({uploads: {
-    absolutPath: { logo: logoUrl, images: imageUrl },
-    relativePath: { logo: uploads.logo, images: uploads.images }
-  }})
+  return firestore
+    .collection('stores')
+    .doc(`${sid}`)
+    .update({
+      uploads: {
+        absolutPath: { logo: logoUrl, images: imageUrl },
+        relativePath: { logo: uploads.logo, images: uploads.images }
+      }
+    })
 }
 function getuploadedfilePath (sid) {
-  return firestore.collection('stores').doc(`${sid}`).get().then((snap) => {
-    return snap.data().uploads
-  })
+  return firestore
+    .collection('stores')
+    .doc(`${sid}`)
+    .get()
+    .then(snap => snap.data().uploads)
 }
