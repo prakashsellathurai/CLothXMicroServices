@@ -19,8 +19,10 @@ function updateAbsoluteFileStoragePAth (sid) {
       console.log('imagePath and logopath are undefined')
       return Promise.resolve()
     } else {
-      let logoPromise = storage.file(logoPath).getMetadata().then(val => { logoUrl = UrlLifyData(val) })
-      promises.push(logoPromise)
+      logoPath.forEach(logo => {
+        let logoPromise = storage.file(logo).getMetadata().then(val => { logoUrl = UrlLifyData(val) })
+        promises.push(logoPromise)
+      })
       imagesPath.forEach(image => {
         let imageRef = storage.file(image).getMetadata().then(Url => imageUrl.push(UrlLifyData(Url)))
         promises.push(imageRef)
