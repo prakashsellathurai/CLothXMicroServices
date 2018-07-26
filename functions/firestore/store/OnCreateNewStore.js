@@ -18,9 +18,6 @@ function ParseSnapAndContext (snap, context) {
     snap.data().storeName,
     snap.data().ownerMobileNo]
 }
-function GetPhoneNumber (storeId) {
-  return dbFun.GetOwner(storeId)
-}
 
 function saveOwner (storeId, ownerName, ownerphoneNumber, Password) {
   return dbFun.saveOwner(storeId, ownerName, ownerphoneNumber, Password)
