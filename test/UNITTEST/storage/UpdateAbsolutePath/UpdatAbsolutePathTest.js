@@ -1,18 +1,20 @@
-var CONSTANTS = require('../../environment/CONSTANTS')
 var admin = require('firebase-admin')
+var CONTANTS = require('../../../../functions/environment/CONSTANTS')
+var serviceAccount = require('./../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://clothxnet.firebaseio.com'
+})
+var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
 var firestore = admin.firestore()
-var storage = admin.storage().bucket(CONSTANTS.STORAGE_BUCKET)
-// If this  is removed the code will crash and you will die alone
-
-module.exports = {
-  updateAbsoluteFileStoragePAth: updateAbsoluteFileStoragePAth
-}
+var CONSTANTS = require('../../../../functions/environment/CONSTANTS')
 function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
     let logoPath = uploads.relativePath.logo
     let imagesPath = uploads.relativePath.images
     let logoUrl = []
     let imageUrl = []
+    let promises = []
     if (isUndefined(logoPath) && isUndefined(imagesPath)) {
       console.log('imagePath and logopath are undefined')
       return Promise.resolve()
@@ -66,3 +68,4 @@ function GetSignedUrl (FileLocation) {
 function isUndefined (obj) {
   return typeof obj === 'undefined' || obj === undefined || obj === null
 }
+updateAbsoluteFileStoragePAth(1034)
