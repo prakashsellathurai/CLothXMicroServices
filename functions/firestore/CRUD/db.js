@@ -3,6 +3,7 @@ var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
 // const settings = {timestampsInSnapshots: true}
 var firestore = admin.firestore()
+
 // firestore.settings(settings)
 var storeModel = require('../../model/store')
 
