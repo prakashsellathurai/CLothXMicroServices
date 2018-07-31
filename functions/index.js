@@ -1,15 +1,6 @@
-var admin = require('firebase-admin')
-var functions = require('firebase-functions')
-var serviceAccount = require('./environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
-var CONSTANTS = require('./environment/CONSTANTS')
-try {
-  admin.initializeApp({
-    credential : admin.credential.cert(serviceAccount),
-    storageBucket: CONSTANTS.STORAGE_BUCKET
-  })
-} catch (e) {
-  console.error(e)
-}
+'use strict'
+// ========================Intialize Admin SDk with credentials =======================//
+require('./environment/initAdmin')()
 // ======================== firetsore triggers ======================================== //
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore.js')
 var OncreateNewStoreLog = require('./firestore/store/OnCreateAddStoreLog')
