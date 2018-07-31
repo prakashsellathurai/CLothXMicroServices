@@ -1,6 +1,7 @@
 'use strict'
 // ========================Intialize Admin SDk with credentials =======================//
-require('./environment/initAdmin')()
+var InitAdmin = require('./environment/initAdmin')
+InitAdmin()
 // ======================== firetsore triggers ======================================== //
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore.js')
 var OncreateNewStoreLog = require('./firestore/store/OnCreateAddStoreLog')
