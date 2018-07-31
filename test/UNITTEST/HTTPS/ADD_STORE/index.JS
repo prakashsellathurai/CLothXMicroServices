@@ -30,13 +30,13 @@ app.post('/submit', (req, res) => {
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
     var location = `logs/AddStoreLogs/${uuid}/${fieldname}/${filename}`
     addUpload(storeObj, `${fieldname}`, location)
-    var fileStream = bucket.file(location).createWriteStream()
+
     //   var addstorelogRef = storageRef.child(`addstorelog/${uuid}/${filename}`)
     file.on('data', function (data) {
-      fileStream.write(data)
+      console.log(data.length)
     })
     file.on('end', function () {
-      fileStream.end()
+
     })
   })
   busboy.on('field', function (
@@ -50,20 +50,11 @@ app.post('/submit', (req, res) => {
     storeObj[fieldname] = val
   })
   busboy.on('finish', function () {
-    return addstorelog(uuid, storeObj).then(ref => {
-      console.log(storeObj)
-      
-   res.redirect('/success')
-      res.end()
-    })
+    console.log(storeObj)
+
+    res.redirect('/success')
+    res.end()
   })
-  if (req.rawBody) {
-    busboy.end(req.rawBody);
-}
-else {
-    req.pipe(busboy);
-}
- 
 })
 
 app.listen(PORT, console.log('listening on PORT ' + PORT))

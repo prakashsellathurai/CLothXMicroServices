@@ -51,7 +51,7 @@ function generateAuthToken (sid, phoneNumber, password, res) {
                 res.json({ isError: false,
                   role: employeeDoc.data().role,
                   token: employeeDoc.data().token,
-                  type: storedata.data().type,
+                  type: storedata.type,
                   phoneNumber: phoneNumber,
                   sid: sid,
                   name: employeeDoc.data().name })
