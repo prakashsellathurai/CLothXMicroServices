@@ -10,5 +10,6 @@ module.exports = {
   GET_SIGNED_URL_SETTINGS: {
     action: 'read',
     expires: '03-09-2491'
-  }
+  },
+  FIRESTORE_SETTINGS: {timestampsInSnapshots: true}
 }

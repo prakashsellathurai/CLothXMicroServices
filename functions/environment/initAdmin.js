@@ -4,10 +4,13 @@ var serviceAccount = require('./clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.jso
 var CONSTANTS = require('./CONSTANTS')
 function CredentialsForProduction () {
   try {
-    return admin.initializeApp({
+    admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       storageBucket: CONSTANTS.STORAGE_BUCKET
     })
+    const firestore = admin.firestore()
+    firestore.settings(CONSTANTS.FIRESTORE_SETTINGS)
+    return admin
   } catch (e) {
     console.error(e)
   }
