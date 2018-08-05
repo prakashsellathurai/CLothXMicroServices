@@ -3,6 +3,7 @@ var cryptoFunctions = require('../../utils/cryptographicFunctions/general')
 var admin = require('firebase-admin')
 // const settings = {timestampsInSnapshots: true}
 var firestore = admin.firestore()
+
 // firestore.settings(settings)
 var storeModel = require('../../model/store')
 
@@ -27,9 +28,7 @@ function checkIfStoreDocExist (sid) {
     return (doc.exists)
   })
 }
-function checkIfSIdExist (sid) {
 
-}
 function generateAuthToken (sid, phoneNumber, password, res) {
   if (!checkIfStoreDocExist(sid)) {
     res.json({ isError: true, error: 'sid  does not exists' })
@@ -53,7 +52,7 @@ function generateAuthToken (sid, phoneNumber, password, res) {
                 res.json({ isError: false,
                   role: employeeDoc.data().role,
                   token: employeeDoc.data().token,
-                  type: storedata.data().type,
+                  type: storedata.type,
                   phoneNumber: phoneNumber,
                   sid: sid,
                   name: employeeDoc.data().name })
@@ -65,7 +64,14 @@ function generateAuthToken (sid, phoneNumber, password, res) {
     })
   }
 }
-
+function saveOWner (sid, ownerName, EmployeePhoneNUmber, password) {
+  let hashedpassword = cryptoFunctions.hashPassword(password)
+  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).set({
+    name: ownerName,
+    password: hashedpassword,
+    role: 'owner'
+  })
+}
 function storeEmployee (sid, EmployeePhoneNUmber, employeeDetails) {
   employeeDetails.password = cryptoFunctions.hashPassword(employeeDetails.password) //  encrypt and save the password
   return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).set(employeeDetails)
@@ -192,7 +198,7 @@ module.exports = {
   checkIfEmployeeExist: checkIfEmployeeExist,
   AddEmployee: storeEmployee,
   GetOwner: GetOwner,
-  encryptThePasswordOnCreate: encryptThepasswordOnce,
+  saveOwner: saveOWner,
   GetClothCollection: GetClothCollection,
   GetClothDoc: GetClothDoc,
   createStoreByStoreLog: createStoreByStoreLog,

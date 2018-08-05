@@ -1,9 +1,5 @@
 var admin = require('firebase-admin')
 var CONTANTS = require('../../../../functions/environment/CONSTANTS')
-var gcloud = require('@google-cloud/storage')({
-  projectId: 'clothxnet',
-  keyFilename: './../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json'
-})
 var serviceAccount = require('./../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

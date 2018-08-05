@@ -4,6 +4,7 @@ var dbFun = require('../CRUD/db')
 var sendEmail = require('../../utils/Mail/sendmail')
 var sendMessage = require('../../utils/message/SendMessage')
 var UpdateAbsolutePathHandler = require('../../utils/storage/UpdateAbsolutePath')
+var utils = require('../../utils/cryptographicFunctions/general')
 // ++++++++++++++++++++++++++++++++++++++++++++++++BUNDLED MODULE ====================================
 // ===================================================================================================
 // ============script runs whenever a new store is added under the location /stores/{sid}=============
@@ -14,15 +15,12 @@ function ParseSnapAndContext (snap, context) {
   return [context.params.storeId,
     snap.data().email,
     snap.data().ownerName,
-    snap.data().ownerPassword,
-    snap.data().storeName]
-}
-function GetPhoneNumber (storeId) {
-  return dbFun.GetOwner(storeId)
+    snap.data().storeName,
+    snap.data().ownerMobileNo]
 }
 
-function PassEncryptHandler (storeId, ownerphoneNumber, Password) {
-  return dbFun.encryptThePasswordOnCreate(storeId, ownerphoneNumber, Password)
+function saveOwner (storeId, ownerName, ownerphoneNumber, Password) {
+  return dbFun.saveOwner(storeId, ownerName, ownerphoneNumber, Password)
 }
 // =====================================================================================
 // ------------------------------------------------------------------------------------
@@ -63,29 +61,21 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
   // piping the process and execution in array
   return Promise.all(promises) // promise chaining as array never worked in my life time
 } */
-function LameCoreHandler (storeId, email, ownerName, Password, storeName) {
-  let ownerphoneNumber
-  return UpdateAbsolutePathHandler(storeId)
-    .then(() => { return GetPhoneNumber(storeId) })
-    .then(doc => {
-      return doc.docs.forEach(doc => {
-        ownerphoneNumber = doc.id
-        return PassEncryptHandler(storeId, ownerphoneNumber, Password)
-          .then((encryptThePAssword) => {
-            return EmailHAndler(email, ownerName, storeName, storeId, ownerphoneNumber, Password)
-              .then((result) => SMSHAndler(ownerphoneNumber, storeName, storeId, Password))
-          })
-      })
-    })
+function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerPhoneNumber) {
+  return saveOwner(storeId, ownerName, ownerPhoneNumber, Password)
+    .then(() => SMSHAndler(ownerPhoneNumber, storeName, storeId, Password))
+    .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
+    .then(() => UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
 }
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
   .onCreate((snap, context) => {
-    var storeId, email, ownerName, Password, storeName// local variables
-    [storeId, email, ownerName, Password, storeName] = ParseSnapAndContext(snap, context) // parse values
+    var storeId, email, ownerName, storeName, ownerPhoneNumber// local variables
+    [storeId, email, ownerName, storeName, ownerPhoneNumber] = ParseSnapAndContext(snap, context) // parse values
     // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
     // return CoreHandler(storeId, email, ownerName, Password, storeName)
     // } catch (e) { console.log(e) } // this one is useless
-    return LameCoreHandler(storeId, email, ownerName, Password, storeName) // i hate this function
+    let Password = utils.PasswordGenerator(6)
+    return LameCoreHandler(storeId, email, ownerName, Password, storeName, ownerPhoneNumber) // i hate this function
   })

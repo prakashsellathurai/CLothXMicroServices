@@ -10,7 +10,7 @@ function storeModel (sid, storelog) {
     ownerName: storelog.ownername,
     ownerMobileNo: storelog.ownermobileno,
     propriatorName: storelog.proprietorname,
-    storeType: storelog.storetype,
+    type: storelog.storetype,
     address: storelog.address,
     district: storelog.district,
     state: storelog.state,
@@ -28,6 +28,13 @@ function storeModel (sid, storelog) {
       geoPoint: storelog.geopoint
     },
     createdAt: new Date()
+  }
+}
+function EmployeeModel (employeeData) {
+  return {
+    name: employeeData.name,
+    password: employeeData.password,
+    role: employeeData.role
   }
 }
 function structureTheobject (sid, obj) {
