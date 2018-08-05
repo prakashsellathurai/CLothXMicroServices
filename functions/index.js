@@ -13,6 +13,7 @@ var OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice.js')
 var addEmployee = require('./http/employee/addemployee.js')
 var login = require('./http/Auth/Auth.js')
 var addstore = require('./http/store/ADD_STORE/index.js')
+var passwordreset = require('./http/store/PASSWORD_RESET/index.js')
 // ------------------------- cloud function exports ----------------------------------- //
 
 exports.OnCreateNewStoreLog = OncreateNewStoreLog
@@ -23,3 +24,4 @@ exports.oncreatenewinvoice = OnCreateNewInvoice
 exports.login = login
 exports.addemployee = addEmployee
 exports.addstore = addstore
+exports.passwordreset = passwordreset
