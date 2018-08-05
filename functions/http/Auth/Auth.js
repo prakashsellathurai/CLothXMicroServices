@@ -16,7 +16,6 @@ login.use(compression())
 login.use(helmet())
 // disable this header to eliminate targetted attacks
 login.disable('x-powered-by')
-login.post('', (req, res) => AuthrequestHandler.requestHandler(req, res))
 // respond to post request '/'
 login.post('/', (req, res) => AuthrequestHandler.requestHandler(req, res))
 
