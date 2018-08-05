@@ -122,6 +122,10 @@ function IntiatiateStoreIndex () {
 function createEmployee (sid, employeeDAta) {
   return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(employeeDAta)
 }
+function encryptThepasswordOnce (sid, EmployeePhoneNUmber, password) {
+  let hashedpassword = cryptoFunctions.hashPassword(password)
+  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword})
+}
 function createStoreByStoreLog (storelog) {
   return CountSize().then((sid) => {
     return createStore(sid, storeModel.MapStoreLog(sid, storelog))
@@ -163,11 +167,27 @@ function checkIfsidExist (sid) {
     return arr.length > 0
   })
 }
+// ############################# log related function ###############
 function addstorelog (uuid, doc) {
   return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
 }
 function RemoveUndefinedValues (obj) {
   return JSON.parse(JSON.stringify(obj))
+}
+// ++++++++++Password reset functions ++++++++++++ //
+function ResetEmployeePassword (sid, EmployeePhoneNUmber, password) {
+  let hashedpassword = cryptoFunctions.hashPassword(password)
+  return firestore.collection(`stores/${sid}/employees/`).doc(`${EmployeePhoneNUmber}`).update({password: hashedpassword})
+}
+function EmployeePasswordResetLogger (sid, EmployeePhoneNUmber) {
+  return firestore.collection(`/DbIndex/stores/passwordreset/`).add({
+    sid: sid,
+    phonenumber: EmployeePhoneNUmber,
+    timestamp: new Date()
+  })
+}
+function EmployeePasswordResetTokenGenerator (sid, EmployeePhoneNUmber) {
+  return EmployeePasswordResetLogger(sid, EmployeePhoneNUmber).then(ref => ref.id)
 }
 module.exports = {
   generateAuthToken: generateAuthToken,
@@ -189,5 +209,7 @@ module.exports = {
   checkIfsidExist: checkIfsidExist,
   CountSize: CountSize,
   addstorelog: addstorelog,
-  AbsoluteCreateStore: AbsoluteCreateStore
+  AbsoluteCreateStore: AbsoluteCreateStore,
+  ResetEmployeePassword: ResetEmployeePassword,
+  EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator
 }
