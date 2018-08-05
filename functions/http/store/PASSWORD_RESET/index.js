@@ -59,7 +59,9 @@ function RootRequestProcessor (req, res) {
 }
 async function PasswordResetHandler (req, res) {
   let authtoken = req.params.token
-  if (isNotdefined(authtoken)) { res.json({msg: 'invalid link'}) } else {
+  if (isNotdefined(authtoken)) {
+    res.sendFile(path.join(__dirname, '/public/invalid.html'))
+  } else {
     res.sendFile(path.join(__dirname, '/public/index.html'))
   }
 }
