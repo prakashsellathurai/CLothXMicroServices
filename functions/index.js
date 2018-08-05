@@ -1,6 +1,7 @@
-var admin = require('firebase-admin')
-var functions = require('firebase-functions')
-try { admin.initializeApp(functions.config()) } catch (e) { console.error(e) }
+'use strict'
+// ========================Intialize Admin SDk with credentials =======================//
+var InitAdmin = require('./environment/initAdmin')
+InitAdmin.CredentialsForProduction()
 // ======================== firetsore triggers ======================================== //
 var OncreateNewStore = require('./firestore/store/OnCreateNewStore.js')
 var OncreateNewStoreLog = require('./firestore/store/OnCreateAddStoreLog')
