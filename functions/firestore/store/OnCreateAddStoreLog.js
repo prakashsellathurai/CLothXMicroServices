@@ -11,7 +11,7 @@ module.exports = functions.firestore.document('/DbIndex/stores/addstorelog/{uuid
   .onCreate((snap, context) => {
     var uuid, storelog// local variables
     [uuid, storelog] = ParseSnapAndContext(snap, context) // parse values
-    console.log(storelog)
+    console.log(snap.data())
     return Preprocessor(uuid, storelog)
       .then((LamHandlerArgArr) => {
         console.log(...LamHandlerArgArr)
