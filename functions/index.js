@@ -24,4 +24,4 @@ exports.oncreatenewinvoice = OnCreateNewInvoice
 exports.login = login
 exports.addemployee = addEmployee
 exports.addstore = addstore
-exports.passwordreset = passwordreset
+//exports.passwordreset = passwordreset
