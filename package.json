@@ -27,5 +27,9 @@
     "jwt-simple": "^0.5.1",
     "nodemailer": "^4.6.5"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2017": "^6.24.1"
+  }
 }
