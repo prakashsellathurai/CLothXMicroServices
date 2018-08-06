@@ -1,3 +1,7 @@
+
+// #################################### this file is deprecated the functionality is moved to client side #####################
+// #########################################################################################################
+// ########################################################################################################
 const functions = require('firebase-functions')
 const express = require('express')
 const passwordRecovery = express()
