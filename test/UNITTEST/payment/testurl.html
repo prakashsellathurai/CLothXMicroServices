@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <form action="/purchase" method="POST">
+        <!-- Note that the amount is in paise = 50 INR -->
+        <script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="rzp_test_VKoM9s0eHvy4Ys"
+            data-amount="5000"
+            data-buttontext="Pay with Razorpay"
+            data-name="Merchant Name"
+            data-description="Purchase Description"
+            data-image="https://your-awesome-site.com/your_logo.jpg"
+            data-prefill.name="Harshil Mathur"
+            data-prefill.email="support@razorpay.com"
+            data-theme.color="#F37254"
+        ></script>
+        <input type="hidden" value="Hidden Element" name="hidden">
+        </form>
+</body>
+</html>
