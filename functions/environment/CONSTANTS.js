@@ -11,5 +11,9 @@ module.exports = {
     action: 'read',
     expires: '03-09-2491'
   },
-  FIRESTORE_SETTINGS: {timestampsInSnapshots: true}
+  FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
+  RAZORPAY_CREDENTIALS: {
+    key_id: 'rzp_test_VKoM9s0eHvy4Ys',
+    key_secret: 'E4i2aOP0z8fDvNsyqXloAtel'
+  }
 }

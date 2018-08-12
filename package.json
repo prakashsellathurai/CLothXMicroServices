@@ -25,7 +25,8 @@
     "firebase-functions": "^1.0.3",
     "helmet": "^3.12.1",
     "jwt-simple": "^0.5.1",
-    "nodemailer": "^4.6.5"
+    "nodemailer": "^4.6.5",
+    "razorpay": "^2.0.1"
   },
   "private": true
 }
