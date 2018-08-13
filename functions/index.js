@@ -9,7 +9,7 @@ var OncreateNewClothes = require('./firestore/clothes/OnCreateNewClothes.js')
 var OndeleteClothes = require('./firestore/clothes/OnDeleteClothes.js')
 var OnCreateNewInvoice = require('./firestore/store/OnCreateInvoice.js')
 // +++++++++++++++++++++++++ http triggers ++++++++++++++++++++++++++++++++++++++++++++ //
-
+var razorpayWebhooklog = require('./http/payment/webhooks/logwebhook.js')
 var addEmployee = require('./http/employee/addemployee.js')
 var login = require('./http/Auth/Auth.js')
 var addstore = require('./http/store/ADD_STORE/index.js')
@@ -23,3 +23,4 @@ exports.oncreatenewinvoice = OnCreateNewInvoice
 exports.login = login
 exports.addemployee = addEmployee
 exports.addstore = addstore
+exports.razorpaywebhook = razorpayWebhooklog
