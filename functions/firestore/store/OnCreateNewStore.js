@@ -81,13 +81,13 @@ function AppHandler (snap, context) {
 |||||||||||||||||||||||||||||||||||||WEBSITE HANDLER ||||||||||||||||||||||||||||||||||||||||||||\|||
 #################################################################################################### */
 function WebsiteHandler (snap, context) {
-
+  let storeId = context.params.storeId
+  let registerUid = snap.data().registerUid
+  return dbFun.AssociateStoreInfoToUser(registerUid, storeId)
 }
 // ==================================================================================================
 // =====================================export module================================================
-module.exports = functions.firestore.document('stores/{storeId}')
-  .onCreate((snap, context) => {
-    storeId = context.params.storeId
-    registerUid = snap.data().registerUid
-    
-  })
+module.exports = functions
+  .firestore
+  .document('stores/{storeId}')
+  .onCreate((snap, context) => WebsiteHandler(snap, context))
