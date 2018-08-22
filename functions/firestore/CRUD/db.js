@@ -189,6 +189,42 @@ function EmployeePasswordResetLogger (sid, EmployeePhoneNUmber) {
 function EmployeePasswordResetTokenGenerator (sid, EmployeePhoneNUmber) {
   return EmployeePasswordResetLogger(sid, EmployeePhoneNUmber).then(ref => ref.id)
 }
+function GetUserData (uuid) {
+  return firestore
+    .doc(`users/${uuid}`)
+    .get()
+    .then(doc => doc.data())
+}
+function AssociateStoreInfoToUser (uuid, storeIds) {
+  return GetUserData(uuid)
+    .then(userDoc => {
+      let registeredStores = userDoc.registerOf
+      let isRegisterbool = userDoc.isRegister
+      let storeArray = []
+      let dataToUpdate
+      if (isEmptyArray(registeredStores)) {
+        storeArray.push(storeIds)
+      } else {
+        storeArray = registeredStores.concat(storeIds)
+      }
+      if (isRegisterbool) {
+        dataToUpdate = {
+          registerOf: storeArray
+        }
+      } else {
+        dataToUpdate = {
+          isRegister: true,
+          registerOf: storeArray
+        }
+      }
+      return firestore
+        .doc(`users/${uuid}`)
+        .update(dataToUpdate)
+    })
+}
+function isEmptyArray (Arr) {
+  return Arr.length === 0 || typeof Arr === 'undefined'
+}
 module.exports = {
   generateAuthToken: generateAuthToken,
   savetoken: saveToken,
@@ -208,8 +244,10 @@ module.exports = {
   storeQueryBySid: storeQueryBySid,
   checkIfsidExist: checkIfsidExist,
   CountSize: CountSize,
+  GetUserData: GetUserData,
   addstorelog: addstorelog,
   AbsoluteCreateStore: AbsoluteCreateStore,
   ResetEmployeePassword: ResetEmployeePassword,
-  EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator
+  EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator,
+  AssociateStoreInfoToUser: AssociateStoreInfoToUser
 }

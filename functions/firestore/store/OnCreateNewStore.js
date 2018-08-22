@@ -11,7 +11,7 @@ var utils = require('../../utils/cryptographicFunctions/general')
 // ===================================================================================================
 // ===================================================================================================
 // ======================================HELPER FUNCTIONS=============================================
-function ParseSnapAndContext (snap, context) {
+function ParseSnapAndContextForAppSignIn (snap, context) {
   return [context.params.storeId,
     snap.data().email,
     snap.data().ownerName,
@@ -67,15 +67,27 @@ function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerP
     .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
     .then(() => UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
 }
+function AppHandler (snap, context) {
+  var storeId, email, ownerName, storeName, ownerPhoneNumber// local variables
+  [storeId, email, ownerName, storeName, ownerPhoneNumber] = ParseSnapAndContextForAppSignIn(snap, context) // parse values
+  // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
+  // return CoreHandler(storeId, email, ownerName, Password, storeName)
+  // } catch (e) { console.log(e) } // this one is useless
+  let Password = utils.PasswordGenerator(6)
+  return LameCoreHandler(storeId, email, ownerName, Password, storeName, ownerPhoneNumber) // i hate this function
+}
+/* ####################################################################################################
+######################################################################################################
+|||||||||||||||||||||||||||||||||||||WEBSITE HANDLER ||||||||||||||||||||||||||||||||||||||||||||\|||
+#################################################################################################### */
+function WebsiteHandler (snap, context) {
+  let storeId = context.params.storeId
+  let registerUid = snap.data().registerUid
+  return dbFun.AssociateStoreInfoToUser(registerUid, storeId)
+}
 // ==================================================================================================
 // =====================================export module================================================
-module.exports = functions.firestore.document('stores/{storeId}')
-  .onCreate((snap, context) => {
-    var storeId, email, ownerName, storeName, ownerPhoneNumber// local variables
-    [storeId, email, ownerName, storeName, ownerPhoneNumber] = ParseSnapAndContext(snap, context) // parse values
-    // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
-    // return CoreHandler(storeId, email, ownerName, Password, storeName)
-    // } catch (e) { console.log(e) } // this one is useless
-    let Password = utils.PasswordGenerator(6)
-    return LameCoreHandler(storeId, email, ownerName, Password, storeName, ownerPhoneNumber) // i hate this function
-  })
+module.exports = functions
+  .firestore
+  .document('stores/{storeId}')
+  .onCreate((snap, context) => WebsiteHandler(snap, context))
