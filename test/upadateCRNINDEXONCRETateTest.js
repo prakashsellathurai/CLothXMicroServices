@@ -57,4 +57,4 @@ var userId = 'ZPnEUNe3l7NR0LYFj0dH'
 
 var userRef = firestore.collection('user').doc(userId)
 var position = 1
-UpdateCRNIndex(userRef, position)
+firestore.doc(`users/w2DUjxHxBIQCuYg4LB0ZlALpD7r2`).get().then(val => console.log(val.data().registerOf.length))

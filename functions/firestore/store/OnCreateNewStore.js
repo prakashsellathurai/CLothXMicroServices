@@ -87,4 +87,7 @@ function WebsiteHandler (snap, context) {
 // =====================================export module================================================
 module.exports = functions.firestore.document('stores/{storeId}')
   .onCreate((snap, context) => {
+    storeId = context.params.storeId
+    registerUid = snap.data().registerUid
+    
   })
