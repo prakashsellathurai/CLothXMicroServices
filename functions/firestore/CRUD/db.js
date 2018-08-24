@@ -217,32 +217,35 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
           registerOf: storeArray
         }
       }
-      return UpdateUserDoc(uuid, dataToUpdate)
+      return UpdateUserDocProperty(uuid, dataToUpdate)
         .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
     })
 }
-function UpdateUserDoc (uuid, dataToUpdate) {
+function UpdateUserDocProperty (uuid, dataToUpdate) {
   return firestore
     .doc(`users/${uuid}`)
     .update(dataToUpdate)
 }
 
-function UpsertStoreDoc (storeId, propertyObj) {
+function UpsertSingleStoreDocProperty (storeId, propertyObj) {
   return firestore
     .doc(`stores/${storeId}`)
     .set(propertyObj, {merge: true})
 }
 function UpdateStoreVerficationStatus (storeIds, STATUS_STRING) {
-  let promises = []
   let property = {
     verificationStatus: STATUS_STRING
   }
   if (Array.isArray(storeIds)) {
-    storeIds.forEach(storeId => promises.push(UpsertStoreDoc(storeId, property)))
-    return Promise.all(promises)
+    return UpdateMultiStoreDocProperty(storeIds, property)
   } else {
-    return UpsertStoreDoc(storeIds, property)
+    return UpsertSingleStoreDocProperty(storeIds, property)
   }
+}
+function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
+  let promises = []
+  storeIds.forEach(storeId => promises.push(UpsertSingleStoreDocProperty(storeId, propertyObj)))
+  return Promise.all(promises)
 }
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
