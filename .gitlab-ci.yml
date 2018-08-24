@@ -21,7 +21,7 @@ production_server_deployment:
     name: production
   <<: *node
   script:
-     - firebase use default
+     - firebase use default --token $FIREBASE_TOKEN_FOR_PRODUCTION
      - npm run deploy
   only:
      - master
@@ -32,7 +32,7 @@ test_server_deployment:
      name: testDeployment
   <<: *node
   script:
-     - firebase use test_server
+     - firebase use test_server --token $FIREBASE_TOKEN_FOR_TESTING
      - npm run test_server_deploy
   only:
     -  develop
