@@ -8,7 +8,7 @@
     "gtfd": "cd functions",
     "goback": "cd ..",
     "predeploy": "firebase use clothxnet --token $FIREBASE_TOKEN $CI_ENVIRONMENT_SLUG",
-    "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_TOKEN",
+    "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_TOKEN_FOR_PRODUCTION",
     "logs": "firebase functions:log"
   },
   "dependencies": {
