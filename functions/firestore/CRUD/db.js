@@ -217,10 +217,32 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
           registerOf: storeArray
         }
       }
-      return firestore
-        .doc(`users/${uuid}`)
-        .update(dataToUpdate)
+      return UpdateUserDoc(uuid, dataToUpdate)
+        .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
     })
+}
+function UpdateUserDoc (uuid, dataToUpdate) {
+  return firestore
+    .doc(`users/${uuid}`)
+    .update(dataToUpdate)
+}
+
+function UpsertStoreDoc (storeId, propertyObj) {
+  return firestore
+    .doc(`stores/${storeId}`)
+    .set(propertyObj, {merge: true})
+}
+function UpdateStoreVerficationStatus (storeIds, STATUS_STRING) {
+  let promises = []
+  let property = {
+    verificationStatus: STATUS_STRING
+  }
+  if (Array.isArray(storeIds)) {
+    storeIds.forEach(storeId => promises.push(UpsertStoreDoc(storeId, property)))
+    return Promise.all(promises)
+  } else {
+    return UpsertStoreDoc(storeIds, property)
+  }
 }
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
