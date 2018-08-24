@@ -8,14 +8,12 @@ function validateHeader (postedInfo, res) {
   return true
 }
 function parseHeaders (req) {
-  console.log(req.headers)
   return { phoneNumber: req.headers.phonenumber, password: req.headers.password, sid: req.headers.sid }
 }
 // ********************* export the handler function******************************* //
 module.exports.requestHandler = function requestHandler (req, res) {
   try {
     var postedInfo = parseHeaders(req)
-    console.log(postedInfo)
     if (validateHeader(postedInfo, res)) {
       return dbFunctions.generateAuthToken(postedInfo.sid, postedInfo.phoneNumber, postedInfo.password, res)
     }
