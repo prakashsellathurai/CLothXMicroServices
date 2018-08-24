@@ -21,6 +21,7 @@ production_server_deployment:
     name: production
   <<: *node
   script:
+     - firebase use default
      - npm run deploy
   only:
      - master
@@ -31,6 +32,7 @@ test_server_deployment:
      name: testDeployment
   <<: *node
   script:
+     - firebase use test_server
      - npm run test_server_deploy
   only:
     -  develop
