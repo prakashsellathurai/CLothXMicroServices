@@ -21,9 +21,12 @@ exports.login = login
 exports.addemployee = addEmployee
 exports.addstore = addstore
 */
-const glob = require('glob')
+
 function exportFunction () {
-  return glob.sync('{,!(node_modules)/**/}*.js', { cwd: __dirname }).forEach(file => {
+  const glob = require('glob')
+  const path = require('path')
+  const EXPORTS_FOLDER = path.join(__dirname, '/exports')
+  return glob.sync('{,!(node_modules)/**/}*.js', { cwd: EXPORTS_FOLDER }).forEach(file => {
     const only = process.env.FUNCTION_NAME
     const name = concoctFunctionName(file)
     if (only === undefined || only === name) {
