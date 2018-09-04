@@ -1,4 +1,4 @@
-var dbFunctions = require('../../firestore/CRUD/db')
+var dbFunctions = require('../../../../shared/firestore/CRUD/db')
 function validateHeader (postedInfo, res) {
   if (!(postedInfo.phoneNumber && postedInfo.password && postedInfo.sid)) {
     res.json({ isError: true, error: 'Authentication info not provided refusing to accept' })
