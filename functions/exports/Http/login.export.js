@@ -1,5 +1,5 @@
 var functions = require('firebase-functions')
-var AuthrequestHandler = require('./AuthRequestHandler')
+var AuthrequestHandler = require('./public/login/loginhandler')
 // auth app code
 
 const express = require('express')

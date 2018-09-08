@@ -2,7 +2,7 @@ var admin = require('firebase-admin')
 var functions = require('firebase-functions')
 var firestore = admin.firestore()
 
-var crnAdder = require('../../utils/crn/ondelete')
+var crnAdder = require('../../../shared/utils/crn/ondelete')
 var OndeleteClothes = functions.firestore
   .document('stores/{storeId}/clothes/{clothId}').onDelete((snap, context) => {
     const deletedcloth = snap.data()
