@@ -15,7 +15,7 @@ const tmpdir = os.tmpdir()
 // custom
 var uploadedFiles = []
 
-const dbFun = require('../../../firestore/CRUD/db')
+const dbFun = require('../../shared/firestore/CRUD/db')
 // ##################################################################
 const gcloud = require('@google-cloud/storage')(
   { projectId: 'clothxnet' }
@@ -28,10 +28,10 @@ addstore.use(cors({ origin: true }))
 addstore.use(compression())
 // use helmet for safety
 addstore.use(helmet())
-addstore.use(express.static(path.join(__dirname, 'public')))
-addstore.get('/', express.static(path.join(__dirname, 'public')))
+addstore.use(express.static(path.join(__dirname, 'public/addstore/public')))
+addstore.get('/', express.static(path.join(__dirname, 'public/addstore/public')))
 addstore.get('/success', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/success.html'))
+  res.sendFile(path.join(__dirname, '/public/addstore/public/success.html'))
 )
 addstore.post('/submit', (req, res) => SubmitHandler(req, res))
 

@@ -1,10 +1,10 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-var dbFun = require('../CRUD/db')
-var sendEmail = require('../../utils/Mail/sendmail')
-var sendMessage = require('../../utils/message/SendMessage')
-var UpdateAbsolutePathHandler = require('../../utils/storage/UpdateAbsolutePath')
-var utils = require('../../utils/cryptographicFunctions/general')
+var dbFun = require('../../../shared/firestore/CRUD/db')
+var sendEmail = require('../../../shared/utils/Mail/sendmail')
+var sendMessage = require('../../../shared/utils/message/SendMessage')
+var UpdateAbsolutePathHandler = require('../../../shared/utils/storage/UpdateAbsolutePath')
+var utils = require('../../../shared/utils/cryptographicFunctions/general')
 // ++++++++++++++++++++++++++++++++++++++++++++++++BUNDLED MODULE ====================================
 // ===================================================================================================
 // ============script runs whenever a new store is added under the location /stores/{sid}=============
@@ -60,14 +60,14 @@ function textMessage (storeName, storeId, ownerphoneNumber, Password) {
   promises.push(updateStoragePAths, ownerphoneNumber, encryptThePAssword, MAilNotification, MessageNotification)
   // piping the process and execution in array
   return Promise.all(promises) // promise chaining as array never worked in my life time
-} */
+}
 function LameCoreHandler (storeId, email, ownerName, Password, storeName, ownerPhoneNumber) {
   return saveOwner(storeId, ownerName, ownerPhoneNumber, Password)
     .then(() => SMSHAndler(ownerPhoneNumber, storeName, storeId, Password))
     .then(() => EmailHAndler(email, ownerName, storeName, storeId, ownerPhoneNumber, Password))
     .then(() => UpdateAbsolutePathHandler.updateAbsoluteFileStoragePAth(storeId))
 }
-function AppHandler (snap, context) {
+/* function AppHandler (snap, context) {
   var storeId, email, ownerName, storeName, ownerPhoneNumber// local variables
   [storeId, email, ownerName, storeName, ownerPhoneNumber] = ParseSnapAndContextForAppSignIn(snap, context) // parse values
   // try { // remove this try catch if you detect anomaly (like interstellar everyone saw that coming , but no one understood it)
@@ -75,7 +75,7 @@ function AppHandler (snap, context) {
   // } catch (e) { console.log(e) } // this one is useless
   let Password = utils.PasswordGenerator(6)
   return LameCoreHandler(storeId, email, ownerName, Password, storeName, ownerPhoneNumber) // i hate this function
-}
+} */
 /* ####################################################################################################
 ######################################################################################################
 |||||||||||||||||||||||||||||||||||||WEBSITE HANDLER ||||||||||||||||||||||||||||||||||||||||||||\|||
