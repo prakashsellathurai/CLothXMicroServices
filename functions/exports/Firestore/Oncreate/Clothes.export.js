@@ -1,7 +1,7 @@
 var admin = require('firebase-admin')
 var functions = require('firebase-functions')
 
-var crnAdder = require('../../utils/crn/oncreate')
+var crnAdder = require('../../../shared/utils/crn/oncreate')
 
 var firestore = admin.firestore()
 
