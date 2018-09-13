@@ -20,7 +20,8 @@ const EXPORTS_FOLDER = [
   PUB_SUB_TRIGGER_PATH,
   STORAGE_TRIGGER_PATH
 ]
-module.exports.exportTheFUnctions = function exportTheFUnctions () {
+module.exports.functions_aggregrator = function FunctionExports () {
+  let exportObj = {}
   for (let index = 0; index < EXPORTS_FOLDER.length; index++) {
     const ABSOLUTE_PATH = EXPORTS_FOLDER[index]
     glob.sync('{,!(node_modules)/**/}*.export.js', { cwd: ABSOLUTE_PATH }).forEach(FILE => {
@@ -28,8 +29,9 @@ module.exports.exportTheFUnctions = function exportTheFUnctions () {
       const name = utils.functionNameGenerator(FILE)
       if (only === undefined || only === name) {
         let filepath = path.resolve(ABSOLUTE_PATH, FILE)
-        module.exports[name] = require(filepath)
+        exportObj[name] = filepath
       }
     })
   }
+  return exportObj
 }
