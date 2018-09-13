@@ -214,7 +214,8 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
       } else {
         dataToUpdate = {
           isRegister: true,
-          registerOf: storeArray
+          registerOf: storeArray,
+          role: 'Register'
         }
       }
       return UpdateUserDocProperty(uuid, dataToUpdate)
