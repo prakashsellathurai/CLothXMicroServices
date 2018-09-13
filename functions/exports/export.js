@@ -23,13 +23,11 @@ const EXPORTS_FOLDER = [
 module.exports.exportTheFUnctions = function exportTheFUnctions () {
   for (let index = 0; index < EXPORTS_FOLDER.length; index++) {
     const ABSOLUTE_PATH = EXPORTS_FOLDER[index]
-    return glob.sync('{,!(node_modules)/**/}*.export.js', { cwd: ABSOLUTE_PATH }).forEach(FILE => {
+    glob.sync('{,!(node_modules)/**/}*.export.js', { cwd: ABSOLUTE_PATH }).forEach(FILE => {
       const only = process.env.FUNCTION_NAME
       const name = utils.functionNameGenerator(FILE)
       if (only === undefined || only === name) {
         let filepath = path.resolve(ABSOLUTE_PATH, FILE)
-        console.log(name, filepath)
-        // return { name: name, filepath: filepath }
         module.exports[name] = require(filepath)
       }
     })
