@@ -1,0 +1,39 @@
+{
+  "name": "mws-api",
+  "version": "3.0.0",
+  "description": "Amazon Marketplace Web Services API client",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -c test/xml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beardon/mws-api.git"
+  },
+  "keywords": [
+    "mws",
+    "amazon",
+    "marketplace",
+    "fba",
+    "sellers"
+  ],
+  "author": "Tyson Cleary <tyson@beardon.com> (https://github.com/tyscorp)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beardon/mws-api/issues"
+  },
+  "homepage": "https://github.com/beardon/mws-api#readme",
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "request": "^2.81.0",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
+  }
+}

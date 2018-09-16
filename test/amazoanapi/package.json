@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amazon-mws": "0.0.19"
+    "mws-api":"2.1.0"
   }
 }
