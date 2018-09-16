@@ -261,7 +261,7 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
             .forEach(doc => {
               let initialStock = doc.data().stock
               let updatedStock = initialStock - quantityToReduce
-              transaction.update(doc.ref, {stock: updatedStock})
+              return transaction.update(doc.ref, {stock: updatedStock})
             })
         })
     })
