@@ -8,7 +8,6 @@ module.exports = functions
   .document('stores/{storeId}/invoices/{invoiceId}')
   .onCreate((snap, context) => {
     const storeId = context.params.storeId
-    // const invoiceId = context.params.invoiceId
     const soldClothsData = snap.data().soldClothes
     const crnArray = soldClothsData.crn
     const sizeArray = soldClothsData.size
