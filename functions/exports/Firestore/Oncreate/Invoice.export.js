@@ -18,8 +18,8 @@ function LocalInventoryUpdater (storeId, cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let prn = cartProduct.prn
-    let quantity_to_reduce = cartProduct.totalQuantity
-    promises.push(UpdateProductQuantity(storeId, prn, quantity_to_reduce))
+    let quantityToReduce = cartProduct.totalQuantity
+    promises.push(UpdateProductQuantity(storeId, prn, quantityToReduce))
   }
   return Promise.all(promises)
 }
