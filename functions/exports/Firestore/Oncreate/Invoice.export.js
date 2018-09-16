@@ -8,55 +8,24 @@ module.exports = functions
   .document('stores/{storeId}/invoices/{invoiceId}')
   .onCreate((snap, context) => {
     const storeId = context.params.storeId
-    const soldClothsData = snap.data().soldClothes
-    const crnArray = soldClothsData.crn
-    const sizeArray = soldClothsData.size
-    const quantityArray = soldClothsData.quantity
-    console.log('syoreId' + storeId + '\n' + 'crnArray' + crnArray + '\n' + 'sizeArray' + sizeArray + '\n' + 'quantityArray' + quantityArray)
-    return UpDateTheSizeArray(storeId, crnArray, quantityArray, sizeArray)
+    const cartProducts = snap.data().cartProducts
+    const invoiceId = context.params.InvoiceId
+    return LocalInventoryUpdater(storeId, cartProducts)
+      .then(() => UpdatePendingStatus(storeId, invoiceId, 'false'))
   })
-
-function UpDateTheSizeArray (sid, crnArray, quantityArray, sizeArray) {
+function LocalInventoryUpdater (storeId, cartProducts) {
   let promises = []
-  for (let index = 0; index < crnArray.length; index++) {
-    console.log('for loop index = ' + index)
-    promises.push(FindclothWithCRn(sid, crnArray[index]).then(clothesDoc => {
-      console.log('for loop after index = ' + index)
-      let ClothDocDAta = clothesDoc.data()
-      let quantityToReduce = quantityArray[index]
-      let intialSize = ClothDocDAta.size[`${sizeArray[index]}`]
-      let reducedSize = intialSize - quantityToReduce
-      console.log(reducedSize)
-      return (checkReducedSizeINtegrity(reducedSize)) ? console.error('size tried to reduce less than 0') : reduceStock(sid, clothesDoc.id, reducedSize, sizeArray[index])
-    }))
+  for (let index = 0; index < cartProducts.length; index++) {
+    const cartProduct = cartProducts[index]
+    let prn = cartProduct.prn
+    let quantity_to_reduce = cartProduct.totalQuantity
+    promises.push(UpdateProductQuantity(storeId, prn, quantity_to_reduce))
   }
-  console.log('end Of FOR LOOP')
-  return Promise.all(promises).then(() => console.log('success'))
+  return Promise.all(promises)
 }
-function reduceStock (storeId, clothId, reducedSize, sizeArrayElement) {
-  let update = {}
-  update[`size.${sizeArrayElement}`] = reducedSize
-  console.log(`reduced Size is updateObject is `)
-  console.log(`{size : ${update.size} }`)
-
-  return new Promise(resolve => {
-    dbFun.GetClothDoc(storeId, clothId).update(update)
-    console.log('=======================================END OF OPERATION +++++++++++++++++++')
-    resolve()
-  })
+function UpdateProductQuantity (storeId, prn, quantity) {
+  return dbFun.ReduceProductQuantity(storeId, prn, quantity)
 }
-
-function FindclothWithCRn (storeId, crn) {
-  return dbFun.GetClothCollection(storeId).then(val => {
-    return new Promise((resolve, reject) => {
-      val.docs.forEach(val => {
-        if (val.data().crn === crn) {
-          return resolve(val)
-        }
-      })
-    })
-  })
-}
-function checkReducedSizeINtegrity (reducedSize) {
-  return reducedSize < 0 || isNaN(reducedSize) || reducedSize === undefined || reducedSize === null
+function UpdatePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+  return dbFun.UpdatInvoicePendingStatus(storeId, invoiceId, UPDATE_STATUS_BOOLEAN)
 }

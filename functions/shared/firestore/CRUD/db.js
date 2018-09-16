@@ -248,6 +248,25 @@ function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
   storeIds.forEach(storeId => promises.push(UpsertSingleStoreDocProperty(storeId, propertyObj)))
   return Promise.all(promises)
 }
+function ReduceProductQuantity (storeId, prn, quantityToReduce) {
+  let productDocRef = firestore
+    .collection(`stores/${storeId}/products`)
+    .where('prn', '==', `${prn}`)
+  return firestore
+    .runTransaction(transaction => {
+      return transaction.get(productDocRef)
+        .then((doc) => {
+          let initialStock = doc.data().stock
+          let updatedStock = initialStock - quantityToReduce
+          transaction.update(productDocRef, {prn: updatedStock})
+        })
+    })
+}
+function UpdatInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+  return firestore
+    .doc(`stores/${storeId}/invoices/${invoiceId}`)
+    .update({pending: `${UPDATE_STATUS_BOOLEAN}`})
+}
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
 }
@@ -275,5 +294,7 @@ module.exports = {
   AbsoluteCreateStore: AbsoluteCreateStore,
   ResetEmployeePassword: ResetEmployeePassword,
   EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator,
-  AssociateStoreInfoToUser: AssociateStoreInfoToUser
+  AssociateStoreInfoToUser: AssociateStoreInfoToUser,
+  ReduceProductQuantity: ReduceProductQuantity,
+  UpdatInvoicePendingStatus: UpdatInvoicePendingStatus
 }
