@@ -9,7 +9,7 @@ module.exports = functions
   .onCreate((snap, context) => {
     const storeId = context.params.storeId
     const cartProducts = snap.data().cartProducts
-    const invoiceId = context.params.InvoiceId
+    const invoiceId = context.params.invoiceId
     return LocalInventoryUpdater(storeId, cartProducts)
       .then(() => UpdatePendingStatus(storeId, invoiceId, 'false'))
   })
