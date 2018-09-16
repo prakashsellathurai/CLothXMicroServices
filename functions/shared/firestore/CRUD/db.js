@@ -254,11 +254,14 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
     .where('prn', '==', `${prn}`)
   return firestore
     .runTransaction(transaction => {
-      return transaction.get(productDocRef)
-        .then((doc) => {
-          let initialStock = doc.data().stock
-          let updatedStock = initialStock - quantityToReduce
-          transaction.update(productDocRef, {prn: updatedStock})
+      return transaction
+        .get(productDocRef)
+        .then((docs) => {
+          return docs.forEach(doc => {
+            let initialStock = doc.data().stock
+            let updatedStock = initialStock - quantityToReduce
+            transaction.update(productDocRef, {prn: updatedStock})
+          })
         })
     })
 }
