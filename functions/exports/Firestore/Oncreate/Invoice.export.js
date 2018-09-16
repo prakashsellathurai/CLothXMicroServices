@@ -3,8 +3,10 @@ var functions = require('firebase-functions')
 var dbFun = require('../../../shared/firestore/CRUD/db')
 // ==================================================================================================
 // =====================================export module================================================
-module.exports = functions.firestore
-  .document('stores/{storeId}/invoice/{invoiceId}').onCreate((snap, context) => {
+module.exports = functions
+  .firestore
+  .document('stores/{storeId}/invoices/{invoiceId}')
+  .onCreate((snap, context) => {
     const storeId = context.params.storeId
     // const invoiceId = context.params.invoiceId
     const soldClothsData = snap.data().soldClothes
