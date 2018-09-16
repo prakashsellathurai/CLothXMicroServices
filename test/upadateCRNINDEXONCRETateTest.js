@@ -22,8 +22,7 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
             console.log(doc.data())
             let initialStock = doc.data().stock
             let updatedStock = initialStock - quantityToReduce
-            console.log(doc.ref)
-            return // transaction.update(productDocRef, {prn: updatedStock})
+            return transaction.update(doc.ref, {stock: 50})
           })
        
           // 

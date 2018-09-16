@@ -257,11 +257,12 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
       return transaction
         .get(productDocRef)
         .then((docs) => {
-          return docs.forEach(doc => {
-            let initialStock = doc.data().stock
-            let updatedStock = initialStock - quantityToReduce
-            transaction.update(productDocRef, {prn: updatedStock})
-          })
+          return docs
+            .forEach(doc => {
+              let initialStock = doc.data().stock
+              let updatedStock = initialStock - quantityToReduce
+              transaction.update(doc.ref, {stock: updatedStock})
+            })
         })
     })
 }
