@@ -22,7 +22,10 @@ function prnCheckLoop (InitialPrnToTest, storeID) {
   })
 }
 function UpdateprnVal (docRef, val) {
-  return firestore.doc(docRef).update({prn: val})
+  return firestore.doc(docRef).update({
+    prn: val,
+    createdOn: admin.firestore.FieldValue.serverTimestamp()
+  })
 }
 function RandomGen (Length) {
   var keylistalpha = 'bcdfghjklmnpqrstvwxyz'
