@@ -1,33 +1,20 @@
 var admin = require('firebase-admin')
 
-var serviceAccount = require('../functions/shared/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+var serviceAccount = require('../functions/shared/environment/clothxtest-firebase-adminsdk-0bpps-e18156c08d.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://clothxnet.firebaseio.com'
+  databaseURL: 'https://clothxtest.firebaseio.com'
 
 })
 var firestore = admin.firestore()
-function ReduceProductQuantity (storeId, prn, quantityToReduce) {
-  let productDocRef = firestore
-    .collection(`stores/${storeId}/products`)
-    .where('prn', '==', `${prn}`)
+function Addstore (storediD) {
   return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((docs) => {
-    
-          return docs.forEach(doc => {
-            console.log(doc.data())
-            let initialStock = doc.data().stock
-            let updatedStock = initialStock - quantityToReduce
-            return transaction.update(doc.ref, {stock: 50})
-          })
-       
-          // 
-        })
+    .doc(`stores/${storediD}`)
+    .set({
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     })
 }
-
-ReduceProductQuantity('9UtL9dt2WaGbsdhqPApe', 'sbzhv', 1)
+// ReduceProductQuantity('1000', 'sbzhv', 1)
+ Addstore(1002)
+// console.log(firestore.FieldValue.serverTimestamp())
