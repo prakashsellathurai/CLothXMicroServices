@@ -198,7 +198,7 @@ function GetUserData (uuid) {
 function AssociateStoreInfoToUser (uuid, storeIds) {
   return GetUserData(uuid)
     .then(userDoc => {
-      let registeredStores = (userDoc.registerOf) ? userDoc.registerOf : []
+      let registeredStores = (typeof userDoc.registerOf !== 'undefined') ? userDoc.registerOf : []
       let isRegisterbool = (typeof userDoc.isRegister !== 'undefined' ) ? userDoc.isRegister : false
       let storeArray = []
       let dataToUpdate
