@@ -198,8 +198,8 @@ function GetUserData (uuid) {
 function AssociateStoreInfoToUser (uuid, storeIds) {
   return GetUserData(uuid)
     .then(userDoc => {
-      let registeredStores = userDoc.registerOf
-      let isRegisterbool = userDoc.isRegister
+      let registeredStores = (userDoc.registerOf) ? userDoc.registerOf : []
+      let isRegisterbool = (typeof userDoc.isRegister !== 'undefined' ) ? userDoc.isRegister : false
       let storeArray = []
       let dataToUpdate
       if (isEmptyArray(registeredStores)) {
