@@ -191,9 +191,18 @@ function EmployeePasswordResetTokenGenerator (sid, EmployeePhoneNUmber) {
 }
 function GetUserData (uuid) {
   return firestore
-    .doc(`users/${uuid}`)
+    .collection('users')
+    .where('uid', '==', `${uuid}`)
     .get()
-    .then(doc => doc.data())
+    .then(docs => {
+      let promises = []
+      docs.forEach(doc => {
+        if (doc.exists) { promises.push(doc.data()) }
+      })
+      return Promise.all(promises)
+    })
+    .then(array => array[0])
+    .then(doc => doc)
 }
 function AssociateStoreInfoToUser (uuid, storeIds) {
   return firestore
@@ -229,7 +238,7 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
           role: 'Register'
         }
       }
-      return UpdateUserDocProperty(uuid, dataToUpdate)
+      return UpdateUserDocProperty(userDoc.email, dataToUpdate)
         .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
     })
 }
