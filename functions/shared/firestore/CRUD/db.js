@@ -200,9 +200,17 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
     .collection('users')
     .where('uid', '==', `${uuid}`)
     .get()
+    .then(docs => {
+      let promises = []
+      docs.forEach(doc => {
+        if (doc.exists) { promises.push(doc.data()) }
+      })
+      return Promise.all(promises)
+    })
+    .then(array => array[0])
     .then(userDoc => {
-      let registeredStores = userDoc.registerOf
-      let isRegisterbool = userDoc.isRegister
+      let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
+      let isRegisterbool = (userDoc.isRegister == null) ? false : userDoc.isRegister
       let storeArray = []
       let dataToUpdate
       if (isEmptyArray(registeredStores)) {

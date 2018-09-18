@@ -11,7 +11,7 @@ var firestore = admin.firestore()
 
 firestore
   .collection('users')
-  .where('uid', '==', 'rQVXK9Rn6qOZrIXfjURRgMCcNSr2')
+  .where('uid', '==', 'w2DUjxHxBIQCuYg4LB0ZlALpD7r2')
   .get().then(docs => {
     let promises = []
     docs.forEach(doc => {
@@ -20,6 +20,8 @@ firestore
     return Promise.all(promises)
   })
   .then(array => array[0])
-  .then(val => {
-    console.log(val)
+  .then(userDoc=> {
+    let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf 
+    let isRegisterbool = (userDoc.isRegister == null) ? false : userDoc.isRegister
+  console.log(registeredStores, isRegisterbool)
   })
