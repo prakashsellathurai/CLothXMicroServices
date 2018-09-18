@@ -196,7 +196,10 @@ function GetUserData (uuid) {
     .then(doc => doc.data())
 }
 function AssociateStoreInfoToUser (uuid, storeIds) {
-  return GetUserData(uuid)
+  return firestore
+    .collection('users')
+    .where('uid', '==', `${uuid}`)
+    .get()
     .then(userDoc => {
       let registeredStores = userDoc.registerOf
       let isRegisterbool = userDoc.isRegister
