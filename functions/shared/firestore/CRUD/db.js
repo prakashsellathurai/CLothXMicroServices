@@ -204,10 +204,11 @@ function GetUserData (uuid) {
     .then(array => array[0])
     .then(doc => doc)
 }
-function AssociateStoreInfoToUser (uuid, storeIds) {
+// this function relates to oncreateStore trigger won't work on other
+function AssociateStoreInfoToUser (uid, storeIds) {
   return firestore
     .collection('users')
-    .where('uid', '==', `${uuid}`)
+    .where('uid', '==', `${uid}`)
     .get()
     .then(docs => {
       let promises = []
