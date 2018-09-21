@@ -316,6 +316,36 @@ function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
 }
+function SetProductPRN (storeId, productId, PRN_VALUE) {
+  return firestore
+    .doc(`/stores/${storeId}/products/${productId}`)
+    .update({
+      prn: PRN_VALUE,
+      createdOn: admin.firestore.FieldValue.serverTimestamp()
+    })
+}
+function RandomPRNgenerator () {
+  let Length = 5
+  var keylistalpha = 'bcdfghjklmnpqrstvwxyz'
+  var temp = ''
+  for (var i = 0; i < Length; i++) { temp += keylistalpha.charAt(Math.floor(Math.random() * keylistalpha.length)) }
+  temp = temp.split('').sort(function () { return 0.5 - Math.random() }).join('')
+  return temp
+}
+
+function prnCheckLoop (storeID) {
+  let InitialPrnToTest = RandomPRNgenerator()
+  return prnCheckLoopCORE(InitialPrnToTest, storeID)
+}
+function prnCheckLoopCORE (PRN_VALUE_TO_TEST, storeID) {
+  return new Promise(function (resolve) {
+    firestore
+      .collection(`/stores/${storeID}/products`)
+      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
+      .get()
+      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoopCORE(RandomPRNgenerator(), storeID))))
+  })
+}
 module.exports = {
   generateAuthToken: generateAuthToken,
   savetoken: saveToken,
@@ -343,5 +373,8 @@ module.exports = {
   AssociateStoreInfoToUser: AssociateStoreInfoToUser,
   ReduceProductQuantity: ReduceProductQuantity,
   UpdatInvoicePendingStatus: updateInvoicePendingStatus,
-  SetInvoicePendingStatusToFalse: SetInvoicePendingStatusToFalse
+  SetInvoicePendingStatusToFalse: SetInvoicePendingStatusToFalse,
+  SetProductPRN: SetProductPRN,
+  prnCheckLoop: prnCheckLoop,
+  RandomPRNgenerator: RandomPRNgenerator
 }
