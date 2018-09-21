@@ -337,6 +337,17 @@ function prnCheckLoop (storeID) {
   let InitialPrnToTest = RandomPRNgenerator()
   return prnCheckLoopCORE(InitialPrnToTest, storeID)
 }
+function LocalInventoryUpdater (storeId, cartProducts) {
+  let promises = []
+  for (let index = 0; index < cartProducts.length; index++) {
+    const cartProduct = cartProducts[index]
+    let prn = cartProduct.prn
+    let quantityToReduce = cartProduct.totalQuantity
+    promises.push(ReduceProductQuantity(storeId, prn, quantityToReduce))
+  }
+  return Promise.all(promises)
+}
+
 function prnCheckLoopCORE (PRN_VALUE_TO_TEST, storeID) {
   return new Promise(function (resolve) {
     firestore
@@ -376,5 +387,6 @@ module.exports = {
   SetInvoicePendingStatusToFalse: SetInvoicePendingStatusToFalse,
   SetProductPRN: SetProductPRN,
   prnCheckLoop: prnCheckLoop,
-  RandomPRNgenerator: RandomPRNgenerator
+  RandomPRNgenerator: RandomPRNgenerator,
+  LocalInventoryUpdater: LocalInventoryUpdater
 }
