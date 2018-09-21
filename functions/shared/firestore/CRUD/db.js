@@ -205,7 +205,7 @@ function GetUserData (uuid) {
     .then(doc => doc)
 }
 // this function relates to oncreateStore trigger won't work on other
-function AssociateStoreInfoToUser (uid, storeIds) {
+function AssociateStoreInfoToUser (uid, storeId) {
   return firestore
     .collection('users')
     .where('uid', '==', `${uid}`)
@@ -224,9 +224,9 @@ function AssociateStoreInfoToUser (uid, storeIds) {
       let storeArray = []
       let dataToUpdate
       if (isEmptyArray(registeredStores)) {
-        storeArray.push(storeIds)
+        storeArray.push(storeId)
       } else {
-        storeArray = registeredStores.concat(storeIds)
+        storeArray = registeredStores.concat(storeId)
       }
       if (isRegisterbool) {
         dataToUpdate = {
@@ -240,8 +240,15 @@ function AssociateStoreInfoToUser (uid, storeIds) {
         }
       }
       return UpdateUserDocProperty(userDoc.email, dataToUpdate)
-        .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
+        .then(() => LogStoreOnCreate(storeId))
     })
+}
+function LogStoreOnCreate (storeId) {
+  let property = {
+    verificationStatus: 'pending',
+    createdAt: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return UpsertSingleStoreDocProperty(storeId, property)
 }
 function UpdateUserDocProperty (uuid, dataToUpdate) {
   return firestore
@@ -289,7 +296,17 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
         })
     })
 }
-function UpdatInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+function SetInvoicePendingStatusToFalse (storeId, invoiceId) {
+  return setInvoicePendingStatus(storeId, invoiceId, 'false')
+}
+function updateInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+  return firestore
+    .doc(`stores/${storeId}/invoices/${invoiceId}`)
+    .update({
+      pending: `${UPDATE_STATUS_BOOLEAN}`,
+      updatedOn: admin.firestore.FieldValue.serverTimestamp()})
+}
+function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
   return firestore
     .doc(`stores/${storeId}/invoices/${invoiceId}`)
     .update({
@@ -298,6 +315,36 @@ function UpdatInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
 }
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
+}
+function SetProductPRN (storeId, productId, PRN_VALUE) {
+  return firestore
+    .doc(`/stores/${storeId}/products/${productId}`)
+    .update({
+      prn: PRN_VALUE,
+      createdOn: admin.firestore.FieldValue.serverTimestamp()
+    })
+}
+function RandomPRNgenerator () {
+  let Length = 5
+  var keylistalpha = 'bcdfghjklmnpqrstvwxyz'
+  var temp = ''
+  for (var i = 0; i < Length; i++) { temp += keylistalpha.charAt(Math.floor(Math.random() * keylistalpha.length)) }
+  temp = temp.split('').sort(function () { return 0.5 - Math.random() }).join('')
+  return temp
+}
+
+function prnCheckLoop (storeID) {
+  let InitialPrnToTest = RandomPRNgenerator()
+  return prnCheckLoopCORE(InitialPrnToTest, storeID)
+}
+function prnCheckLoopCORE (PRN_VALUE_TO_TEST, storeID) {
+  return new Promise(function (resolve) {
+    firestore
+      .collection(`/stores/${storeID}/products`)
+      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
+      .get()
+      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoopCORE(RandomPRNgenerator(), storeID))))
+  })
 }
 module.exports = {
   generateAuthToken: generateAuthToken,
@@ -325,5 +372,9 @@ module.exports = {
   EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator,
   AssociateStoreInfoToUser: AssociateStoreInfoToUser,
   ReduceProductQuantity: ReduceProductQuantity,
-  UpdatInvoicePendingStatus: UpdatInvoicePendingStatus
+  UpdatInvoicePendingStatus: updateInvoicePendingStatus,
+  SetInvoicePendingStatusToFalse: SetInvoicePendingStatusToFalse,
+  SetProductPRN: SetProductPRN,
+  prnCheckLoop: prnCheckLoop,
+  RandomPRNgenerator: RandomPRNgenerator
 }
