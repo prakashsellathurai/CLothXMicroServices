@@ -246,7 +246,7 @@ function AssociateStoreInfoToUser (uid, storeId) {
 function LogStoreOnCreate (storeId) {
   let property = {
     verificationStatus: 'pending',
-    createdAt: admin.firestore.FieldValue.serverTimestamp
+    createdAt: admin.firestore.FieldValue.serverTimestamp()
   }
   return UpsertSingleStoreDocProperty(storeId, property)
 }
@@ -296,7 +296,17 @@ function ReduceProductQuantity (storeId, prn, quantityToReduce) {
         })
     })
 }
-function UpdatInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+function SetInvoicePendingStatusToFalse (storeId, invoiceId) {
+  return setInvoicePendingStatus(storeId, invoiceId, 'false')
+}
+function updateInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
+  return firestore
+    .doc(`stores/${storeId}/invoices/${invoiceId}`)
+    .update({
+      pending: `${UPDATE_STATUS_BOOLEAN}`,
+      updatedOn: admin.firestore.FieldValue.serverTimestamp()})
+}
+function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
   return firestore
     .doc(`stores/${storeId}/invoices/${invoiceId}`)
     .update({
@@ -332,5 +342,6 @@ module.exports = {
   EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator,
   AssociateStoreInfoToUser: AssociateStoreInfoToUser,
   ReduceProductQuantity: ReduceProductQuantity,
-  UpdatInvoicePendingStatus: UpdatInvoicePendingStatus
+  UpdatInvoicePendingStatus: updateInvoicePendingStatus,
+  SetInvoicePendingStatusToFalse: SetInvoicePendingStatusToFalse
 }
