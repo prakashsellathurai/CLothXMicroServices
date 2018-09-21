@@ -191,15 +191,36 @@ function EmployeePasswordResetTokenGenerator (sid, EmployeePhoneNUmber) {
 }
 function GetUserData (uuid) {
   return firestore
-    .doc(`users/${uuid}`)
+    .collection('users')
+    .where('uid', '==', `${uuid}`)
     .get()
-    .then(doc => doc.data())
+    .then(docs => {
+      let promises = []
+      docs.forEach(doc => {
+        if (doc.exists) { promises.push(doc.data()) }
+      })
+      return Promise.all(promises)
+    })
+    .then(array => array[0])
+    .then(doc => doc)
 }
-function AssociateStoreInfoToUser (uuid, storeIds) {
-  return GetUserData(uuid)
+// this function relates to oncreateStore trigger won't work on other
+function AssociateStoreInfoToUser (uid, storeIds) {
+  return firestore
+    .collection('users')
+    .where('uid', '==', `${uid}`)
+    .get()
+    .then(docs => {
+      let promises = []
+      docs.forEach(doc => {
+        if (doc.exists) { promises.push(doc.data()) }
+      })
+      return Promise.all(promises)
+    })
+    .then(array => array[0])
     .then(userDoc => {
-      let registeredStores = userDoc.registerOf
-      let isRegisterbool = userDoc.isRegister
+      let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
+      let isRegisterbool = (userDoc.isRegister == null) ? false : userDoc.isRegister
       let storeArray = []
       let dataToUpdate
       if (isEmptyArray(registeredStores)) {
@@ -218,7 +239,7 @@ function AssociateStoreInfoToUser (uuid, storeIds) {
           role: 'Register'
         }
       }
-      return UpdateUserDocProperty(uuid, dataToUpdate)
+      return UpdateUserDocProperty(userDoc.email, dataToUpdate)
         .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
     })
 }
