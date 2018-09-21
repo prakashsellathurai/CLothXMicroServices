@@ -205,7 +205,7 @@ function GetUserData (uuid) {
     .then(doc => doc)
 }
 // this function relates to oncreateStore trigger won't work on other
-function AssociateStoreInfoToUser (uid, storeIds) {
+function AssociateStoreInfoToUser (uid, storeId) {
   return firestore
     .collection('users')
     .where('uid', '==', `${uid}`)
@@ -224,9 +224,9 @@ function AssociateStoreInfoToUser (uid, storeIds) {
       let storeArray = []
       let dataToUpdate
       if (isEmptyArray(registeredStores)) {
-        storeArray.push(storeIds)
+        storeArray.push(storeId)
       } else {
-        storeArray = registeredStores.concat(storeIds)
+        storeArray = registeredStores.concat(storeId)
       }
       if (isRegisterbool) {
         dataToUpdate = {
@@ -240,8 +240,15 @@ function AssociateStoreInfoToUser (uid, storeIds) {
         }
       }
       return UpdateUserDocProperty(userDoc.email, dataToUpdate)
-        .then(() => UpdateStoreVerficationStatus(storeIds, 'pending'))
+        .then(() => LogStoreOnCreate(storeId))
     })
+}
+function LogStoreOnCreate (storeId) {
+  let property = {
+    verificationStatus: 'pending',
+    createdAt: admin.firestore.FieldValue.serverTimestamp
+  }
+  return UpsertSingleStoreDocProperty(storeId, property)
 }
 function UpdateUserDocProperty (uuid, dataToUpdate) {
   return firestore
