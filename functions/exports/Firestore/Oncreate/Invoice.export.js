@@ -11,7 +11,7 @@ module.exports = functions
     const cartProducts = snap.data().cartProducts
     const invoiceId = context.params.invoiceId
     return LocalInventoryUpdater(storeId, cartProducts)
-      .then(() => UpdatePendingStatus(storeId, invoiceId, 'false'))
+      .then(() => dbFun.SetInvoicePendingStatusToFalse(storeId, invoiceId))
   })
 function LocalInventoryUpdater (storeId, cartProducts) {
   let promises = []
@@ -19,13 +19,7 @@ function LocalInventoryUpdater (storeId, cartProducts) {
     const cartProduct = cartProducts[index]
     let prn = cartProduct.prn
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(UpdateProductQuantity(storeId, prn, quantityToReduce))
+    promises.push(dbFun.ReduceProductQuantity(storeId, prn, quantityToReduce))
   }
   return Promise.all(promises)
-}
-function UpdateProductQuantity (storeId, prn, quantity) {
-  return dbFun.ReduceProductQuantity(storeId, prn, quantity)
-}
-function UpdatePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
-  return dbFun.UpdatInvoicePendingStatus(storeId, invoiceId, UPDATE_STATUS_BOOLEAN)
 }
