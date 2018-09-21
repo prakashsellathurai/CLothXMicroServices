@@ -1,7 +1,8 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
 var dbFun = require('../../../shared/firestore/CRUD/db')
-function WebsiteHandler (snap, context) {
+
+function OnCreateStoreHandler (snap, context) {
   let storeId = context.params.storeId
   let registerUid = snap.data().registerUid
   return dbFun.AssociateStoreInfoToUser(registerUid, storeId)
@@ -11,4 +12,4 @@ function WebsiteHandler (snap, context) {
 module.exports = functions
   .firestore
   .document('stores/{storeId}')
-  .onCreate((snap, context) => WebsiteHandler(snap, context))
+  .onCreate((snap, context) => OnCreateStoreHandler(snap, context))
