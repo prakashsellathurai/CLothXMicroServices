@@ -193,7 +193,7 @@ function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
 }
 function ReduceProductQuantity (storeId, prn, quantityToReduce) {
   let productDocRef = firestore
-    .collection(`stores/${storeId}/products`)
+    .collection(`products`)
     .where('prn', '==', `${prn}`)
   return firestore
     .runTransaction(transaction => {
@@ -252,7 +252,7 @@ function prnCheckLoop () {
   let PRN_VALUE_TO_TEST = RandomPRNgenerator()
   return new Promise(function (resolve) {
     firestore
-      .collection(`/products`)
+      .collection(`products`)
       .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
       .get()
       .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
