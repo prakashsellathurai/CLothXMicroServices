@@ -1,6 +1,6 @@
 var admin = require('firebase-admin')
 
-var serviceAccount = require('../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
+var serviceAccount = require('../functions/shared/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -51,4 +51,22 @@ function deleteclothes (userRef, clothRef, crnContentref, userId, clothId) {
   }
   return Promise.all([promise])
 }
-deleteclothes(userRef, clothRef, crnContentref, userId, clothId)
+function prnCheckLoop () {
+  let PRN_VALUE_TO_TEST = RandomPRNgenerator()
+  return new Promise(function (resolve) {
+    firestore
+      .collection(`products`)
+      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
+      .get()
+      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
+  })
+}
+function RandomPRNgenerator () {
+  let Length = 5
+  var keylistalpha = 'bcdfghjklmnpqrstvwxyz'
+  var temp = ''
+  for (var i = 0; i < Length; i++) { temp += keylistalpha.charAt(Math.floor(Math.random() * keylistalpha.length)) }
+  temp = temp.split('').sort(function () { return 0.5 - Math.random() }).join('')
+  return temp
+}
+prnCheckLoop ().then(val => console.log(val))
