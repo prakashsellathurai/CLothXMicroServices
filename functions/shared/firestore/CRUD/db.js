@@ -231,9 +231,9 @@ function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
 }
-function SetProductPRN (storeId, productId, PRN_VALUE) {
+function SetProductPRN (productId, PRN_VALUE) {
   return firestore
-    .doc(`/stores/${storeId}/products/${productId}`)
+    .doc(`/products/${productId}`)
     .update({
       prn: PRN_VALUE,
       createdOn: admin.firestore.FieldValue.serverTimestamp()
