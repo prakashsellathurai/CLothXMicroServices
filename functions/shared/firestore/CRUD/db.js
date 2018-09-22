@@ -248,9 +248,15 @@ function RandomPRNgenerator () {
   return temp
 }
 
-function prnCheckLoop (storeID) {
-  let InitialPrnToTest = RandomPRNgenerator()
-  return prnCheckLoopCORE(InitialPrnToTest, storeID)
+function prnCheckLoop () {
+  let PRN_VALUE_TO_TEST = RandomPRNgenerator()
+  return new Promise(function (resolve) {
+    firestore
+      .collection(`/products`)
+      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
+      .get()
+      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
+  })
 }
 function LocalInventoryUpdater (storeId, cartProducts) {
   let promises = []
@@ -263,15 +269,6 @@ function LocalInventoryUpdater (storeId, cartProducts) {
   return Promise.all(promises)
 }
 
-function prnCheckLoopCORE (PRN_VALUE_TO_TEST, storeID) {
-  return new Promise(function (resolve) {
-    firestore
-      .collection(`/stores/${storeID}/products`)
-      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
-      .get()
-      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoopCORE(RandomPRNgenerator(), storeID))))
-  })
-}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
