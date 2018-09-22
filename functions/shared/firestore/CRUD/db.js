@@ -193,7 +193,7 @@ function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
 }
 function ReduceProductQuantity (storeId, prn, quantityToReduce) {
   let productDocRef = firestore
-    .collection(`stores/${storeId}/products`)
+    .collection(`products`)
     .where('prn', '==', `${prn}`)
   return firestore
     .runTransaction(transaction => {
@@ -231,9 +231,9 @@ function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
 function isEmptyArray (Arr) {
   return Arr.length === 0 || typeof Arr === 'undefined'
 }
-function SetProductPRN (storeId, productId, PRN_VALUE) {
+function SetProductPRN (productId, PRN_VALUE) {
   return firestore
-    .doc(`/stores/${storeId}/products/${productId}`)
+    .doc(`/products/${productId}`)
     .update({
       prn: PRN_VALUE,
       createdOn: admin.firestore.FieldValue.serverTimestamp()
@@ -248,9 +248,15 @@ function RandomPRNgenerator () {
   return temp
 }
 
-function prnCheckLoop (storeID) {
-  let InitialPrnToTest = RandomPRNgenerator()
-  return prnCheckLoopCORE(InitialPrnToTest, storeID)
+function prnCheckLoop () {
+  let PRN_VALUE_TO_TEST = RandomPRNgenerator()
+  return new Promise(function (resolve) {
+    firestore
+      .collection(`products`)
+      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
+      .get()
+      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
+  })
 }
 function LocalInventoryUpdater (storeId, cartProducts) {
   let promises = []
@@ -263,15 +269,6 @@ function LocalInventoryUpdater (storeId, cartProducts) {
   return Promise.all(promises)
 }
 
-function prnCheckLoopCORE (PRN_VALUE_TO_TEST, storeID) {
-  return new Promise(function (resolve) {
-    firestore
-      .collection(`/stores/${storeID}/products`)
-      .where('prn', '==', `${PRN_VALUE_TO_TEST}`)
-      .get()
-      .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoopCORE(RandomPRNgenerator(), storeID))))
-  })
-}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
