@@ -1,7 +1,7 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/db')
-function PrnAssigner (snap, context) {
+function PrnAssigner (context) {
   let productId = context.params.productId
   return db.prnCheckLoop()
     .then(rand => db.SetProductPRN(productId, rand))
@@ -11,4 +11,4 @@ function PrnAssigner (snap, context) {
 module.exports = functions
   .firestore
   .document('/products/{productId}')
-  .onCreate((snap, context) => PrnAssigner(snap, context))
+  .onCreate((snap, context) => PrnAssigner(context))
