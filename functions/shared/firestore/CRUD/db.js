@@ -135,28 +135,21 @@ function AssociateStoreInfoToUser (uid, storeId) {
     .then(array => array[0])
     .then(userDoc => {
       let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
-      let isRegisterbool = (userDoc.isRegister == null) ? false : userDoc.isRegister
-      let storeArray = []
-      let dataToUpdate
-      if (isEmptyArray(registeredStores)) {
-        storeArray.push(storeId)
-      } else {
-        storeArray = registeredStores.concat(storeId)
-      }
-      if (isRegisterbool) {
-        dataToUpdate = {
-          registerOf: storeArray
-        }
-      } else {
-        dataToUpdate = {
-          isRegister: true,
-          registerOf: storeArray,
-          role: 'Register'
-        }
+      let storeArray = MergeAndRemoveDuplicatesArray(registeredStores, storeId)
+      let dataToUpdate = ((userDoc.isRegister == null) ? false : userDoc.isRegister) ? {
+        registerOf: storeArray
+      } : {
+        isRegister: true,
+        registerOf: storeArray,
+        role: 'Register'
       }
       return UpdateUserDocProperty(userDoc.email, dataToUpdate)
         .then(() => LogStoreOnCreate(storeId))
     })
+}
+function MergeAndRemoveDuplicatesArray (array, string) {
+  var c = array.concat(string)
+  return c.filter(function (item, pos) { return c.indexOf(item) === pos })
 }
 function LogStoreOnCreate (storeId) {
   let property = {
