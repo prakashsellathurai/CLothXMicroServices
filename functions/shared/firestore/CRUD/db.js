@@ -185,7 +185,7 @@ function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
   storeIds.forEach(storeId => promises.push(UpsertSingleStoreDocProperty(storeId, propertyObj)))
   return Promise.all(promises)
 }
-function ReduceProductQuantity (storeId, prn, quantityToReduce) {
+function ReduceProductQuantity (prn, quantityToReduce) {
   let productDocRef = firestore
     .collection(`products`)
     .where('prn', '==', `${prn}`)
@@ -252,13 +252,13 @@ function prnCheckLoop () {
       .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
   })
 }
-function LocalInventoryUpdater (storeId, cartProducts) {
+function LocalInventoryUpdater (cartProducts) {
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let prn = cartProduct.prn
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(ReduceProductQuantity(storeId, prn, quantityToReduce))
+    promises.push(ReduceProductQuantity(prn, quantityToReduce))
   }
   return Promise.all(promises)
 }
