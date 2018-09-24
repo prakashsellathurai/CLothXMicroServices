@@ -121,53 +121,54 @@ function GetUserData (uuid) {
 }
 // this function relates to oncreateStore trigger won't work on other
 function AssociateStoreInfoToUser (uid, storeId) {
-  return firestore
+  let docRef = firestore
     .collection('users')
     .where('uid', '==', `${uid}`)
-    .get()
-    .then(docs => {
-      let promises = []
-      docs.forEach(doc => {
-        if (doc.exists) { promises.push(doc.data()) }
+
+  return firestore.runTransaction(t => {
+    return t.get(docRef)
+      .then(docs => {
+        let promises = []
+        docs.forEach(doc => {
+          if (doc.exists) { promises.push(doc.data()) }
+        })
+        return Promise.all(promises)
       })
-      return Promise.all(promises)
-    })
-    .then(array => array[0])
-    .then(userDoc => {
-      let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
-      let storeArray = MergeAndRemoveDuplicatesArray(registeredStores, storeId)
-      let dataToUpdate = ((userDoc.isRegister == null) ? false : userDoc.isRegister) ? {
-        registerOf: storeArray
-      } : {
-        isRegister: true,
-        registerOf: storeArray,
-        role: 'Register'
-      }
-      return UpdateUserDocProperty(userDoc.email, dataToUpdate)
-        .then(() => LogStoreOnCreate(storeId))
-    })
+      .then(array => array[0])
+      .then(userDoc => {
+        let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
+        let storeArray = MergeAndRemoveDuplicatesArray(registeredStores, storeId)
+        let dataToUpdate = ((userDoc.isRegister == null) ? false : userDoc.isRegister) ? {
+          registerOf: storeArray
+        } : {
+          isRegister: true,
+          registerOf: storeArray,
+          role: 'Register'
+        }
+        return UpdateUserDocProperty(t, userDoc.email, dataToUpdate)
+          .then(() => LogStoreOnCreate(t, storeId))
+      })
+  })
 }
 function MergeAndRemoveDuplicatesArray (array, string) {
   var c = array.concat(string)
   return c.filter(function (item, pos) { return c.indexOf(item) === pos })
 }
-function LogStoreOnCreate (storeId) {
+function LogStoreOnCreate (transaction, storeId) {
   let property = {
     verificationStatus: 'pending',
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   }
-  return UpsertSingleStoreDocProperty(storeId, property)
+  return UpsertSingleStoreDocProperty(transaction, storeId, property)
 }
-function UpdateUserDocProperty (uuid, dataToUpdate) {
-  return firestore
-    .doc(`users/${uuid}`)
-    .update(dataToUpdate)
+function UpdateUserDocProperty (transaction, uuid, dataToUpdate) {
+  let userDocRef = firestore.doc(`users/${uuid}`)
+  return transaction.update(userDocRef, dataToUpdate)
 }
 
-function UpsertSingleStoreDocProperty (storeId, propertyObj) {
-  return firestore
-    .doc(`stores/${storeId}`)
-    .set(propertyObj, {merge: true})
+function UpsertSingleStoreDocProperty (transaction, storeId, propertyObj) {
+  let DOcRef = firestore.doc(`stores/${storeId}`)
+  transaction.update(DOcRef, propertyObj)
 }
 function UpdateStoreVerficationStatus (storeIds, STATUS_STRING) {
   let property = {
