@@ -6,7 +6,7 @@ function MainHandler (snap, context) {
   const storeId = context.params.storeId
   const cartProducts = snap.data().cartProducts
   const invoiceId = context.params.invoiceId
-  return dbFun.LocalInventoryUpdater(cartProducts)
+  return dbFun.LocalInventoryUpdater(storeId, cartProducts)
     .then(() => dbFun.SetInvoicePendingStatusToFalse(storeId, invoiceId))
 }
 // ==================================================================================================
