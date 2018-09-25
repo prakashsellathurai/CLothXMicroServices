@@ -185,26 +185,7 @@ function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
   storeIds.forEach(storeId => promises.push(UpsertSingleStoreDocProperty(storeId, propertyObj)))
   return Promise.all(promises)
 }
-function ReduceProductQuantity (prn, quantityToReduce) {
-  let productDocRef = firestore
-    .collection(`products`)
-    .where('prn', '==', `${prn}`)
-  return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((docs) => {
-          return docs
-            .forEach(doc => {
-              let initialStock = doc.data().stock
-              let updatedStock = initialStock - quantityToReduce
-              return transaction.update(doc.ref, {
-                stock: updatedStock,
-                updatedOn: admin.firestore.FieldValue.serverTimestamp()})
-            })
-        })
-    })
-}
+
 function SetInvoicePendingStatusToFalse (storeId, invoiceId) {
   return setInvoicePendingStatus(storeId, invoiceId, 'false')
 }
@@ -252,15 +233,45 @@ function prnCheckLoop () {
       .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
   })
 }
-function LocalInventoryUpdater (cartProducts) {
+function LocalInventoryUpdater (storeId, cartProducts) {
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let prn = cartProduct.prn
+    let size = cartProduct.size
+    let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(ReduceProductQuantity(prn, quantityToReduce))
+    promises.push(ReduceProductQuantity(storeId, prn, size, singleUnitPrize, quantityToReduce))
   }
   return Promise.all(promises)
+}
+function ReduceProductQuantity (storeId, prn, size, singleUnitPrice, quantityToReduce) {
+  let productDocRef = firestore
+    .collection(`products`)
+    .where('prn', '==', `${prn}`)
+    .where('storeId', '==', `${storeId}`)
+  return firestore
+    .runTransaction(transaction => {
+      return transaction
+        .get(productDocRef)
+        .then((docs) => {
+          return docs
+            .forEach(doc => {
+              let ssp = doc.data().ssp
+              let reducedssp = reduceStock(ssp, singleUnitPrice, size, quantityToReduce)
+              return transaction.update(doc.ref, {ssp: reducedssp})
+            })
+        })
+    })
+}
+function reduceStock (ssp, price, size, quantityToReduce) {
+  for (var i = 0; i < ssp.length; i++) {
+    if (ssp[i].price == price && ssp[i].size === size) { // leave == since it compares two numbers
+      ssp[i].stock -= quantityToReduce
+      return ssp
+    }
+  }
+  return null
 }
 
 module.exports = {
