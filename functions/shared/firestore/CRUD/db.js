@@ -145,45 +145,21 @@ function AssociateStoreInfoToUser (uid, storeId) {
           registerOf: storeArray,
           role: 'Register'
         }
-        return UpdateUserDocProperty(t, userDoc.email, dataToUpdate)
-          .then(() => LogStoreOnCreate(t, storeId))
+
+        let userDocRef = firestore.doc(`users/${userDoc.email}`)
+        t.update(userDocRef, dataToUpdate)
+        let StorePropertyObj = {
+          verificationStatus: 'pending',
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        }
+        let StoreDOcRef = firestore.doc(`stores/${storeId}`)
+        t.update(StoreDOcRef, StorePropertyObj)
       })
   })
 }
 function MergeAndRemoveDuplicatesArray (array, string) {
   var c = array.concat(string)
   return c.filter(function (item, pos) { return c.indexOf(item) === pos })
-}
-function LogStoreOnCreate (transaction, storeId) {
-  let property = {
-    verificationStatus: 'pending',
-    createdAt: admin.firestore.FieldValue.serverTimestamp()
-  }
-  return UpsertSingleStoreDocProperty(transaction, storeId, property)
-}
-function UpdateUserDocProperty (transaction, uuid, dataToUpdate) {
-  let userDocRef = firestore.doc(`users/${uuid}`)
-  return transaction.update(userDocRef, dataToUpdate)
-}
-
-function UpsertSingleStoreDocProperty (transaction, storeId, propertyObj) {
-  let DOcRef = firestore.doc(`stores/${storeId}`)
-  transaction.update(DOcRef, propertyObj)
-}
-function UpdateStoreVerficationStatus (storeIds, STATUS_STRING) {
-  let property = {
-    verificationStatus: STATUS_STRING
-  }
-  if (Array.isArray(storeIds)) {
-    return UpdateMultiStoreDocProperty(storeIds, property)
-  } else {
-    return UpsertSingleStoreDocProperty(storeIds, property)
-  }
-}
-function UpdateMultiStoreDocProperty (storeIds, propertyObj) {
-  let promises = []
-  storeIds.forEach(storeId => promises.push(UpsertSingleStoreDocProperty(storeId, propertyObj)))
-  return Promise.all(promises)
 }
 
 function SetInvoicePendingStatusToFalse (storeId, invoiceId) {
