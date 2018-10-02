@@ -1,0 +1,11 @@
+{
+    "<sku>": {
+        "product_id": "<product_id>",
+        "locations": [
+            {
+                "id": "<location-id>",
+                "inventory": 0
+            }
+        ]
+    }
+}

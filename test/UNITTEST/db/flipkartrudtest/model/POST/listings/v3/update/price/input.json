@@ -1,0 +1,10 @@
+{
+    "<sku>": {
+        "product_id": "<product_id>",
+        "price": {
+            "mrp": 0,
+            "selling_price": 0,
+            "currency": "INR"
+        }
+    }
+}

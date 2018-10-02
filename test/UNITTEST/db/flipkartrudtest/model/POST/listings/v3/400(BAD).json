@@ -1,0 +1,10 @@
+{
+    "errors": [
+        {
+            "severity": "ERROR|WARNING",
+            "code": "<code>",
+            "description": "<description>",
+            "path": "<path-to-failed-json-node>"
+        }
+    ]
+}

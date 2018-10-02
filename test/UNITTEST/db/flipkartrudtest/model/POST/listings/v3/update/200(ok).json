@@ -1,0 +1,21 @@
+{
+    "sku": {
+        "status": "success|failure|warning",
+        "errors": [
+            {
+                "severity": "ERROR|WARNING",
+                "code": "<code>",
+                "description": "<description>"
+            }
+        ],
+        "attribute_errors": [
+            {
+                "severity": "ERROR|WARNING",
+                "code": "<code>",
+                "description": "<description>",
+                "attribute": "<attribute>",
+                "path": "<path-to-attribute>"
+            }
+        ]
+    }
+}
