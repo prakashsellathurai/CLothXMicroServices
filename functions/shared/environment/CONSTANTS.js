@@ -11,5 +11,13 @@ module.exports = {
     action: 'read',
     expires: '03-09-2491'
   },
-  FIRESTORE_SETTINGS: {timestampsInSnapshots: true}
+  FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
+  TEST_CREDENTIALS: {
+    FLIPKART: {
+      APP_NAME: 'prakash',
+      APP_TYPE: 'self_access_application',
+      APP_Id: '17660a67b78355a040a528502230ba38b32a1',
+      APP_Secret: '2bb23eec6f4d629559dbad5f2ca36d4d4'
+    }
+  }
 }
