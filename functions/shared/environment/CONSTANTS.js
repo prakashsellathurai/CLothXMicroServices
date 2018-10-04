@@ -11,5 +11,9 @@ module.exports = {
     action: 'read',
     expires: '03-09-2491'
   },
-  FIRESTORE_SETTINGS: {timestampsInSnapshots: true}
+  FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
+  ALGOLIA: {
+    appId:  'K5TY9WEM1N',
+    adminApiKey: '87a91ddef91e0868d76405c2467122e9'
+  }
 }
