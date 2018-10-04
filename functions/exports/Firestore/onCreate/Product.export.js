@@ -20,7 +20,7 @@ function IndexItInAlgolia (snap) {
     //Add the data to the algolia index
     return index.addObject({
         objectId,
-        ...data
+        data
     })
 }
 // ==================================================================================================
