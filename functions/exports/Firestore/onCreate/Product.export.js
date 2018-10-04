@@ -1,7 +1,7 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/db')
-import * as algoliasearch from 'algoliasearch';
+var algoliasearch = require('algoliasearch')
 
 const client = algoliasearch(env.algolia.appId, env.algolia.apiKey)
 const index = client.initIndex('product_search')
@@ -27,7 +27,8 @@ function IndexItInAlgolia (snap) {
 module.exports = functions
   .firestore
   .document('/products/{productId}')
-  .onCreate(async (snap, context) => {
-     await PrnAssigner(context)
-      IndexItInAlgolia(snap)
+  .onCreate((snap, context) => {
+        PrnAssigner(context)
+            .then(() => IndexItInAlgolia(snap))
+
   })
