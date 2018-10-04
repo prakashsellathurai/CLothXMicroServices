@@ -9,9 +9,10 @@ const index = client.initIndex('product_search')
 
 function PrnAssigner (context) {
   let productId = context.params.productId
+     return db.prnCheckLoop()
+        .then(rand => db.SetProductPRN(productId, rand))
 
-  return db.prnCheckLoop()
-    .then(rand => db.SetProductPRN(productId, rand))
+
 }
 function IndexItInAlgolia (snap) {
     const data = snap.data()
@@ -29,7 +30,7 @@ module.exports = functions
   .firestore
   .document('/products/{productId}')
   .onCreate((snap, context) => {
-        PrnAssigner(context)
+       return PrnAssigner(context)
             .then(() => IndexItInAlgolia(snap))
 
   })
