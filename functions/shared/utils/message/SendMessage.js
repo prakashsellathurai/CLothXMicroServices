@@ -1,6 +1,6 @@
 'use strict'
 var http = require('http')
-var Constants = require('../../environment/CONSTANTS')
+var env = require('../../environment/env')
 module.exports = function (PhoneNumber, Message) {
   return new Promise(function (resolve, reject) {
     var options = {
@@ -9,7 +9,7 @@ module.exports = function (PhoneNumber, Message) {
       'port': 80,
       'path': '/api/v2/sendsms',
       'headers': {
-        'authkey': Constants.MSG_91_API_KEY,
+        'authkey': env.MSG_91_API_KEY,
         'content-type': 'application/json'
       }
     }

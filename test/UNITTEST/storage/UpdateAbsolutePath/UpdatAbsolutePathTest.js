@@ -1,13 +1,13 @@
 var admin = require('firebase-admin')
-var CONTANTS = require('../../../../functions/environment/CONSTANTS')
+var env = require('../../../../functions/environment/env')
 var serviceAccount = require('./../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://clothxnet.firebaseio.com'
 })
-var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
+var storage = admin.storage().bucket(env.STORAGE_BUCKET)
 var firestore = admin.firestore()
-var CONSTANTS = require('../../../../functions/environment/CONSTANTS')
+var env = require('../../../../functions/environment/env')
 function updateAbsoluteFileStoragePAth (sid) {
   return getuploadedfilePath(sid).then(uploads => {
     let logoPath = uploads.relativePath.logo
@@ -61,7 +61,7 @@ function getuploadedfilePath (sid) {
 function GetSignedUrl (FileLocation) {
   return storage
     .file(FileLocation)
-    .getSignedUrl(CONSTANTS.GET_SIGNED_URL_SETTINGS)
+    .getSignedUrl(env.GET_SIGNED_URL_SETTINGS)
     .then(signedUrls => signedUrls[0])
     .catch(err => console.log('get signed url error' + 'Error Info ' + err))
 }
