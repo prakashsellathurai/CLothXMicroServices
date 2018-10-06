@@ -1,11 +1,11 @@
 var admin = require('firebase-admin')
-var CONTANTS = require('../../../../functions/environment/CONSTANTS')
+var env = require('../../../../functions/environment/env')
 var serviceAccount = require('./../../../../functions/environment/clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://clothxnet.firebaseio.com'
 })
-var storage = admin.storage().bucket(CONTANTS.STORAGE_BUCKET)
+var storage = admin.storage().bucket(env.STORAGE_BUCKET)
 function HandleFilemove (uuid, sid, imagelocationArr, logolocationarr) {
   let promises = []
   for (let index = 0; index < logolocationarr.length; index++) {

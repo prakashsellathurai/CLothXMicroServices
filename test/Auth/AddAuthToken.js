@@ -8,8 +8,8 @@ admin.initializeApp({
 
 })
 var jwt = require('../../functions/node_modules/jwt-simple')
-var Constants = require('../../functions/environment/CONSTANTS')
-var secret = Constants.SECRET_TOKEN
+var env = require('../../functions/environment/env')
+var secret = env.SECRET_TOKEN
 var firestore = admin.firestore()
 function getOwner (sid) {
   return firestore.collection('stores').doc(`${sid}`).collection('employee').where('role', '==', 'owner')
