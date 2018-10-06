@@ -69,7 +69,8 @@ typings/
 .vscode/launch.json
 .vscode/extensions.json
 .history
-
+.vs
+.idea
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
