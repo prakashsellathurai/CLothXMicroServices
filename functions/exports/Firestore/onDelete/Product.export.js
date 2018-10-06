@@ -1,8 +1,8 @@
 //= ===================================== IMPORTS ===============================================//
-var functions = require('firebase-functions')
-var algoliasearch = require('algoliasearch')
 const env = require('../../../shared/environment/env');
 
+var functions = require('firebase-functions')
+var algoliasearch = require('algoliasearch')
 const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 const index = client.initIndex('product_search')
 
