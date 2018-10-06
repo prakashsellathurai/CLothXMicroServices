@@ -1,10 +1,10 @@
 //= ===================================== IMPORTS ===============================================//
-var functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/db')
-var algoliasearch = require('algoliasearch')
 const env = require('../../../shared/environment/env')
 
+var functions = require('firebase-functions')
 const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
+var algoliasearch = require('algoliasearch')
 const index = client.initIndex('product_search')
 
 function PrnAssigner (context) {
@@ -24,13 +24,13 @@ function IndexItInAlgolia (snap) {
         data
     })
 }
+function MainHandler (snap, context) {
+    return PrnAssigner(context)
+    .then(() => IndexItInAlgolia(snap))
+}
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
   .firestore
   .document('/products/{productId}')
-  .onCreate((snap, context) => {
-       return PrnAssigner(context)
-            .then(() => IndexItInAlgolia(snap))
-
-  })
+  .onCreate((snap, context) => MainHandler(snap, context))

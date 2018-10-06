@@ -18,5 +18,4 @@ function DeleteIndexInAlgolia (snap) {
 module.exports = functions
     .firestore
     .document('/products/{productId}')
-    .onDelete((snap, context) => DeleteIndexInAlgolia(snap)
-    )
+    .onDelete((snap, context) => DeleteIndexInAlgolia(snap))
