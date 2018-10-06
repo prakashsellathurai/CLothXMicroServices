@@ -1,9 +1,9 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
 var algoliasearch = require('algoliasearch')
-const env = functions.config();
+const env = require('../../../shared/environment/env');
 
-const client = algoliasearch(env.algolia.appid, env.algolia.apikey)
+const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 const index = client.initIndex('product_search')
 
 
@@ -18,5 +18,4 @@ function DeleteIndexInAlgolia (snap) {
 module.exports = functions
     .firestore
     .document('/products/{productId}')
-    .onDelete((snap, context) => DeleteIndexInAlgolia(snap)
-    )
+    .onDelete((snap, context) => DeleteIndexInAlgolia(snap))
