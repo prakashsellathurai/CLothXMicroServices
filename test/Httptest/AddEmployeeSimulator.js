@@ -50,8 +50,8 @@ var firestore = admin.firestore()
 // --------------------------------------------------- env end add this shit every test script --------
 var SHA256 = require('../../functions/node_modules/crypto-js/sha256')
 var jwt = require('../../functions/node_modules/jwt-simple')
-var Constants = require('../../functions/environment/CONSTANTS')
-var secret = Constants.SECRET_TOKEN
+var env = require('../../functions/environment/env')
+var secret = env.SECRET_TOKEN
 var SendMessage = require('../../functions/utils/message/SendMessage')
 const express = require('express')
 const app = express()
