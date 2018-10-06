@@ -3,9 +3,9 @@ const db = require('./../../../shared/firestore/CRUD/db')
 const env = require('../../../shared/environment/env')
 
 var functions = require('firebase-functions')
-var algoliasearch = require('algoliasearch')
-const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
-const index = client.initIndex('product_search')
+// var algoliasearch = require('algoliasearch')
+// const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
+// const index = client.initIndex('product_search')
 
 function PrnAssigner (context) {
   let productId = context.params.productId
@@ -15,14 +15,8 @@ function PrnAssigner (context) {
 
 }
 function IndexItInAlgolia (snap) {
-    const data = snap.data()
-    const objectId = snap.id
-
-    //Add the data to the algolia index
-    return index.addObject({
-        objectId,
-        data
-    })
+console.log('data will be indexed in algolia')
+return 0
 }
 function MainHandler (snap, context) {
     return PrnAssigner(context)
