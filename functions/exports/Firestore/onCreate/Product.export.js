@@ -3,8 +3,8 @@ const db = require('./../../../shared/firestore/CRUD/db')
 const env = require('../../../shared/environment/env')
 
 var functions = require('firebase-functions')
-const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 var algoliasearch = require('algoliasearch')
+const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 const index = client.initIndex('product_search')
 
 function PrnAssigner (context) {
