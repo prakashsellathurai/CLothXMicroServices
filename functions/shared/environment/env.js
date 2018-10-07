@@ -13,7 +13,13 @@ module.exports = {
   },
   FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
   ALGOLIA: {
-    appId:  'K5TY9WEM1N',
+    appId: 'K5TY9WEM1N',
     adminApiKey: '87a91ddef91e0868d76405c2467122e9'
+  },
+  OMNI_CHANNEL_INTEGRATION: {
+    FLIKART: {
+      AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token?grant_type=client_credentials',
+      Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login'
+    }
   }
 }
