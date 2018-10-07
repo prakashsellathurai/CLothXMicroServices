@@ -2,16 +2,14 @@
 const env = require('../../../shared/environment/env');
 
 var functions = require('firebase-functions')
-var algoliasearch = require('algoliasearch')
-const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
-const index = client.initIndex('product_search')
+// var algoliasearch = require('algoliasearch')
+// const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
+// const index = client.initIndex('product_search')
 
 
 function DeleteIndexInAlgolia (snap) {
-    const objectId = snap.id
-
-    //Delete data in the algolia index
-    return index.deleteObject(objectId)
+  console.log('data will be deleted in algolia')
+  return 0
 }
 // ==================================================================================================
 // =====================================export module================================================

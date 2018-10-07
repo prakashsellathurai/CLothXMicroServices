@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "severity": "ERROR|WARNING",
+            "code": "<code>",
+            "description": "<description>"
+        }
+    ]
+}

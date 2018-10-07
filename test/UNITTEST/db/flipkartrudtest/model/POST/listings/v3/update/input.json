@@ -1,0 +1,72 @@
+{
+    "<sku>": {
+        "product_id": "<product-id>",
+        "price": {
+            "mrp": 0,
+            "selling_price": 0,
+            "currency": "INR"
+        },
+        "tax": {
+            "hsn": "<harmonized-system-nomenclature>",
+            "tax_code" : "<tax-code to determine goods-service-tax>"
+        },
+        "listing_status": "ACTIVE|INACTIVE",
+        "shipping_fees": {
+            "local": 0,
+            "zonal": 0,
+            "national": 0,
+            "currency": "INR"
+        },
+        "fulfillment_profile": "NON_FBF|FBF_LITE|FBF",
+        "fulfillment": {
+            "dispatch_sla": 1,
+            "shipping_provider": "FLIPKART|SELLER|FLIPKART_SELLER",
+            "procurement_type": "REGULAR|EXPRESS|INTERNATIONAL|MADE_TO_ORDER|DOMESTIC"
+        },
+        "packages": [
+            {
+                "id": "<flipkart-system-id>",
+                "name": "<package-identifier>",
+                "dimensions": {
+                    "length": 1,
+                    "breadth": 1,
+                    "height": 1
+                },
+                "weight": 1,
+                "description": "",
+                "handling": {
+                    "fragile": true
+                },
+                "notional_value": {
+                    "amount": 1,
+                    "unit": "PERCENTAGE|<CURRENCY>"
+                }
+            }
+        ],
+        "locations": [
+            {
+                "id": "<location-id>",
+                "status": "ENABLED|DISABLED",
+                "inventory": 0
+            }
+        ],
+        "address_label": {
+            "manufacturer_details": [
+                "<address_of_manufacturer>"
+            ],
+            "importer_details": [
+                "<address_of_importer>"
+            ],
+            "packer_details": [
+                "<address_of_packer>"
+            ],
+            "countries_of_origin": [
+                "<iso_alpha2_code_of_country_of_origin>"
+            ]
+        },
+        "dating_label": {
+            "mfg_date": "<Manufacturing date of the product in linux EPOCH (Seconds)>",
+            "shelf_life": "<Shelf life of the product in Seconds>"
+        }
+    }
+}
