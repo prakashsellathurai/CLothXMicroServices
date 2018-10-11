@@ -8,8 +8,16 @@ app.post('/', (req, res) => {
   console.log(req)
   res.json({success: true})
 })
+app.get('/', (req, res) => {
+  console.log(req)
+  res.json({success: true})
+})
 app.post('/flipkart', (req, res) => {
   console.log(req)
   res.json({success: 'flipkart authentication success'})
+})
+app.get('/flipkart', (req, res) => {
+  console.log(req)
+  res.json({success: 'flipkart authentication'})
 })
 module.exports = functions.https.onRequest(app)
