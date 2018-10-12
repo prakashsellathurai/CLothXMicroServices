@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "oauth": "^0.9.15"
+    "client-oauth2": "^4.2.1",
+    "oauth": "^0.9.15",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "unirest": "^0.5.1"
   }
 }
