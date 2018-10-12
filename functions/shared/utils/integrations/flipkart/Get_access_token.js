@@ -1,7 +1,7 @@
 let ERROR_MESSAGE = {
   error: 'key/secret is missing'
 }
-module.exports = function FlipkartGetAccessToken (key, secret) {
+module.exports = (key, secret) => {
   let FLIPKART_API_BASE_ROOT = 'https://api.flipkart.net/oauth-service'
 
   var request = require('request-promise')
