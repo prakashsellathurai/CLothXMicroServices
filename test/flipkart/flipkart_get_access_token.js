@@ -8,6 +8,7 @@ describe('Oauth2', function () {
     FlipkartGetAccessToken('b7b0811327b2975262318ab844bb8a836050', '1bd70ec15c0d3b31879e86d532db6fe7a')
       .then((body) => {
         if (typeof JSON.parse(body) === 'object') {
+          console.log(body)
           done()
         } else {
           done('not json')
@@ -18,6 +19,7 @@ describe('Oauth2', function () {
   it('it should return error message on undefuned value', function (done) {
     FlipkartGetAccessToken(undefined, undefined)
       .then(body => {
+        console.log(body)
         let assert = require('assert')
         assert.deepStrictEqual(body, ERROR_MESSAGE)
         done()
@@ -26,6 +28,7 @@ describe('Oauth2', function () {
   it('should return error on wrong info', function (done) {
     FlipkartGetAccessToken('a', 'm')
       .then(body => {
+        console.log(body)
         if (typeof JSON.parse(body) === 'object') {
           done()
         } else {
@@ -53,7 +56,7 @@ function FlipkartGetAccessToken (key, secret) {
           'client_secret': `${secret}`
         }
       })
-      .then((res) => res)
+      .then((res) =>  JSON.parse(JSON.stringify(res)))
       .catch((err) => JSON.parse(JSON.stringify(err)).response.body)
   }
 }
