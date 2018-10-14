@@ -21,7 +21,7 @@ module.exports = (key, secret) => {
           'client_secret': `${secret}`
         }
       })
-      .then((res) => JSON.parse(JSON.stringify(res)))
-      .catch((err) => JSON.parse(JSON.stringify(err)).response.body)
+      .then((res) => JSON.parse(res))
+      .catch((err) => JSON.parse(err).response.body)
   }
 }
