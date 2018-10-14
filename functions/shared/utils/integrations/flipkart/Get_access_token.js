@@ -1,5 +1,7 @@
 let ERROR_MESSAGE = {
-  error: 'key/secret is missing'
+  error: 'unauthorized error',
+  error_description: 'query params not given'
+  
 }
 module.exports = (key, secret) => {
   let FLIPKART_API_BASE_ROOT = 'https://api.flipkart.net/oauth-service'
