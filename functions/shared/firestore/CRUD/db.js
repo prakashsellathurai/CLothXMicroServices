@@ -1,7 +1,10 @@
 // uncomment this while production
-var admin = require('firebase-admin')
+var env = require('../../environment/env')
+var admin = require('../../environment/initAdmin').setCredentials()
+const firestore = admin.firestore()
+firestore.settings(env.FIRESTORE_SETTINGS)
 // const settings = {timestampsInSnapshots: true}
-var firestore = admin.firestore()
+
 function getEmployeeeData (sid, employeeID) {
   return firestore.collection(`stores/${sid}/employees`).doc(`${employeeID}`).get()
 }
@@ -249,7 +252,18 @@ function reduceStock (ssp, price, size, quantityToReduce) {
   }
   return null
 }
+// integrations related db functions
 
+function saveFlipkartAccessTokenCredentials (storeId, clientId, clientSecret, accessToken) {
+  let obj = {
+    accessToken: `${accessToken}`,
+    appId: `${clientId}`,
+    appSecret: `${clientSecret}`
+  }
+  return firestore
+    .doc(`stores/${storeId}/integrations/flipkart`)
+    .update(obj)
+}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
@@ -274,5 +288,6 @@ module.exports = {
   SetProductPRN: SetProductPRN,
   prnCheckLoop: prnCheckLoop,
   RandomPRNgenerator: RandomPRNgenerator,
-  LocalInventoryUpdater: LocalInventoryUpdater
+  LocalInventoryUpdater: LocalInventoryUpdater,
+  saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials
 }
