@@ -21,7 +21,7 @@ production_server_deployment:
     name: production
   <<: *node
   script:
-     - firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN
+     - npm run set_production_environment
      - npm run deploy
   only:
      - master
@@ -32,7 +32,7 @@ test_server_deployment:
      name: testDeployment
   <<: *node
   script:
-     - firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN
+     - npm run set_development_environment
      - npm run deploy
   only:
     -  develop
