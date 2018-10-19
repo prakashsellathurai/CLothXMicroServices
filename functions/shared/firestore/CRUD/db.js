@@ -264,6 +264,19 @@ function saveFlipkartAccessTokenCredentials (storeId, clientId, clientSecret, ac
     .doc(`stores/${storeId}/integrations/flipkart`)
     .update(obj)
 }
+function LogOnflipkartAccessTokenTrigger (storeId, response) {
+  let obj = {
+    response: JSON.parse(response),
+    event: 'access token request',
+    timeStamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return LogOnFlipkartEvents(storeId, obj)
+}
+function LogOnFlipkartEvents (storeId, logObj) {
+  return firestore
+    .collection(`stores/${storeId}/integrations/flipkart/logs`)
+    .add(logObj)
+}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
@@ -289,5 +302,6 @@ module.exports = {
   prnCheckLoop: prnCheckLoop,
   RandomPRNgenerator: RandomPRNgenerator,
   LocalInventoryUpdater: LocalInventoryUpdater,
-  saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials
+  saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials,
+  LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger
 }

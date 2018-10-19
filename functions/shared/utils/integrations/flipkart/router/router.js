@@ -9,13 +9,12 @@ flipkartRouter.post('/accesstoken', (req, res) => {
   let storeId = req.query.store_id
 
   return getAccesToken(clientid, clientSecret)
-    .then((response) => {
-      if (!response.error) {
-        return db.saveFlipkartAccessTokenCredentials(storeId, clientid, clientSecret, response.access_token)
-          .then(() => response)
-      }
-      return response
-    })
+    .then((response) => (!response.error)
+      ? db.saveFlipkartAccessTokenCredentials(storeId, clientid, clientSecret, response.access_token)
+        .then(() => response)
+      : response)
+    .then((response) => db.LogOnflipkartAccessTokenTrigger(storeId, response))
     .then((response) => res.json(response))
+    .catch(() => res.json({error: 'server error', error_description: 'server responded with status 500'}))
 })
 module.exports = flipkartRouter
