@@ -17,6 +17,5 @@ flipkartRouter.post('/accesstoken', (req, res) => {
     .then((response) => db.LogOnflipkartAccessTokenTrigger(storeId, response))
     .then((response) => res.json(response))
     .catch(() => res.json({error: 'server error', error_description: 'server responded with status 500'}))
-  }
- })
+  })
 module.exports = flipkartRouter
