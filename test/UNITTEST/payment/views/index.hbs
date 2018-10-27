@@ -9,19 +9,36 @@
 <body>
     <form action="/pay" method="POST">
 <!-- Note that the amount is in paise = 50 INR -->
-<script
-    src="https://checkout.razorpay.com/v1/checkout.js"
-    data-key="{{KEY_ID}}"
-    data-amount="5000"
-    data-buttontext="Pay"
-    data-name="Merchant Name"
-    data-description="Purchase Description"
-    data-image="https://your-awesome-site.com/your_logo.jpg"
-    data-prefill.name="Gaurav Kumar"
-    data-prefill.email="test@test.com"
-    data-theme.color="#F37254"
-></script>
-<input type="hidden" value="Hidden Element" name="hidden">
+<button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": {{KEY_ID}},
+    "subscription_id": {{SUBSCRIPTION_ID}},
+    "name": "Merchant Name",
+    "description": "Purchase Description",
+    "image": "/your_logo.png",
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+    },
+    "prefill": {
+        "name": "Customer Name",
+        "email": "test@email.com"
+    },
+    "notes": {
+        "address": "Hello World"
+    },
+    "theme": {
+        "color": "#F37254"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
 </form>
 </body>
 </html>
