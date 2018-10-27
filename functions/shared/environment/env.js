@@ -17,8 +17,9 @@ module.exports = {
   },
   OMNI_CHANNEL_INTEGRATION: {
     FLIKART: {
-      AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token?grant_type=client_credentials',
-      Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login'
+      AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token',
+      Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login',
+      FLIPKART_SELLER_API_BASE_URL: 'https://api.flipkart.net/sellers'
     }
   }
 }
