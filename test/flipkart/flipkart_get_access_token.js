@@ -2,13 +2,14 @@ let ERROR_MESSAGE = {
   error: 'key/secret is missing'
 }
 
-describe('Oauth2', function () {
+describe('Oauth2 autentication test', function () {
   let assert = require('assert')
   it('gets bearer token', function (done) {
     FlipkartGetAccessToken('b7b0811327b2975262318ab844bb8a836050', '1bd70ec15c0d3b31879e86d532db6fe7a')
       .then((body) => {
         if (typeof JSON.parse(body) === 'object') {
-          console.log(body)
+          console.log(JSON.parse(body))
+          console.log(JSON.parse(body)['expires_in'])
           done()
         } else {
           done('not json')
@@ -56,7 +57,7 @@ function FlipkartGetAccessToken (key, secret) {
           'client_secret': `${secret}`
         }
       })
-      .then((res) =>  JSON.parse(JSON.stringify(res)))
+      .then((res) => JSON.parse(JSON.stringify(res)))
       .catch((err) => JSON.parse(JSON.stringify(err)).response.body)
   }
 }

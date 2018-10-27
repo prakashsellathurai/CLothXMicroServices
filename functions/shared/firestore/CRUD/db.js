@@ -277,6 +277,38 @@ function LogOnFlipkartEvents (storeId, logObj) {
     .collection(`stores/${storeId}/integrations/flipkart/logs`)
     .add(logObj)
 }
+function logonFlipkartCreateListings (storeId, response) {
+  let obj = {
+    response: JSON.parse(response),
+    event: 'create listings request',
+    timeStamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return LogOnFlipkartEvents(storeId, obj)
+}
+function logOnFlipkartUpdateListings (storeId, response) {
+  let obj = {
+    response: JSON.parse(response),
+    event: 'update listings request',
+    timeStamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return LogOnFlipkartEvents(storeId, obj)
+}
+function logOnPriceUpdate (storeId, response) {
+  let obj = {
+    response: JSON.parse(response),
+    event: 'update price request',
+    timeStamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return LogOnFlipkartEvents(storeId, obj)
+}
+function logOnInventoryUpdate (storeId, response) {
+  let obj = {
+    response: JSON.parse(response),
+    event: 'update Inventory request',
+    timeStamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return LogOnFlipkartEvents(storeId, obj)
+}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
@@ -303,5 +335,9 @@ module.exports = {
   RandomPRNgenerator: RandomPRNgenerator,
   LocalInventoryUpdater: LocalInventoryUpdater,
   saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials,
-  LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger
+  LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger,
+  logonFlipkartCreateListings: logonFlipkartCreateListings,
+  logOnFlipkartUpdateListings: logOnFlipkartUpdateListings,
+  logOnPriceUpdate: logOnPriceUpdate,
+  logOnInventoryUpdate: logOnInventoryUpdate
 }
