@@ -1,5 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
+const db = require('./../../../shared/firestore/CRUD/db')
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
@@ -10,10 +11,12 @@ module.exports = functions
     const oldDocument = change.before.data()
     const storeId = context.params.storeId
     const pendingBillId = context.params.pendingBillId
+    let invoiceId = document.invoiceId
     if (document === null) {
       return Promise.resolve(0)
     } else {
       const cartProducts = document.cartProducts
-      return Promise.resolve(0)
+      return db.LocalInventoryProductReducer(storeId, cartProducts)
+        .then(() => db.SetInvoicePendingStatusToFalse(storeId, invoiceId))
     }
   })
