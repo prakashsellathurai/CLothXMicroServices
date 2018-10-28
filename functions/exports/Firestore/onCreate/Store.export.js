@@ -11,8 +11,13 @@ function OnCreateStoreHandler (snap, context) {
   let email = registerUid
   return dbFun
     .AssociateStoreInfoToUser(registerUid, storeId)
-    .then(() => razorpayApi
-      .CreateCustomer(name, email, contactNo, notes))
+    .then(() =>
+      razorpayApi
+        .CreateCustomer(name, email, contactNo, notes))
+    .then((res) => {
+      let razorPayId = res.id
+      return dbFun.saveRazorPayId(storeId, razorPayId)
+    })
 }
 
 // ==================================================================================================

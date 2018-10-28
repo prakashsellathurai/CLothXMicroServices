@@ -7,7 +7,7 @@ const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 const index = client.initIndex('product_search')
 
 function DeleteIndexInAlgolia (snap) {
-  const objectId = snap.index
+  const objectId = snap.id
   return index.deleteObject(objectId)
 }
 // ==================================================================================================

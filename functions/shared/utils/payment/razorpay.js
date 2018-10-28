@@ -1,5 +1,5 @@
 const Razorpay = require('razorpay')
-const env = require('./../../../functions/shared/environment/env')
+const env = require('./../../environment/env')
 var instance = new Razorpay({
   key_id: env.RAZOR_PAY.KEY_ID,
   key_secret: env.RAZOR_PAY.KEY_SECRET
@@ -18,8 +18,10 @@ const CancelASubscription = (subscriptionId, cancelAtCycleEnd) => instance.subsc
 const CreateAddon = (subscriptionId, params) => instance.subscriptions.createAddon(subscriptionId, params)
 const verifyAuthTransaction = (RazorPayPaymentId, razorPaySubscriptionId, razorPaySignature) => {
   const crypto = require('crypto')
-  const hmac = crypto.createHmac('sha256', 'a secret')
-  hmac.digest('hex')
+  const secret = `${RazorPayPaymentId}|${razorPaySubscriptionId}`
+  const hmac = crypto.createHmac('sha256', secret)
+  const expectedSignature = hmac.digest('hex')
+  return expectedSignature === razorPaySignature
 }
 const CreatePlan = (params) => instance.plans.create(params)
 const fetchplan = (planId) => instance.plans.fetch(planId)
@@ -39,5 +41,6 @@ module.exports = {
   CreateAddon: CreateAddon,
   CreatePlan: CreatePlan,
   fetchplan: fetchplan,
-  fetchAllPlan: fetchAllPlan
+  fetchAllPlan: fetchAllPlan,
+  verifyAuthTransaction: verifyAuthTransaction
 }
