@@ -7,8 +7,8 @@
     "start": "npm run shell",
     "gtfd": "cd functions",
     "goback": "cd ..",
-    "set_production_environment":"firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxnet",
-    "set_development_environment":"firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxtest",
+    "set_production_environment": "firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxnet",
+    "set_development_environment": "firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxtest",
     "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_ACCESS_TOKEN",
     "logs": "firebase functions:log"
   },
@@ -30,7 +30,8 @@
     "helmet": "^3.12.1",
     "nodemailer": "^4.6.5",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "razorpay": "^2.0.1"
   },
   "private": true
 }

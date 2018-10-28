@@ -309,6 +309,31 @@ function logOnInventoryUpdate (storeId, response) {
   }
   return LogOnFlipkartEvents(storeId, obj)
 }
+function logPaymentAuthVerification (storeId, razorpaySubscriptionId, razorpayPaymentId) {
+  let obj = {
+    event: 'Auth transaction verified',
+    event_details: {
+      subscriptionId: razorpaySubscriptionId,
+      paymentId: razorpayPaymentId
+    }
+  }
+  return firestore
+    .collection(`stores/${storeId}/payments`)
+    .add(obj)
+}
+function saveRazorPayId (storeId, razorPayId) {
+  return firestore
+    .doc(`stores/${storeId}`)
+    .update({
+      razorPayPaymentId: razorPayId
+    })
+}
+function GetRazorPayCustomerId (storeId) {
+  return firestore
+    .doc(`stores/${storeId}`)
+    .get()
+    .then((docRef) => docRef.data().razorPayPaymentId)
+}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
@@ -339,5 +364,8 @@ module.exports = {
   logonFlipkartCreateListings: logonFlipkartCreateListings,
   logOnFlipkartUpdateListings: logOnFlipkartUpdateListings,
   logOnPriceUpdate: logOnPriceUpdate,
-  logOnInventoryUpdate: logOnInventoryUpdate
+  logOnInventoryUpdate: logOnInventoryUpdate,
+  logPaymentAuthVerification: logPaymentAuthVerification,
+  saveRazorPayId: saveRazorPayId,
+  GetRazorPayCustomerId: GetRazorPayCustomerId
 }

@@ -21,5 +21,9 @@ module.exports = {
       Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login',
       FLIPKART_SELLER_API_BASE_URL: 'https://api.flipkart.net/sellers'
     }
+  },
+  RAZOR_PAY: {
+    KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
+    KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'
   }
 }
