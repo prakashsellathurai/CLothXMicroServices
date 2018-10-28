@@ -212,7 +212,47 @@ function prnCheckLoop () {
       .then(queryResult => resolve((queryResult.empty) ? (PRN_VALUE_TO_TEST) : (prnCheckLoop())))
   })
 }
-function LocalInventoryUpdater (storeId, cartProducts) {
+function LocalInventoryProductReturner (storeId, cartProducts) {
+  let promises = []
+  for (let index = 0; index < cartProducts.length; index++) {
+    const cartProduct = cartProducts[index]
+    let prn = cartProduct.prn
+    let size = cartProduct.size
+    let singleUnitPrize = cartProduct.singleUnitPrice
+    let quantityToReturn = cartProduct.totalQuantity
+    promises.push(ReturnProductQuantity(storeId, prn, size, singleUnitPrize, quantityToReturn))
+  }
+  return Promise.all(promises)
+}
+function ReturnProductQuantity (storeId, prn, size, singleUnitPrice, quantityToReturn) {
+  let productDocRef = firestore
+    .collection(`products`)
+    .where('prn', '==', `${prn}`)
+    .where('storeId', '==', `${storeId}`)
+  return firestore
+    .runTransaction(transaction => {
+      return transaction
+        .get(productDocRef)
+        .then((docs) => {
+          return docs
+            .forEach(doc => {
+              let ssp = doc.data().ssp
+              let returnedssp = returnStock(ssp, singleUnitPrice, size, quantityToReturn)
+              return transaction.update(doc.ref, {ssp: returnedssp})
+            })
+        })
+    })
+}
+function returnStock (ssp, price, size, quantityToReturn) {
+  for (var i = 0; i < ssp.length; i++) {
+    if (ssp[i].price == price && ssp[i].size === size) { // leave == since it compares two numbers
+      ssp[i].stock += quantityToReturn
+      return ssp
+    }
+  }
+  return null
+}
+function LocalInventoryProductReducer (storeId, cartProducts) {
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
@@ -334,6 +374,13 @@ function GetRazorPayCustomerId (storeId) {
     .get()
     .then((docRef) => docRef.data().razorPayPaymentId)
 }
+// Oncreate return related db operations
+function deleteInvoice (storeId, invoiceId) {
+  return firestore
+    .doc(`stores/${storeId}/invoices/${invoiceId}`)
+    .delete()
+    .catch((err) => console.error(err))
+}
 module.exports = {
   getEmployeedata: getEmployeeeData,
   checkIfStoreExist: checkIfStoreDocExist,
@@ -358,7 +405,7 @@ module.exports = {
   SetProductPRN: SetProductPRN,
   prnCheckLoop: prnCheckLoop,
   RandomPRNgenerator: RandomPRNgenerator,
-  LocalInventoryUpdater: LocalInventoryUpdater,
+  LocalInventoryProductReducer: LocalInventoryProductReducer,
   saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials,
   LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger,
   logonFlipkartCreateListings: logonFlipkartCreateListings,
@@ -367,5 +414,7 @@ module.exports = {
   logOnInventoryUpdate: logOnInventoryUpdate,
   logPaymentAuthVerification: logPaymentAuthVerification,
   saveRazorPayId: saveRazorPayId,
-  GetRazorPayCustomerId: GetRazorPayCustomerId
+  GetRazorPayCustomerId: GetRazorPayCustomerId,
+  deleteInvoice: deleteInvoice,
+  LocalInventoryProductReturner: LocalInventoryProductReturner
 }
