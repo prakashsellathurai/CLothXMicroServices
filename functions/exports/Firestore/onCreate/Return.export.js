@@ -13,8 +13,10 @@ module.exports = functions
     let cartProducts = snap.data().cartProducts
     let invoiceId = snap.data().invoiceId
     if (isAllReturn) {
-      return db.deleteInvoice(storeId, invoiceId)
-        .then(() => db.LocalInventoryProductReturner(storeId, cartProducts))
+      return db
+        .deleteInvoice(storeId, invoiceId)
+        .then(() => db
+          .LocalInventoryProductReturner(storeId, cartProducts))
     } else {
       return db
         .updateInvoiceOnProductsReturn(storeId, invoiceId, cartProducts)
