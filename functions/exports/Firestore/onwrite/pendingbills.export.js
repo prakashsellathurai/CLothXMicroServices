@@ -10,13 +10,11 @@ module.exports = functions
     const document = change.after.exists ? change.after.data() : null
     const oldDocument = change.before.data()
     const storeId = context.params.storeId
-    const pendingBillId = context.params.pendingBillId
-    let invoiceId = document.invoiceId
     if (document === null) {
-      return Promise.resolve(0)
+      let cartproducts = oldDocument.cartproducts
+      return db.LocalInventoryProductReturner(storeId, cartproducts)
     } else {
-      const cartProducts = document.cartProducts
+      let cartProducts = document.cartProducts
       return db.LocalInventoryProductReducer(storeId, cartProducts)
-        .then(() => db.SetInvoicePendingStatusToFalse(storeId, invoiceId))
     }
   })
