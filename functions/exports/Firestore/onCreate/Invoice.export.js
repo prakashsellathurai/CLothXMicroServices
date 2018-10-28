@@ -4,10 +4,16 @@ var dbFun = require('../../../shared/firestore/CRUD/db')
 // ===============================================================================================
 function MainHandler (snap, context) {
   const storeId = context.params.storeId
-  const cartProducts = snap.data().cartProducts
   const invoiceId = context.params.invoiceId
-  return dbFun.LocalInventoryProductReducer(storeId, cartProducts)
+  return dbFun.deletePendingBill(storeId, invoiceId)
     .then(() => dbFun.SetInvoicePendingStatusToFalse(storeId, invoiceId))
+    .catch((err) => {
+      if (err) {
+        return dbFun.SetInvoicePendingStatusToFalse(storeId, invoiceId)
+      } else {
+        console.error(err)
+      }
+    })
 }
 // ==================================================================================================
 // =====================================export module================================================

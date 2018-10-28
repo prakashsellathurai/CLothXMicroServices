@@ -381,6 +381,11 @@ function deleteInvoice (storeId, invoiceId) {
     .delete()
     .catch((err) => console.error(err))
 }
+function deletePendingBill (storeId, PendingBillId) {
+  return firestore
+    .doc(`stores/${storeId}/pendingbills/${PendingBillId}`)
+    .delete()
+}
 function updateInvoiceOnProductsReturn (storeId, invoiceId, cartProducts) {
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
@@ -453,5 +458,6 @@ module.exports = {
   GetRazorPayCustomerId: GetRazorPayCustomerId,
   deleteInvoice: deleteInvoice,
   LocalInventoryProductReturner: LocalInventoryProductReturner,
-  updateInvoiceOnProductsReturn: updateInvoiceOnProductsReturn
+  updateInvoiceOnProductsReturn: updateInvoiceOnProductsReturn,
+  deletePendingBill: deletePendingBill
 }
