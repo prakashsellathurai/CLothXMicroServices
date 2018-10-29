@@ -1,5 +1,6 @@
 const functions = require('firebase-functions')
 const razorpayApi = require('../../../shared/utils/payment/razorpay')
+const db = require('./../../../shared/firestore/CRUD/db')
 function CheckForPaymentInfoChanges (document, oldDocument) {
   return document.registerUid !== oldDocument.registerUid ||
 document.contactNo !== oldDocument.contactNo ||
@@ -18,9 +19,12 @@ module.exports = functions
       let contactNo = document.contactNo
       let notes = document.description
       let name = document.storeName
-      let email = registerUid
+      let customerId = document.razorPayPaymentId
       try {
-        return razorpayApi.EditCustomer(name, email, contactNo, notes)
+        return db
+          .GetUserEmailByUUID(registerUid)
+          .then((email) => razorpayApi
+            .EditCustomer(customerId, name, email, contactNo, notes))
       } catch (error) {
         console.log(error)
         return Promise.resolve(error)
