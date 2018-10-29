@@ -1,6 +1,15 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
 const db = require('../../../shared/firestore/CRUD/db')
+function StockUpdater (document, oldDocument, storeId) {
+  if (document === null) {
+    let cartproducts = oldDocument.cartproducts
+    return db.LocalInventoryProductReturner(storeId, cartproducts)
+  } else {
+    let cartProducts = document.cartProducts
+    return db.LocalInventoryProductReducer(storeId, cartProducts)
+  }
+}
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
@@ -10,11 +19,7 @@ module.exports = functions
     const document = change.after.exists ? change.after.data() : null
     const oldDocument = change.before.data()
     const storeId = context.params.storeId
-    if (document === null) {
-      let cartproducts = oldDocument.cartproducts
-      return db.LocalInventoryProductReturner(storeId, cartproducts)
-    } else {
-      let cartProducts = document.cartProducts
-      return db.LocalInventoryProductReducer(storeId, cartProducts)
-    }
+    const pendingBillId = context.params.pendingBillId
+    return StockUpdater(document, oldDocument, storeId)
+      .then(() => db.TimestampOnUpdatedPendingBill(storeId, pendingBillId))
   })

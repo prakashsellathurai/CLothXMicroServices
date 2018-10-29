@@ -425,7 +425,7 @@ function ReduceProductQuantityOnInvoice (storeId, invoiceId, prn, size, singleUn
 }
 function assignRandomPendingBillToken (storeId, pendingBillId) {
   let obj = {
- pendingBillToken: getRndInteger(1, 10000)
+    pendingBillToken: getRndInteger(1, 10000)
   }
   return firestore
     .doc(`store/${storeId}/pendingbills/${pendingBillId}`)
@@ -433,6 +433,22 @@ function assignRandomPendingBillToken (storeId, pendingBillId) {
 }
 function getRndInteger (min, max) {
   return Math.floor(Math.random() * (max - min)) + min
+}
+function TimestampOnCreateReturn (storeId, returnId) {
+  let obj = {
+    createdOn: admin.firestore.FieldValue.serverTimestamp
+  }
+  return firestore
+    .doc(`stores/${storeId}/returns/${returnId}`)
+    .update(obj)
+}
+function TimestampOnUpdatedPendingBill (storeId, pendingBillId) {
+  let obj = {
+    updatedOn: admin.firestore.FieldValue.serverTimestamp
+  }
+  return firestore
+    .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
+    .update(obj)
 }
 module.exports = {
   getEmployeedata: getEmployeeeData,
@@ -472,5 +488,7 @@ module.exports = {
   LocalInventoryProductReturner: LocalInventoryProductReturner,
   updateInvoiceOnProductsReturn: updateInvoiceOnProductsReturn,
   deletePendingBill: deletePendingBill,
-  assignRandomPendingBillToken: assignRandomPendingBillToken
+  assignRandomPendingBillToken: assignRandomPendingBillToken,
+  TimestampOnCreateReturn: TimestampOnCreateReturn,
+  TimestampOnUpdatedPendingBill: TimestampOnUpdatedPendingBill
 }
