@@ -4,124 +4,6 @@ var admin = require('../../environment/initAdmin').setCredentials()
 const firestore = admin.firestore()
 firestore.settings(env.FIRESTORE_SETTINGS)
 // const settings = {timestampsInSnapshots: true}
-
-function getEmployeeeData (sid, employeeID) {
-  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeID}`).get()
-}
-function GetClothDoc (storeId, clothId) {
-  return firestore.collection(`stores/${storeId}/clothes`).doc(`${clothId}`)
-}
-function checkIfEmployeeExist (sid, employeeId) {
-  return getEmployeeeData(sid, employeeId).then((employeeDoc) => {
-    return (employeeDoc.exists)
-  })
-}
-
-function getstoreData (sid) {
-  return firestore.collection('stores').doc(`${sid}`).get().then((resolvedvalue) => resolvedvalue.data())
-}
-
-function checkIfStoreDocExist (sid) {
-  return firestore.collection('stores').doc(`${sid}`).get().then((doc) => {
-    return (doc.exists)
-  })
-}
-function GetOwner (sid) {
-  return firestore.collection(`stores/${sid}/employees/`).where('role', '==', 'owner').get()
-}
-function GetClothCollection (storeId) {
-  return firestore.collection(`stores/${storeId}/clothes`).get()
-}
-
-// ===================================================================== storeIndex related routines===========================================
-function CountSize () {
-  return GetStoreIndex().then(snap => {
-    if (snap.exists && snap.data().storesCount) return snap.data().storesCount
-    else {
-      return IntiatiateStoreIndex().then((snap) => {
-        return GetStoreIndex().then((snap) => snap.data().storesCount)
-      })
-    }
-  })
-}
-function IncStoreIndex () {
-  return CountSize().then(count => {
-    return firestore.collection('DbIndex').doc('stores').update({ storesCount: count + 1 })
-  })
-}
-function DecStoreIndex () {
-  return CountSize().then(count => {
-    return firestore.collection('DbIndex').doc('stores').update({ storesCount: count - 1 })
-  })
-}
-function GetStoreIndex () {
-  return firestore.collection('DbIndex').doc('stores').get()
-}
-function IntiatiateStoreIndex () {
-  return firestore.collection('DbIndex').doc('stores').set({ storesCount: 1001 }).then(() => { return 1001 })
-}
-// ======================================================END OF STORE INDEX ROUTINES ======================================
-// =======================================================db functions for store add / employee add ====================
-function createEmployee (sid, employeeDAta) {
-  return firestore.collection(`stores/${sid}/employees`).doc(`${employeeDAta.mobileNo}`).set(employeeDAta)
-}
-
-function storeQueryBySid (sid) {
-  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
-    let promises = []
-    if (val.empty) {
-      return Promise.resolve([1000])
-    } else {
-      val.docs.forEach(doc => {
-        promises.push(doc.id)
-      })
-      return Promise.all(promises)
-    }
-  })
-}
-function checkIfsidExist (sid) {
-  return firestore.collection('stores').where('sid', '==', sid).get().then(val => {
-    let promises = []
-    val.docs.forEach(doc => {
-      promises.push(doc.id)
-    })
-    return Promise.all(promises)
-  }).then(arr => {
-    return arr.length > 0
-  })
-}
-// ############################# log related function ###############
-function addstorelog (uuid, doc) {
-  return firestore.collection('/DbIndex/stores/addstorelog').doc(uuid).set(RemoveUndefinedValues(doc))
-}
-function RemoveUndefinedValues (obj) {
-  return JSON.parse(JSON.stringify(obj))
-}
-function EmployeePasswordResetLogger (sid, EmployeePhoneNUmber) {
-  return firestore.collection(`/DbIndex/stores/passwordreset/`).add({
-    sid: sid,
-    phonenumber: EmployeePhoneNUmber,
-    timestamp: new Date()
-  })
-}
-function EmployeePasswordResetTokenGenerator (sid, EmployeePhoneNUmber) {
-  return EmployeePasswordResetLogger(sid, EmployeePhoneNUmber).then(ref => ref.id)
-}
-function GetUserData (uuid) {
-  return firestore
-    .collection('users')
-    .where('uid', '==', `${uuid}`)
-    .get()
-    .then(docs => {
-      let promises = []
-      docs.forEach(doc => {
-        if (doc.exists) { promises.push(doc.data()) }
-      })
-      return Promise.all(promises)
-    })
-    .then(array => array[0])
-    .then(doc => doc)
-}
 // this function relates to oncreateStore trigger won't work on other
 function AssociateStoreInfoToUser (uid, storeId) {
   let docRef = firestore
@@ -183,9 +65,7 @@ function setInvoicePendingStatus (storeId, invoiceId, UPDATE_STATUS_BOOLEAN) {
       pending: `${UPDATE_STATUS_BOOLEAN}`,
       createdOn: admin.firestore.FieldValue.serverTimestamp()})
 }
-function isEmptyArray (Arr) {
-  return Arr.length === 0 || typeof Arr === 'undefined'
-}
+
 function SetProductPRN (productId, PRN_VALUE) {
   return firestore
     .doc(`/products/${productId}`)
