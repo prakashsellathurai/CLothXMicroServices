@@ -451,22 +451,6 @@ function TimestampOnUpdatedPendingBill (storeId, pendingBillId) {
     .update(obj)
 }
 module.exports = {
-  getEmployeedata: getEmployeeeData,
-  checkIfStoreExist: checkIfStoreDocExist,
-  getStoreData: getstoreData,
-  checkIfEmployeeExist: checkIfEmployeeExist,
-  GetOwner: GetOwner,
-  GetClothCollection: GetClothCollection,
-  GetClothDoc: GetClothDoc,
-  createEmployee: createEmployee,
-  IncStoreIndex: IncStoreIndex,
-  DecStoreIndex: DecStoreIndex,
-  storeQueryBySid: storeQueryBySid,
-  checkIfsidExist: checkIfsidExist,
-  CountSize: CountSize,
-  GetUserData: GetUserData,
-  addstorelog: addstorelog,
-  EmployeePasswordResetTokenGenerator: EmployeePasswordResetTokenGenerator,
   AssociateStoreInfoToUser: AssociateStoreInfoToUser,
   ReduceProductQuantity: ReduceProductQuantity,
   UpdatInvoicePendingStatus: updateInvoicePendingStatus,
