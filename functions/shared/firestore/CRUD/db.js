@@ -157,6 +157,7 @@ function AssociateStoreInfoToUser (uid, storeId) {
         }
         let StoreDOcRef = firestore.doc(`stores/${storeId}`)
         t.update(StoreDOcRef, StorePropertyObj)
+        return userDoc.email
       })
   })
 }
