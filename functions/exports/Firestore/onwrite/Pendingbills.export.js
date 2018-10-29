@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-const db = require('./../../../shared/firestore/CRUD/db')
+const db = require('../../../shared/firestore/CRUD/db')
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions

@@ -1,5 +1,5 @@
 const functions = require('firebase-functions')
-const razorpayApi = require('./../../../shared/utils/payment/razorpay')
+const razorpayApi = require('../../../shared/utils/payment/razorpay')
 function CheckForPaymentInfoChanges (document, oldDocument) {
   return document.registerUid !== oldDocument.registerUid ||
 document.contactNo !== oldDocument.contactNo ||
@@ -14,7 +14,7 @@ module.exports = functions
     const oldDocument = change.before.data()
 
     if (CheckForPaymentInfoChanges(document, oldDocument)) {
-      let registerUid = document.registerUid
+      let registerUid = document.registerUid // need to configure for changes
       let contactNo = document.contactNo
       let notes = document.description
       let name = document.storeName

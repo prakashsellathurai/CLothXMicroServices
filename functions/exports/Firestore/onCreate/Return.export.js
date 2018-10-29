@@ -6,7 +6,7 @@ const db = require('./../../../shared/firestore/CRUD/db')
 
 module.exports = functions
   .firestore
-  .document('stores/{storeId}/return/{returnId}')
+  .document('stores/{storeId}/returns/{returnId}')
   .onCreate((snap, context) => {
     let storeId = context.params.storeId
     let isAllReturn = snap.data().isAllReturn
