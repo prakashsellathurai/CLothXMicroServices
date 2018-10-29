@@ -1,5 +1,5 @@
 const functions = require('firebase-functions')
-const razorpayApi = require('./../../../shared/utils/payment/razorpay')
+const razorpayApi = require('../../../shared/utils/payment/razorpay')
 function CheckForPaymentInfoChanges (document, oldDocument) {
   return document.registerUid !== oldDocument.registerUid ||
 document.contactNo !== oldDocument.contactNo ||
