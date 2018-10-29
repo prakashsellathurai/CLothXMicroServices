@@ -5,6 +5,22 @@ const firestore = admin.firestore()
 firestore.settings(env.FIRESTORE_SETTINGS)
 // const settings = {timestampsInSnapshots: true}
 // this function relates to oncreateStore trigger won't work on other
+function GetUserEmailByUUID (uid) {
+  return firestore
+    .collection('users')
+    .where('uid', '==', `${uid}`)
+    .get()
+    .then(docs => {
+      let promises = []
+      docs
+        .forEach(doc => {
+          if (doc.exists) { promises.push(doc.data()) }
+        })
+      return Promise.all(promises)
+    })
+    .then(array => array[0])
+    .then((doc) => doc.email)
+}
 function AssociateStoreInfoToUser (uid, storeId) {
   let docRef = firestore
     .collection('users')
@@ -354,5 +370,6 @@ module.exports = {
   deletePendingBill: deletePendingBill,
   assignRandomPendingBillToken: assignRandomPendingBillToken,
   TimestampOnCreateReturn: TimestampOnCreateReturn,
-  TimestampOnUpdatedPendingBill: TimestampOnUpdatedPendingBill
+  TimestampOnUpdatedPendingBill: TimestampOnUpdatedPendingBill,
+  GetUserEmailByUUID: GetUserEmailByUUID
 }
