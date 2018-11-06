@@ -17,6 +17,7 @@ function MainHandler(snap, context) {
         })
         .then(() => {
             const givenCustomerData = {
+                'storeId': storeId,
                 'customerNo': context.params.customerNumber,
                 'customerName': context.params.customerName,
                 'createdOn': context.params.createdOn,

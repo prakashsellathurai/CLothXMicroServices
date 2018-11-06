@@ -215,21 +215,49 @@ function reduceStock(ssp, price, size, quantityToReduce) {
 
 // customer reward management
 
-function updateCustomerReward({customerNo, customerName, totalQuantity, totalPrice, createdOn}) {
-    if(checkWhetherCustomerExitOrNot()){
-        createCustomerAndReward({customerNo, customerName, totalQuantity, totalPrice, createdOn})
+function updateCustomerReward(customer) {
+    if (checkWhetherCustomerExitOrNot(customer.customerNo)) {
+        return createCustomerAndReward(customer)
     } else {
-        setAndUpdateCustomerRewards(calculatedCustomerReward)
+        setAndUpdateCustomerRewards(calculatedCustomerReward(customer))
+        if (checkWhetherCustomerNewStoreRewardOrNot(customer.storeId, customer.customerNo)) {
+            return createNewStoreCustomerReward(customer)
+        } else {
+            return setAndUpdateCustomerStoreRewards(calculatedCustomerStoreReward(customer))
+        }
     }
 }
-function calculatedCustomerReward({customerNo, totalQuantity, totalPrice, createdOn}) {
-    const currentStateOfCustomerReward = getCurrentStateOfCustomer(customerNo)
+
+function checkWhetherCustomerExitOrNot(customerNo) {
+    return firestore
+        .doc(`customers/${customerNo}`)
+        .get()
+        .then((customer) => customer.exists)
+}
+
+
+function createCustomerAndReward(customer) {
+    const data = {
+        'customerName': customer.customerName,
+        'noOfItemsPurchased': customer.totalQuantity,
+        'totalCostOfPurchase': customer.totalPrice,
+        'firstVisit': customer.createdOn,
+        'totalNoOfVisit': 1,
+        'totalProductsReturn': 0,
+    }
+    return firestore
+        .doc(`customers/${customerNo}`)
+        .set(data)
+        .then(() => createNewStoreCustomerReward(customer))
+}
+function calculatedCustomerReward(exitingCustomerData) {
+    const currentStateOfCustomerReward = getCurrentStateOfCustomer(exitingCustomerData.customerNo)
     return {
-        'customerNo': customerNo,
-        'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + totalQuantity,
-        'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + totalPrice,
+        'customerNo': exitingCustomerData.customerNo,
+        'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
+        'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
         'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-        'lastVisit': createdOn
+        'lastVisit': exitingCustomerData.createdOn
     }
 }
 
@@ -238,26 +266,6 @@ function getCurrentStateOfCustomer(customerNo) {
         .doc(`customers/${customerNo}`)
         .get()
         .then((customer) => customer.data())
-}
-
-function createCustomerAndReward({customerNo, customerName, totalQuantity, totalPrice, createdOn}) {
-    const data = {
-        'customerName': customerName,
-        'noOfItemsPurchased': totalQuantity,
-        'totalCostOfPurchase': totalPrice,
-        'firstVisit': createdOn,
-        'totalNoOfVisit': 1
-    }
-    return firestore
-        .doc(`customers/${customerNo}`)
-        .set(data)
-}
-
-function checkWhetherCustomerExitOrNot(customerNo) {
-    return firestore
-        .doc(`customers/${customerNo}`)
-        .get()
-        .then((customer) => customer.exists)
 }
 
 function setAndUpdateCustomerRewards({customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
@@ -271,6 +279,62 @@ function setAndUpdateCustomerRewards({customerNo, noOfItemsPurchased, totalCostO
         .doc(`customers/${customerNo}`)
         .set(data, {merge: true})
 }
+
+// store reward function
+
+function checkWhetherCustomerNewStoreRewardOrNot(storeId, customerNo) {
+    return firestore
+        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .get()
+        .then((store) => store.exists)
+}
+function createNewStoreCustomerReward(customer) {
+    const rewardData = {
+        'noOfItemsPurchased': customer.totalQuantity,
+        'totalCostOfPurchase': customer.totalPrice,
+        'firstVisit': customer.createdOn,
+        'totalNoOfVisit': 1,
+        'totalProductsReturn': 0
+    }
+    return firestore
+        .doc(`customers/${customer.customerNo}/storeRewards/${customer.storeId}`)
+        .set(rewardData)
+}
+
+
+function calculatedCustomerStoreReward(exitingCustomerData) {
+    const currentStateOfCustomerReward = getCurrentStateOfCustomerStoreReward(exitingCustomerData.storeId, exitingCustomerData.customerNo)
+    return {
+        'customerNo': exitingCustomerData.customerNo,
+        'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
+        'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
+        'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
+        'lastVisit': exitingCustomerData.createdOn
+    }
+}
+
+
+function getCurrentStateOfCustomerStoreReward(storeId, customerNo) {
+    return firestore
+        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .get()
+        .then((customer) => customer.data())
+}
+
+
+
+function setAndUpdateCustomerStoreRewards({storeId, customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
+    const data = {
+        'noOfItemsPurchased': noOfItemsPurchased,
+        'totalCostOfPurchase': totalCostOfPurchase,
+        'totalNoOfVisit': totalNoOfVisit,
+        'lastVisit': lastVisit
+    }
+    return firestore
+        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .set(data, {merge: true})
+}
+
 
 // integrations related db functions
 
