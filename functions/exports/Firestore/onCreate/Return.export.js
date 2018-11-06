@@ -1,5 +1,4 @@
 //= ===================================== IMPORTS ===============================================//
-import {updateAndMergeReturnCountInReward} from "../../../shared/firestore/CRUD/db";
 
 const functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/db')
@@ -31,6 +30,6 @@ module.exports = functions
     let customerNo = snap.data().customerNumber
     return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
       .then(() => db.TimestampOnCreateReturn(storeId, returnId))
-        .then(() => updateAndMergeReturnCountInReward(customerNo, cartProducts.length))
+        .then(() => db.updateAndMergeReturnCountInReward(customerNo, cartProducts.length))
 
   })
