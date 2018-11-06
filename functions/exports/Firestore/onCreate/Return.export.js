@@ -4,12 +4,12 @@ const db = require('./../../../shared/firestore/CRUD/db')
 function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
   if (isAllReturn) {
     return db
-      .deleteInvoice(storeId, invoiceId)
+      .deleteInvoice(invoiceId)
       .then(() => db
         .LocalInventoryProductReturner(storeId, cartProducts))
   } else {
     return db
-      .updateInvoiceOnProductsReturn(storeId, invoiceId, cartProducts)
+      .updateInvoiceOnProductsReturn(invoiceId, cartProducts)
       .then(() => db
         .LocalInventoryProductReturner(storeId, cartProducts))
   }
