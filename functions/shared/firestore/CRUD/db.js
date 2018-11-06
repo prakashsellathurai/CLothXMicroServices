@@ -250,6 +250,7 @@ function createCustomerAndReward(customer) {
         .set(data)
         .then(() => createNewStoreCustomerReward(customer))
 }
+
 function calculatedCustomerReward(exitingCustomerData) {
     const currentStateOfCustomerReward = getCurrentStateOfCustomer(exitingCustomerData.customerNo)
     return {
@@ -288,13 +289,13 @@ function checkWhetherCustomerNewStoreRewardOrNot(storeId, customerNo) {
         .get()
         .then((store) => store.exists)
 }
+
 function createNewStoreCustomerReward(customer) {
     const rewardData = {
         'noOfItemsPurchased': customer.totalQuantity,
         'totalCostOfPurchase': customer.totalPrice,
         'firstVisit': customer.createdOn,
         'totalNoOfVisit': 1,
-        'totalProductsReturn': 0
     }
     return firestore
         .doc(`customers/${customer.customerNo}/storeRewards/${customer.storeId}`)
@@ -321,7 +322,12 @@ function getCurrentStateOfCustomerStoreReward(storeId, customerNo) {
         .then((customer) => customer.data())
 }
 
-
+function updateAndMergeReturnCountInReward(customerNo, totalReturn) {
+    const currentReturnState = getCurrentStateOfCustomer(customerNo)
+    return firestore
+        .doc(`customers/${customerNo}`)
+        .set({'totalProductsReturn': currentReturnState + totalReturn}, {merge: true})
+}
 
 function setAndUpdateCustomerStoreRewards({storeId, customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
     const data = {
@@ -520,7 +526,8 @@ module.exports = {
     prnCheckLoop: prnCheckLoop,
     RandomPRNgenerator: RandomPRNgenerator,
     LocalInventoryProductReducer: LocalInventoryProductReducer,
-    updateCustomerReward,
+    updateCustomerReward: updateCustomerReward,
+    updateAndMergeReturnCountInReward: updateAndMergeReturnCountInReward,
     saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials,
     LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger,
     logonFlipkartCreateListings: logonFlipkartCreateListings,
