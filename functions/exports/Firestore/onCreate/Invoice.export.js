@@ -18,11 +18,11 @@ function MainHandler(snap, context) {
         .then(() => {
             const givenCustomerData = {
                 'storeId': storeId,
-                'customerNo': context.params.customerNumber,
-                'customerName': context.params.customerName,
-                'createdOn': context.params.createdOn,
-                'totalPrice': context.params.totalPrice,
-                'totalQuantity': context.params.totalQuantity,
+                'customerNo': snap.data().customerNumber,
+                'customerName': snap.data().customerName,
+                'createdOn': snap.data().createdOn,
+                'totalPrice': snap.data().totalPrice,
+                'totalQuantity': snap.data().totalQuantity,
             }
             return dbFun.updateCustomerReward(givenCustomerData)
         })
