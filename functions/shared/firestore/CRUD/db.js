@@ -152,19 +152,19 @@ function ReturnProductQuantity(storeId, prn, size, singleUnitPrice, quantityToRe
                 .then((docs) => {
                     return docs
                         .forEach(doc => {
-                            let ssp = doc.data().ssp
-                            let returnedssp = returnStock(ssp, singleUnitPrice, size, quantityToReturn)
-                            return transaction.update(doc.ref, {ssp: returnedssp})
+                            let variants = doc.data().variants
+                            let returnedVariants = returnStock(variants, singleUnitPrice, size, quantityToReturn)
+                            return transaction.update(doc.ref, {variants: returnedVariants})
                         })
                 })
         })
 }
 
-function returnStock(ssp, price, size, quantityToReturn) {
-    for (var i = 0; i < ssp.length; i++) {
-        if (ssp[i].price == price && ssp[i].size === size) { // leave == since it compares two numbers
-            ssp[i].stock += quantityToReturn
-            return ssp
+function returnStock(variants, price, size, quantityToReturn) {
+    for (var i = 0; i < variants.length; i++) {
+        if (variants[i].sellingPrice == price && variants[i].size === size) { // leave == since it compares two numbers
+            variants[i].stock += quantityToReturn
+            return variants
         }
     }
     return null
@@ -195,19 +195,19 @@ function ReduceProductQuantity(storeId, prn, size, singleUnitPrice, quantityToRe
                 .then((docs) => {
                     return docs
                         .forEach(doc => {
-                            let ssp = doc.data().ssp
-                            let reducedssp = reduceStock(ssp, singleUnitPrice, size, quantityToReduce)
-                            return transaction.update(doc.ref, {ssp: reducedssp})
+                            let variants = doc.data().variants
+                            let reducedVariants = reduceStock(variants, singleUnitPrice, size, quantityToReduce)
+                            return transaction.update(doc.ref, {variants: reducedVariants})
                         })
                 })
         })
 }
 
-function reduceStock(ssp, price, size, quantityToReduce) {
-    for (var i = 0; i < ssp.length; i++) {
-        if (ssp[i].price == price && ssp[i].size === size) { // leave == since it compares two numbers
-            ssp[i].stock -= quantityToReduce
-            return ssp
+function reduceStock(variants, price, size, quantityToReduce) {
+    for (var i = 0; i < variants.length; i++) {
+        if (variants[i].sellingPrice == price && variants[i].size === size) { // leave == since it compares two numbers
+            variants[i].stock -= quantityToReduce
+            return variants
         }
     }
     return null
