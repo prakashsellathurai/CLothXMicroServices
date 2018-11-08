@@ -246,7 +246,7 @@ function createCustomerAndReward(customer) {
         'totalProductsReturn': 0,
     }
     return firestore
-        .doc(`customers/${customerNo}`)
+        .doc(`customers/${customer.customerNo}`)
         .set(data)
         .then(() => createNewStoreCustomerReward(customer))
 }
