@@ -285,7 +285,7 @@ function setAndUpdateCustomerRewards({customerNo, noOfItemsPurchased, totalCostO
 
 function checkWhetherCustomerNewStoreRewardOrNot(storeId, customerNo) {
     return firestore
-        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .doc(`stores/${storeId}/customers/${customerNo}`)
         .get()
         .then((store) => store.exists)
 }
@@ -298,7 +298,7 @@ function createNewStoreCustomerReward(customer) {
         'totalNoOfVisit': 1,
     }
     return firestore
-        .doc(`customers/${customer.customerNo}/storeRewards/${customer.storeId}`)
+        .doc(`stores/${customer.storeId}/customers/${customer.customerNo}`)
         .set(rewardData)
 }
 
@@ -317,7 +317,7 @@ function calculatedCustomerStoreReward(exitingCustomerData) {
 
 function getCurrentStateOfCustomerStoreReward(storeId, customerNo) {
     return firestore
-        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .doc(`stores/${storeId}/customers/${customerNo}`)
         .get()
         .then((customer) => customer.data())
 }
@@ -337,7 +337,7 @@ function setAndUpdateCustomerStoreRewards({storeId, customerNo, noOfItemsPurchas
         'lastVisit': lastVisit
     }
     return firestore
-        .doc(`customers/${customerNo}/storeRewards/${storeId}`)
+        .doc(`stores/${storeId}/customers/${customerNo}`)
         .set(data, {merge: true})
 }
 
