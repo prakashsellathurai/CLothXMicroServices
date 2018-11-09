@@ -1,15 +1,16 @@
 //= ===================================== IMPORTS ===============================================//
+
 const functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/db')
 function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
   if (isAllReturn) {
     return db
-      .deleteInvoice(storeId, invoiceId)
+      .deleteInvoice(invoiceId)
       .then(() => db
         .LocalInventoryProductReturner(storeId, cartProducts))
   } else {
     return db
-      .updateInvoiceOnProductsReturn(storeId, invoiceId, cartProducts)
+      .updateInvoiceOnProductsReturn(invoiceId, cartProducts)
       .then(() => db
         .LocalInventoryProductReturner(storeId, cartProducts))
   }
@@ -26,6 +27,9 @@ module.exports = functions
     let isAllReturn = snap.data().isAllReturn
     let cartProducts = snap.data().cartProducts
     let invoiceId = snap.data().invoiceId
+    let customerNo = snap.data().customerNumber
     return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
       .then(() => db.TimestampOnCreateReturn(storeId, returnId))
+        .then(() => db.updateAndMergeReturnCountInReward(customerNo, cartProducts.length))
+
   })
