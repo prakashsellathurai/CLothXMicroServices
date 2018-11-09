@@ -21,5 +21,5 @@ module.exports = functions
     const storeId = context.params.storeId
     const pendingBillId = context.params.pendingBillId
     return StockUpdater(document, oldDocument, storeId)
-      .then(() => db.TimestampOnUpdatedPendingBill(storeId, pendingBillId))
+      .then(() => db.timestamp.OnUpdatedPendingBill(storeId, pendingBillId))
   })

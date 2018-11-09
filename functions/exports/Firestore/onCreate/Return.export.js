@@ -29,7 +29,6 @@ module.exports = functions
     let invoiceId = snap.data().invoiceId
     let customerNo = snap.data().customerNumber
     return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
-      .then(() => db.TimestampOnCreateReturn(storeId, returnId))
-        .then(() => db.updateAndMergeReturnCountInReward(customerNo, cartProducts.length))
-
+      .then(() => db.timestamp.OnCreateReturn(storeId, returnId))
+      .then(() => db.reward.updateReturnCount(customerNo, cartProducts.length))
   })

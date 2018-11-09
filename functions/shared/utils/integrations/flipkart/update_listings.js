@@ -7,7 +7,7 @@ const db = require('./../../../firestore/CRUD/db')
 module.exports = (Authkey, storeId, PostedListingObj) => {
   return API_REQUEST.post(URL, Authkey, PostedListingObj)
     .then((response) => {
-      return db.logOnFlipkartUpdateListings(storeId, response)
+      return db.log.FlipkartUpdateListings(storeId, response)
         .then((response) => JSON.parse(response))
     })
 }

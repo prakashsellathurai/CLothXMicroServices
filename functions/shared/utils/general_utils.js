@@ -6,6 +6,14 @@ function functionNameGenerator (file) {
   const snake = `${split.join('_')}${event}`
   return camel(snake)
 }
+function MergeAndRemoveDuplicatesArray (array, string) {
+  var c = array.concat(string)
+  return c.filter(function (item, pos) {
+    return c.indexOf(item) === pos
+  })
+}
+
 module.exports = {
-  functionNameGenerator: functionNameGenerator
+  functionNameGenerator: functionNameGenerator,
+  MergeAndRemoveDuplicatesArray: MergeAndRemoveDuplicatesArray
 }

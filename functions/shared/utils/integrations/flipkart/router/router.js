@@ -34,7 +34,7 @@ function accesstokenRouteHandler (req, res) {
         ? db.saveFlipkartAccessTokenCredentials(storeId, clientid, clientSecret, response.access_token)
           .then(() => response)
         : response)
-      .then((response) => db.LogOnflipkartAccessTokenTrigger(storeId, response))
+      .then((response) => db.log.flipkartAccessTokenTrigger(storeId, response))
       .then((response) => res.json(response))
       .catch((err) => {
         console.log(err)

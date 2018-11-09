@@ -7,7 +7,7 @@ const db = require('./../../../firestore/CRUD/db')
 module.exports = (Authkey, storeId, PostedListingObj) => {
   return API_REQUEST.post(URL, Authkey, PostedListingObj)
     .then((response) => {
-      return db.logOnPriceUpdate(storeId, response)
+      return db.log.PriceUpdate(storeId, response)
         .then((response) => JSON.parse(response))
     })
 }
