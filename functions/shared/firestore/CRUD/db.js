@@ -159,12 +159,12 @@ function ReturnProductQuantity(storeId, productUid, size, singleUnitPrice, quant
 
 function returnStock(variants, price, size, quantityToReturn) {
     for (var i = 0; i < variants.length; i++) {
-        if (variants[i].sellingPrice === price && variants[i].size === size) { // leave == since it compares two numbers
+        if (variants[i].size === size) { // leave == since it compares two numbers
             variants[i].stock += quantityToReturn
             return variants
         }
     }
-    return null
+    return variants
 }
 
 function LocalInventoryProductReducer(storeId, cartProducts) {
@@ -199,12 +199,12 @@ function ReduceProductQuantity(storeId, productUid, size, singleUnitPrice, quant
 
 function reduceStock(variants, price, size, quantityToReduce) {
     for (var i = 0; i < variants.length; i++) {
-        if (variants[i].sellingPrice === price && variants[i].size === size) { // leave == since it compares two numbers
+        if (variants[i].size === size) { // leave == since it compares two numbers
             variants[i].stock -= quantityToReduce
             return variants
         }
     }
-    return null
+    return variants
 }
 
 // customer reward management
