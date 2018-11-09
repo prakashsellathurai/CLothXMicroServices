@@ -9,6 +9,8 @@ module.exports = functions
   .onCreate((snap, context) => {
     let storeId = context.params.storeId
     let pendingBillId = context.params.pendingBillId
-    return db.assignRandomPendingBillToken(storeId, pendingBillId)
+    return db
+      .assign
+      .randomPendingBillToken(storeId, pendingBillId)
   }
   )

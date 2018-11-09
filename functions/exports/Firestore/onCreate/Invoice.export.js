@@ -17,10 +17,15 @@ function MainHandler (snap, context) {
   const invoiceId = context.params.invoiceId
   const createdData = snap.data()
   return db
-    .deletePendingBill(storeId, invoiceId)
-    .then(() => db.reward.updateCustomer(parseCustomerData(createdData, storeId)))
-    .then(() => db.SetInvoicePendingStatusToFalse(invoiceId))
-    .catch((err) => (err) ? db.SetInvoicePendingStatusToFalse(invoiceId) : console.error(err))
+    ._delete
+    .pendingBill(storeId, invoiceId)
+    .then(() => db
+      .update
+      .customerReward(parseCustomerData(createdData, storeId)))
+    .then(() => db
+      .SetInvoicePendingStatusToFalse(invoiceId))
+    .catch((err) => (err) ? db
+      .SetInvoicePendingStatusToFalse(invoiceId) : console.error(err))
     .catch((err) => console.log(err))
 }
 
