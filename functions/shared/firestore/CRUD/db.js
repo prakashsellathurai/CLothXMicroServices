@@ -171,31 +171,28 @@ function LocalInventoryProductReducer(storeId, cartProducts) {
     let promises = []
     for (let index = 0; index < cartProducts.length; index++) {
         const cartProduct = cartProducts[index]
-        let prn = cartProduct.prn
+        let productUid = cartProduct.productUid
         let size = cartProduct.size
         let singleUnitPrize = cartProduct.singleUnitPrice
         let quantityToReduce = cartProduct.totalQuantity
-        promises.push(ReduceProductQuantity(storeId, prn, size, singleUnitPrize, quantityToReduce))
+        promises.push(ReduceProductQuantity(storeId, productUid, size, singleUnitPrize, quantityToReduce))
     }
     return Promise.all(promises)
 }
 
-function ReduceProductQuantity(storeId, prn, size, singleUnitPrice, quantityToReduce) {
+function ReduceProductQuantity(storeId, productUid, size, singleUnitPrice, quantityToReduce) {
     let productDocRef = firestore
-        .collection(`products`)
-        .where('prn', '==', `${prn}`)
-        .where('storeId', '==', `${storeId}`)
+        .doc(`products/${productUid}`)
     return firestore
         .runTransaction(transaction => {
             return transaction
                 .get(productDocRef)
-                .then((docs) => {
-                    return docs
-                        .forEach(doc => {
+                .then((doc) => {
+
                             let variants = doc.data().variants
                             let reducedVariants = reduceStock(variants, singleUnitPrice, size, quantityToReduce)
                             return transaction.update(doc.ref, {variants: reducedVariants})
-                        })
+
                 })
         })
 }
