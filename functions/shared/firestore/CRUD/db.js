@@ -127,90 +127,86 @@ function prnCheckLoop () {
   })
 }
 
-function LocalInventoryProductReturner (storeId, cartProducts) {
-  let promises = []
-  for (let index = 0; index < cartProducts.length; index++) {
-    const cartProduct = cartProducts[index]
-    let prn = cartProduct.prn
-    let size = cartProduct.size
-    let singleUnitPrize = cartProduct.singleUnitPrice
-    let quantityToReturn = cartProduct.totalQuantity
-    promises.push(ReturnProductQuantity(storeId, prn, size, singleUnitPrize, quantityToReturn))
-  }
-  return Promise.all(promises)
+function LocalInventoryProductReturner(storeId, cartProducts) {
+    let promises = []
+    for (let index = 0; index < cartProducts.length; index++) {
+        const cartProduct = cartProducts[index]
+        let productUid = cartProduct.productUid
+        let size = cartProduct.size
+        let singleUnitPrize = cartProduct.singleUnitPrice
+        let quantityToReturn = cartProduct.totalQuantity
+        promises.push(ReturnProductQuantity(storeId, productUid, size, singleUnitPrize, quantityToReturn))
+    }
+    return Promise.all(promises)
 }
 
-function ReturnProductQuantity (storeId, prn, size, singleUnitPrice, quantityToReturn) {
-  let productDocRef = firestore
-    .collection(`products`)
-    .where('prn', '==', `${prn}`)
-    .where('storeId', '==', `${storeId}`)
-  return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((docs) => {
-          return docs
-            .forEach(doc => {
-              let variants = doc.data().variants
-              let returnedVariants = returnStock(variants, singleUnitPrice, size, quantityToReturn)
-              return transaction.update(doc.ref, {variants: returnedVariants})
-            })
+function ReturnProductQuantity(storeId, productUid, size, singleUnitPrice, quantityToReturn) {
+    let productDocRef = firestore
+        .doc(`products/${productUid}`)
+    return firestore
+        .runTransaction(transaction => {
+            return transaction
+                .get(productDocRef)
+                .then((doc) => {
+
+                    let variants = doc.data().variants
+                    let returnedVariants = returnStock(variants, singleUnitPrice, size, quantityToReturn)
+                    return transaction.update(doc.ref, {variants: returnedVariants})
+
+                })
         })
     })
 }
 
-function returnStock (variants, price, size, quantityToReturn) {
-  for (var i = 0; i < variants.length; i++) {
-    if (variants[i].sellingPrice == price && variants[i].size === size) { // leave == since it compares two numbers
-      variants[i].stock += quantityToReturn
-      return variants
+function returnStock(variants, price, size, quantityToReturn) {
+    for (var i = 0; i < variants.length; i++) {
+        if (variants[i].size === size) { // leave == since it compares two numbers
+            variants[i].stock += quantityToReturn
+            return variants
+        }
     }
-  }
-  return null
+    return variants
 }
 
-function LocalInventoryProductReducer (storeId, cartProducts) {
-  let promises = []
-  for (let index = 0; index < cartProducts.length; index++) {
-    const cartProduct = cartProducts[index]
-    let prn = cartProduct.prn
-    let size = cartProduct.size
-    let singleUnitPrize = cartProduct.singleUnitPrice
-    let quantityToReduce = cartProduct.totalQuantity
-    promises.push(ReduceProductQuantity(storeId, prn, size, singleUnitPrize, quantityToReduce))
-  }
-  return Promise.all(promises)
+function LocalInventoryProductReducer(storeId, cartProducts) {
+    let promises = []
+    for (let index = 0; index < cartProducts.length; index++) {
+        const cartProduct = cartProducts[index]
+        let productUid = cartProduct.productUid
+        let size = cartProduct.size
+        let singleUnitPrize = cartProduct.singleUnitPrice
+        let quantityToReduce = cartProduct.totalQuantity
+        promises.push(ReduceProductQuantity(storeId, productUid, size, singleUnitPrize, quantityToReduce))
+    }
+    return Promise.all(promises)
 }
 
-function ReduceProductQuantity (storeId, prn, size, singleUnitPrice, quantityToReduce) {
-  let productDocRef = firestore
-    .collection(`products`)
-    .where('prn', '==', `${prn}`)
-    .where('storeId', '==', `${storeId}`)
-  return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((docs) => {
-          return docs
-            .forEach(doc => {
-              let variants = doc.data().variants
-              let reducedVariants = reduceStock(variants, singleUnitPrice, size, quantityToReduce)
-              return transaction.update(doc.ref, {variants: reducedVariants})
-            })
+function ReduceProductQuantity(storeId, productUid, size, singleUnitPrice, quantityToReduce) {
+    let productDocRef = firestore
+        .doc(`products/${productUid}`)
+    return firestore
+        .runTransaction(transaction => {
+            return transaction
+                .get(productDocRef)
+                .then((doc) => {
+
+                            let variants = doc.data().variants
+                            let reducedVariants = reduceStock(variants, singleUnitPrice, size, quantityToReduce)
+                            return transaction.update(doc.ref, {variants: reducedVariants})
+
+                })
         })
     })
 }
 
-function reduceStock (variants, price, size, quantityToReduce) {
-  for (var i = 0; i < variants.length; i++) {
-    if (variants[i].sellingPrice == price && variants[i].size === size) { // leave == since it compares two numbers
-      variants[i].stock -= quantityToReduce
-      return variants
+function reduceStock(variants, price, size, quantityToReduce) {
+    for (var i = 0; i < variants.length; i++) {
+        if (variants[i].size === size) { // leave == since it compares two numbers
+            variants[i].stock -= quantityToReduce
+            return variants
+        }
     }
-  }
-  return null
+    return variants
 }
 
 // customer reward management
@@ -444,40 +440,41 @@ function deletePendingBill (storeId, PendingBillId) {
     .delete()
 }
 
-function updateInvoiceOnProductsReturn (invoiceId, cartProducts) {
-  let promises = []
-  for (let index = 0; index < cartProducts.length; index++) {
-    const cartProduct = cartProducts[index]
-    let prn = cartProduct.prn
-    let size = cartProduct.size
-    let singleUnitPrize = cartProduct.singleUnitPrice
-    let quantityToReturn = cartProduct.totalQuantity
-    promises.push(ReduceProductQuantityOnInvoice(invoiceId, prn, size, singleUnitPrize, quantityToReturn))
-  }
-  return Promise.all(promises)
+function updateInvoiceOnProductsReturn(invoiceId, cartProducts) {
+    let promises = []
+    for (let index = 0; index < cartProducts.length; index++) {
+        const cartProduct = cartProducts[index]
+        let productUid = cartProduct.productUid
+        let size = cartProduct.size
+        let singleUnitPrize = cartProduct.singleUnitPrice
+        let quantityToReturn = cartProduct.totalQuantity
+        promises.push(ReduceProductQuantityOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+    }
+    return Promise.all(promises)
 }
 
-function ReduceProductQuantityOnInvoice (invoiceId, prn, size, singleUnitPrize, quantityToReturn) {
-  let InvoiceDocRef = firestore
-    .doc(`invoices/${invoiceId}`)
-  return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(InvoiceDocRef)
-        .then((doc) => {
-          let cartProductsToUpdate = doc.data().cartProducts
-          for (let index = 0; index < cartProductsToUpdate.length; index++) {
-            const cartProduct = cartProductsToUpdate[index]
-            if (cartProduct.prn === prn && cartProduct.size === size && cartProduct.singleUnitPrice == singleUnitPrize) {
-              cartProduct.totalQuantity -= quantityToReturn
-              if (cartProduct.totalQuantity == 0) {
-                if (index > -1) {
-                  cartProductsToUpdate = cartProductsToUpdate.splice(index, 1)
-                }
-              }
-            }
-          }
-          return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
+function ReduceProductQuantityOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn) {
+    let InvoiceDocRef = firestore
+        .doc(`invoices/${invoiceId}`)
+    return firestore
+        .runTransaction(transaction => {
+            return transaction
+                .get(InvoiceDocRef)
+                .then((doc) => {
+                    let cartProductsToUpdate = doc.data().cartProducts
+                    for (let index = 0; index < cartProductsToUpdate.length; index++) {
+                        const cartProduct = cartProductsToUpdate[index]
+                        if (cartProduct.productUid === productUid && cartProduct.size === size && cartProduct.singleUnitPrice === singleUnitPrize) {
+                            cartProduct.totalQuantity -= quantityToReturn
+                            if (cartProduct.totalQuantity === 0) {
+                                if (index > -1) {
+                                    cartProductsToUpdate = cartProductsToUpdate.splice(index, 1)
+                                }
+                            }
+                        }
+                    }
+                    return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
+                })
         })
     })
 }
@@ -495,22 +492,22 @@ function getRndInteger (min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-function TimestampOnCreateReturn (storeId, returnId) {
-  let obj = {
-    createdOn: admin.firestore.FieldValue.serverTimestamp
-  }
-  return firestore
-    .doc(`stores/${storeId}/returns/${returnId}`)
-    .update(obj)
+function TimestampOnCreateReturn(storeId, returnId) {
+    let obj = {
+        createdOn: admin.firestore.FieldValue.serverTimestamp()
+    }
+    return firestore
+        .doc(`stores/${storeId}/returns/${returnId}`)
+        .update(obj)
 }
 
-function TimestampOnUpdatedPendingBill (storeId, pendingBillId) {
-  let obj = {
-    updatedOn: admin.firestore.FieldValue.serverTimestamp
-  }
-  return firestore
-    .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
-    .update(obj)
+function TimestampOnUpdatedPendingBill(storeId, pendingBillId) {
+    let obj = {
+        updatedOn: admin.firestore.FieldValue.serverTimestamp()
+    }
+    return firestore
+        .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
+        .update(obj)
 }
 
 module.exports = {
