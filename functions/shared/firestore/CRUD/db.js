@@ -3,6 +3,7 @@ var env = require('../../environment/env')
 var admin = require('../../environment/initAdmin').setCredentials()
 const firestore = admin.firestore()
 firestore.settings(env.FIRESTORE_SETTINGS)
+const update = require('./update')
 // const settings = {timestampsInSnapshots: true}
 // this function relates to oncreateStore trigger won't work on other
 function GetUserEmailByUUID (uid) {
@@ -127,212 +128,6 @@ function prnCheckLoop () {
   })
 }
 
-function LocalInventoryProductReturner(storeId, cartProducts) {
-    let promises = []
-    for (let index = 0; index < cartProducts.length; index++) {
-        const cartProduct = cartProducts[index]
-        let productUid = cartProduct.productUid
-        let size = cartProduct.size
-        let singleUnitPrize = cartProduct.singleUnitPrice
-        let quantityToReturn = cartProduct.totalQuantity
-        promises.push(ReturnProductQuantity(storeId, productUid, size, singleUnitPrize, quantityToReturn))
-    }
-    return Promise.all(promises)
-}
-
-function ReturnProductQuantity(storeId, productUid, size, singleUnitPrice, quantityToReturn) {
-    let productDocRef = firestore
-        .doc(`products/${productUid}`)
-    return firestore
-        .runTransaction(transaction => {
-            return transaction
-                .get(productDocRef)
-                .then((doc) => {
-
-                    let variants = doc.data().variants
-                    let returnedVariants = returnStock(variants, singleUnitPrice, size, quantityToReturn)
-                    return transaction.update(doc.ref, {variants: returnedVariants})
-
-                })
-        })
-    })
-}
-
-function returnStock(variants, price, size, quantityToReturn) {
-    for (var i = 0; i < variants.length; i++) {
-        if (variants[i].size === size) { // leave == since it compares two numbers
-            variants[i].stock += quantityToReturn
-            return variants
-        }
-    }
-    return variants
-}
-
-function LocalInventoryProductReducer(storeId, cartProducts) {
-    let promises = []
-    for (let index = 0; index < cartProducts.length; index++) {
-        const cartProduct = cartProducts[index]
-        let productUid = cartProduct.productUid
-        let size = cartProduct.size
-        let singleUnitPrize = cartProduct.singleUnitPrice
-        let quantityToReduce = cartProduct.totalQuantity
-        promises.push(ReduceProductQuantity(storeId, productUid, size, singleUnitPrize, quantityToReduce))
-    }
-    return Promise.all(promises)
-}
-
-function ReduceProductQuantity(storeId, productUid, size, singleUnitPrice, quantityToReduce) {
-    let productDocRef = firestore
-        .doc(`products/${productUid}`)
-    return firestore
-        .runTransaction(transaction => {
-            return transaction
-                .get(productDocRef)
-                .then((doc) => {
-
-                            let variants = doc.data().variants
-                            let reducedVariants = reduceStock(variants, singleUnitPrice, size, quantityToReduce)
-                            return transaction.update(doc.ref, {variants: reducedVariants})
-
-                })
-        })
-    })
-}
-
-function reduceStock(variants, price, size, quantityToReduce) {
-    for (var i = 0; i < variants.length; i++) {
-        if (variants[i].size === size) { // leave == since it compares two numbers
-            variants[i].stock -= quantityToReduce
-            return variants
-        }
-    }
-    return variants
-}
-
-// customer reward management
-
-function updateCustomerReward (customer) {
-  if (checkWhetherCustomerExitOrNot(customer.customerNo)) {
-    return createCustomerAndReward(customer)
-  } else {
-    setAndUpdateCustomerRewards(calculatedCustomerReward(customer))
-    if (checkWhetherCustomerNewStoreRewardOrNot(customer.storeId, customer.customerNo)) {
-      return createNewStoreCustomerReward(customer)
-    } else {
-      return setAndUpdateCustomerStoreRewards(calculatedCustomerStoreReward(customer))
-    }
-  }
-}
-
-function checkWhetherCustomerExitOrNot (customerNo) {
-  return firestore
-    .doc(`customers/${customerNo}`)
-    .get()
-    .then((customer) => customer.exists)
-}
-
-function createCustomerAndReward (customer) {
-  const data = {
-    'customerName': customer.customerName,
-    'noOfItemsPurchased': customer.totalQuantity,
-    'totalCostOfPurchase': customer.totalPrice,
-    'firstVisit': customer.createdOn,
-    'totalNoOfVisit': 1,
-    'totalProductsReturn': 0
-  }
-  return firestore
-    .doc(`customers/${customer.customerNo}`)
-    .set(data)
-    .then(() => createNewStoreCustomerReward(customer))
-}
-
-function calculatedCustomerReward (exitingCustomerData) {
-  const currentStateOfCustomerReward = getCurrentStateOfCustomer(exitingCustomerData.customerNo)
-  return {
-    'customerNo': exitingCustomerData.customerNo,
-    'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
-    'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
-    'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-    'lastVisit': exitingCustomerData.createdOn
-  }
-}
-
-function getCurrentStateOfCustomer (customerNo) {
-  return firestore
-    .doc(`customers/${customerNo}`)
-    .get()
-    .then((customer) => customer.data())
-}
-
-function setAndUpdateCustomerRewards ({customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
-  const data = {
-    'noOfItemsPurchased': noOfItemsPurchased,
-    'totalCostOfPurchase': totalCostOfPurchase,
-    'totalNoOfVisit': totalNoOfVisit,
-    'lastVisit': lastVisit
-  }
-  return firestore
-    .doc(`customers/${customerNo}`)
-    .set(data, {merge: true})
-}
-
-// store reward function
-
-function checkWhetherCustomerNewStoreRewardOrNot (storeId, customerNo) {
-  return firestore
-    .doc(`stores/${storeId}/customers/${customerNo}`)
-    .get()
-    .then((store) => store.exists)
-}
-
-function createNewStoreCustomerReward (customer) {
-  const rewardData = {
-    'noOfItemsPurchased': customer.totalQuantity,
-    'totalCostOfPurchase': customer.totalPrice,
-    'firstVisit': customer.createdOn,
-    'totalNoOfVisit': 1
-  }
-  return firestore
-    .doc(`stores/${customer.storeId}/customers/${customer.customerNo}`)
-    .set(rewardData)
-}
-
-function calculatedCustomerStoreReward (exitingCustomerData) {
-  const currentStateOfCustomerReward = getCurrentStateOfCustomerStoreReward(exitingCustomerData.storeId, exitingCustomerData.customerNo)
-  return {
-    'customerNo': exitingCustomerData.customerNo,
-    'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
-    'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
-    'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-    'lastVisit': exitingCustomerData.createdOn
-  }
-}
-
-function getCurrentStateOfCustomerStoreReward (storeId, customerNo) {
-  return firestore
-    .doc(`stores/${storeId}/customers/${customerNo}`)
-    .get()
-    .then((customer) => customer.data())
-}
-
-function updateAndMergeReturnCountInReward (customerNo, totalReturn) {
-  const currentReturnState = getCurrentStateOfCustomer(customerNo)
-  return firestore
-    .doc(`customers/${customerNo}`)
-    .set({'totalProductsReturn': currentReturnState + totalReturn}, {merge: true})
-}
-
-function setAndUpdateCustomerStoreRewards ({storeId, customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
-  const data = {
-    'noOfItemsPurchased': noOfItemsPurchased,
-    'totalCostOfPurchase': totalCostOfPurchase,
-    'totalNoOfVisit': totalNoOfVisit,
-    'lastVisit': lastVisit
-  }
-  return firestore
-    .doc(`stores/${storeId}/customers/${customerNo}`)
-    .set(data, {merge: true})
-}
 
 // integrations related db functions
 
@@ -440,41 +235,40 @@ function deletePendingBill (storeId, PendingBillId) {
     .delete()
 }
 
-function updateInvoiceOnProductsReturn(invoiceId, cartProducts) {
-    let promises = []
-    for (let index = 0; index < cartProducts.length; index++) {
-        const cartProduct = cartProducts[index]
-        let productUid = cartProduct.productUid
-        let size = cartProduct.size
-        let singleUnitPrize = cartProduct.singleUnitPrice
-        let quantityToReturn = cartProduct.totalQuantity
-        promises.push(ReduceProductQuantityOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
-    }
-    return Promise.all(promises)
+function updateInvoiceOnProductsReturn (invoiceId, cartProducts) {
+  let promises = []
+  for (let index = 0; index < cartProducts.length; index++) {
+    const cartProduct = cartProducts[index]
+    let productUid = cartProduct.productUid
+    let size = cartProduct.size
+    let singleUnitPrize = cartProduct.singleUnitPrice
+    let quantityToReturn = cartProduct.totalQuantity
+    promises.push(ReduceProductQuantityOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+  }
+  return Promise.all(promises)
 }
 
-function ReduceProductQuantityOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn) {
-    let InvoiceDocRef = firestore
-        .doc(`invoices/${invoiceId}`)
-    return firestore
-        .runTransaction(transaction => {
-            return transaction
-                .get(InvoiceDocRef)
-                .then((doc) => {
-                    let cartProductsToUpdate = doc.data().cartProducts
-                    for (let index = 0; index < cartProductsToUpdate.length; index++) {
-                        const cartProduct = cartProductsToUpdate[index]
-                        if (cartProduct.productUid === productUid && cartProduct.size === size && cartProduct.singleUnitPrice === singleUnitPrize) {
-                            cartProduct.totalQuantity -= quantityToReturn
-                            if (cartProduct.totalQuantity === 0) {
-                                if (index > -1) {
-                                    cartProductsToUpdate = cartProductsToUpdate.splice(index, 1)
-                                }
-                            }
-                        }
-                    }
-                    return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
-                })
+function ReduceProductQuantityOnInvoice (invoiceId, productUid, size, singleUnitPrize, quantityToReturn) {
+  let InvoiceDocRef = firestore
+    .doc(`invoices/${invoiceId}`)
+  return firestore
+    .runTransaction(transaction => {
+      return transaction
+        .get(InvoiceDocRef)
+        .then((doc) => {
+          let cartProductsToUpdate = doc.data().cartProducts
+          for (let index = 0; index < cartProductsToUpdate.length; index++) {
+            const cartProduct = cartProductsToUpdate[index]
+            if (cartProduct.productUid === productUid && cartProduct.size === size && cartProduct.singleUnitPrice === singleUnitPrize) {
+              cartProduct.totalQuantity -= quantityToReturn
+              if (cartProduct.totalQuantity === 0) {
+                if (index > -1) {
+                  cartProductsToUpdate = cartProductsToUpdate.splice(index, 1)
+                }
+              }
+            }
+          }
+          return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
         })
     })
 }
@@ -492,25 +286,28 @@ function getRndInteger (min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-function TimestampOnCreateReturn(storeId, returnId) {
-    let obj = {
-        createdOn: admin.firestore.FieldValue.serverTimestamp()
-    }
-    return firestore
-        .doc(`stores/${storeId}/returns/${returnId}`)
-        .update(obj)
+function TimestampOnCreateReturn (storeId, returnId) {
+  let obj = {
+    createdOn: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return firestore
+    .doc(`stores/${storeId}/returns/${returnId}`)
+    .update(obj)
 }
 
-function TimestampOnUpdatedPendingBill(storeId, pendingBillId) {
-    let obj = {
-        updatedOn: admin.firestore.FieldValue.serverTimestamp()
-    }
-    return firestore
-        .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
-        .update(obj)
+function TimestampOnUpdatedPendingBill (storeId, pendingBillId) {
+  let obj = {
+    updatedOn: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return firestore
+    .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
+    .update(obj)
 }
 
 module.exports = {
+  admin: admin,
+  firestore: firestore,
+  update: update,
   AssociateStoreInfoToUser: AssociateStoreInfoToUser,
   ReduceProductQuantity: ReduceProductQuantity,
   UpdatInvoicePendingStatus: updateInvoicePendingStatus,
@@ -519,8 +316,6 @@ module.exports = {
   prnCheckLoop: prnCheckLoop,
   RandomPRNgenerator: RandomPRNgenerator,
   LocalInventoryProductReducer: LocalInventoryProductReducer,
-  updateCustomerReward: updateCustomerReward,
-  updateAndMergeReturnCountInReward: updateAndMergeReturnCountInReward,
   saveFlipkartAccessTokenCredentials: saveFlipkartAccessTokenCredentials,
   LogOnflipkartAccessTokenTrigger: LogOnflipkartAccessTokenTrigger,
   logonFlipkartCreateListings: logonFlipkartCreateListings,
