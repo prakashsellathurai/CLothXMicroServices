@@ -6,7 +6,7 @@ const algoliaClient = require('../../shared/environment/initAlgoliaClient').with
 app.use(cors({origin: true}))
 app.post('/product_search', (req, res) => {
     const query = JSON.parse(req.body.query)
-    const filters = 'data.isListable:true AND data.isDeleted:false'
+    const filters = 'isListable:true AND isDeleted:false'
     let index = algoliaClient.initIndex('product_search')
     return index
         .search({query: query, filters: filters})
@@ -16,7 +16,7 @@ app.post('/product_search', (req, res) => {
 })
 app.post('/store_search', (req, res) => {
     const query = JSON.parse(req.body.query)
-    const filters = `data.storeId:${req.body.storeId} AND data.isListable:true AND data.isDeleted:false`
+    const filters = `storeId:${req.body.storeId} AND isListable:true AND isDeleted:false`
     let index = algoliaClient.initIndex('product_search')
     return index
         .search({query: query, filters: filters})
@@ -26,7 +26,7 @@ app.post('/store_search', (req, res) => {
 })
 app.post('/store_search_all', (req, res) => {
     const query = JSON.parse(req.body.query)
-    const filters = `data.storeId:${req.body.storeId} AND data.isDeleted:false`
+    const filters = `storeId:${req.body.storeId} AND isDeleted:false`
     let index = algoliaClient.initIndex('product_search')
     return index
         .search({query: query, filters: filters})
