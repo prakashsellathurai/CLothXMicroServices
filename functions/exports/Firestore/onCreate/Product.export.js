@@ -14,11 +14,8 @@ function PrnAssigner (context) {
 }
 function IndexItInAlgolia (snap) {
   const data = snap.data()
-  const objectId = snap.id
-  return index.addObject({
-    objectId,
-    data
-  })
+    data.objectID = snap.id
+  return index.addObject(data)
 }
 function MainHandler (snap, context) {
   return PrnAssigner(context)
