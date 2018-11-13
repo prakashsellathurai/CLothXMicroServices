@@ -27,7 +27,8 @@ app.post('/store_search', (req, res) => {
     })
 })
 app.post('/store_search_all', (req, res) => {
-  const query = JSON.parse(req.body.query)
+  const query = req.body.query
+  if (typeof query === 'undefined') res.json({error: 'invaild body', error_description: 'query key is undefined'})
   const filters = `storeId:${req.body.storeId} AND isDeleted:false`
   let index = algoliaClient.initIndex('product_search')
   return index
