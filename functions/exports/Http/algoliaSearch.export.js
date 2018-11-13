@@ -4,7 +4,7 @@ const cors = require('cors')
 const app = express()
 const algoliaClient = require('../../shared/environment/initAlgoliaClient').withCredentials()
 app.use(cors({origin: true}))
-app.get('/product_search', (req, res) => {
+app.post('/product_search', (req, res) => {
   let query = req.body.query
   if (typeof query === 'undefined') {
     res.json({error: 'invaild query', error_description: 'query key is undefined'})
@@ -18,7 +18,7 @@ app.get('/product_search', (req, res) => {
       })
   }
 })
-app.get('/store_search', (req, res) => {
+app.post('/store_search', (req, res) => {
   let query = req.body.query
   let storeId = req.body.storeId
   if (typeof query === 'undefined') {
@@ -35,7 +35,7 @@ app.get('/store_search', (req, res) => {
       })
   }
 })
-app.get('/store_search_all', (req, res) => {
+app.post('/store_search_all', (req, res) => {
   let query = req.body.query
   let storeId = req.body.storeId
   if (typeof query === 'undefined') {
