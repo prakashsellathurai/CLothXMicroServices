@@ -9,7 +9,8 @@ module.exports = {
   FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
   ALGOLIA: {
     appId: 'K5TY9WEM1N',
-    adminApiKey: '87a91ddef91e0868d76405c2467122e9'
+    adminApiKey: '87a91ddef91e0868d76405c2467122e9',
+    SEARCH_ONLY_API_KEY: 'c34f0706878bc2a520600b07f9587757'
   },
   OMNI_CHANNEL_INTEGRATION: {
     FLIKART: {
@@ -20,6 +21,7 @@ module.exports = {
   },
   RAZOR_PAY: {
     KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
-    KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'
+    KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif',
+  
   }
 }
