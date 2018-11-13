@@ -1,5 +1,7 @@
-const db = require('./db')
+const db = require('./index')
 const firestore = db.firestore
+const reduce = db.reduce
+const admin = db.admin
 function customerReward (customer) {
   let customerDocRef = firestore
     .doc(`customers/${customer.customerNo}`)
@@ -59,6 +61,28 @@ function customerReward (customer) {
         })
     })
 }
+function invoiceOnProductsReturn (invoiceId, cartProducts) {
+  let promises = []
+  for (let index = 0; index < cartProducts.length; index++) {
+    const cartProduct = cartProducts[index]
+    let productUid = cartProduct.productUid
+    let size = cartProduct.size
+    let singleUnitPrize = cartProduct.singleUnitPrice
+    let quantityToReturn = cartProduct.totalQuantity
+    promises.push(reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+  }
+  return Promise.all(promises)
+}
+function invoicePendingStatus (invoiceId, UPDATE_STATUS_BOOLEAN) {
+  return firestore
+    .doc(`/invoices/${invoiceId}`)
+    .update({
+      pending: `${UPDATE_STATUS_BOOLEAN}`,
+      createdOn: admin.firestore.FieldValue.serverTimestamp()
+    })
+}
 module.exports = {
-  customerReward: customerReward
+  customerReward: customerReward,
+  invoiceOnProductsReturn: invoiceOnProductsReturn,
+  invoicePendingStatus: invoicePendingStatus
 }

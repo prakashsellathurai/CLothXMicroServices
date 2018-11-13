@@ -1,4 +1,4 @@
-const db = require('./db')
+const db = require('./index')
 const firestore = db.firestore
 function productsOnLocalInventory (cartProducts) {
   let promises = []
@@ -8,12 +8,12 @@ function productsOnLocalInventory (cartProducts) {
     let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(ReduceProductQuantity(productUid, size, singleUnitPrize, quantityToReduce))
+    promises.push(reduceProductQuantity(productUid, size, singleUnitPrize, quantityToReduce))
   }
   return Promise.all(promises)
 }
 
-function ReduceProductQuantity (storeId, productUid, size, singleUnitPrice, quantityToReduce) {
+function reduceProductQuantity (productUid, size, quantityToReduce) {
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
@@ -38,6 +38,32 @@ function reduceStock (variants, size, quantityToReduce) {
   return variants
 }
 
+function productsOnInvoice (invoiceId, productUid, size, singleUnitPrize, quantityToReturn) {
+  let InvoiceDocRef = firestore
+    .doc(`invoices/${invoiceId}`)
+  return firestore
+    .runTransaction(transaction => {
+      return transaction
+        .get(InvoiceDocRef)
+        .then((doc) => {
+          let cartProductsToUpdate = doc.data().cartProducts
+          for (let index = 0; index < cartProductsToUpdate.length; index++) {
+            const cartProduct = cartProductsToUpdate[index]
+            if (cartProduct.productUid === productUid && cartProduct.size === size && cartProduct.singleUnitPrice === singleUnitPrize) {
+              cartProduct.totalQuantity -= quantityToReturn
+              if (cartProduct.totalQuantity === 0) {
+                if (index > -1) {
+                  cartProductsToUpdate = cartProductsToUpdate.splice(index, 1)
+                }
+              }
+            }
+          }
+          return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
+        })
+    })
+}
+
 module.exports = {
-  productsOnLocalInventory: productsOnLocalInventory
+  productsOnLocalInventory: productsOnLocalInventory,
+  productsOnInvoice: productsOnInvoice
 }
