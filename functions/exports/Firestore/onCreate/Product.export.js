@@ -7,23 +7,30 @@ var algoliasearch = require('algoliasearch')
 const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
 const index = client.initIndex('product_search')
 
-function PrnAssigner (context) {
-  let productId = context.params.productId
-  return db.prnCheckLoop()
-    .then(rand => db.SetProductPRN(productId, rand))
+function PrnAssigner(context) {
+    let productId = context.params.productId
+    return db.prnCheckLoop()
+        .then(rand => {
+            return db.SetProductPRN(productId, rand)
+                .then(() => Promise.resolve(rand))
+        })
 }
-function IndexItInAlgolia (snap) {
-  const data = snap.data()
+
+function IndexItInAlgolia(snap, rand) {
+    const data = snap.data()
     data.objectID = snap.id
-  return index.addObject(data)
+    data.prn = rand
+    return index.addObject(data)
 }
-function MainHandler (snap, context) {
-  return PrnAssigner(context)
-    .then(() => IndexItInAlgolia(snap))
+
+function MainHandler(snap, context) {
+    return PrnAssigner(context)
+        .then((rand) => IndexItInAlgolia(snap, rand))
 }
+
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
-  .firestore
-  .document('/products/{productId}')
-  .onCreate((snap, context) => MainHandler(snap, context))
+    .firestore
+    .document('/products/{productId}')
+    .onCreate((snap, context) => MainHandler(snap, context))
