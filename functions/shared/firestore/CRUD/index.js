@@ -13,8 +13,9 @@ const _delete = require('./delete')
 const _get = require('./get')
 const _set = require('./set')
 const _assign = require('./assign')
-const _timestamp = require('./timestamp')
+
 const utils = require('./../utils/index')
+const _timestamp = require('./timestamp')
 module.exports = {
   admin: admin,
   firestore: firestore,

@@ -2,7 +2,7 @@
 const express = require('express')
 const subscriptionRouter = express.Router()
 const razorpayApi = require('./../razorpay')
-const db = require('./../../../firestore/CRUD/db')
+const db = require('./../../../firestore/CRUD/index')
 subscriptionRouter.post('/verify', (req, res) => {
   let storeId = req.query.store_id
   let razorpayPaymentId = req.body.razorpay_payment_id

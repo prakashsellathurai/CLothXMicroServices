@@ -81,8 +81,22 @@ function invoicePendingStatus (invoiceId, UPDATE_STATUS_BOOLEAN) {
       createdOn: admin.firestore.FieldValue.serverTimestamp()
     })
 }
+function returnCountInReward (customerNo, totalReturn) {
+  let customerDocRef = firestore
+    .doc(`customers/${customerNo}`)
+  return firestore
+    .runTransaction(t => {
+      return t.get(customerDocRef)
+        .then((customerDoc) => {
+          let currentProductsReturn = customerDoc.data().totalProductsReturn
+          currentProductsReturn = (typeof currentProductsReturn !== 'undefined') ? currentProductsReturn : 0
+          t.update(customerDocRef, {totalProductsReturn: currentProductsReturn + totalReturn})
+        })
+    })
+}
 module.exports = {
   customerReward: customerReward,
   invoiceOnProductsReturn: invoiceOnProductsReturn,
-  invoicePendingStatus: invoicePendingStatus
+  invoicePendingStatus: invoicePendingStatus,
+  returnCountInReward: returnCountInReward
 }
