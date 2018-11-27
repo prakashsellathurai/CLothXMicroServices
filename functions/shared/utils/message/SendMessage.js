@@ -23,8 +23,7 @@ module.exports = function (PhoneNumber, Message) {
 
       res.on('end', function () {
         var body = Buffer.concat(chunks)
-        console.log(body.toString())
-        resolve(body.toString())
+        resolve(JSON.parse(JSON.stringify(body.toString())))
       })
       req.on('error', function (err) {
         console.log(err)
