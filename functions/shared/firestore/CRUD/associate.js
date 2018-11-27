@@ -3,6 +3,7 @@ const firestore = db.firestore
 const admin = db.admin
 
 function storeInfoToUser (uid, storeId) {
+
   let docRef = firestore
     .collection('users')
     .where('uid', '==', `${uid}`)
