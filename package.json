@@ -2,6 +2,7 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
+    "test": "node ./scripts/setDeploymentenv.js clothxtest && mocha ./test/index.js",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -20,6 +21,7 @@
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
     "camelcase": "5.0.0",
+    "chai": "^4.2.0",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "express": "^4.16.3",
