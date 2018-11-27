@@ -2,7 +2,6 @@ const db = require('./../CRUD/index')
 const firestore = db.firestore
 const flipkart = require('./flipkart/index')
 const razorpay = require('./razorpay/index')
-const sms = require('./sms/index')
 function RandomPRNgenerator () {
   let Length = 5
   var keylistalpha = 'bcdfghjklmnpqrstvwxyz'
@@ -30,6 +29,5 @@ function prnCheckLoop () {
 module.exports = {
   flipkart: flipkart,
   razorpay: razorpay,
-  sms: sms,
   prnCheckLoop: prnCheckLoop
 }
