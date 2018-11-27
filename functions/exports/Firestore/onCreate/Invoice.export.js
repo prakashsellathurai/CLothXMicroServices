@@ -1,26 +1,24 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-var dbFun = require('../../../shared/firestore/CRUD/db')
+var db = require('../../../shared/firestore/CRUD/index')
 var sendMessage = require('./../../../shared/utils/message/SendMessage')
 var utils = require('./../../../shared/utils/general_utils')
 
 // ===============================================================================================
 function MainHandler (snap, context) {
+  const cartProducts = snap.data().cartProducts
   const sendSmsBoolean = snap.data().sendSms
   const cartProducts = snap.data().cartProducts
   const invoiceId = context.params.invoiceId
   const customerNo = snap.data().customerNumber
   const storeId = snap.data().storeUid
+  return db
+    .reduce
+    .productsOnLocalInventory(cartProducts)
+    .then(() => db
+      .set
+      .invoicePendingStatusToFalse(invoiceId))
 
-  return dbFun.LocalInventoryProductReducer(storeId, cartProducts)
-    .then(() => dbFun.SetInvoicePendingStatusToFalse(invoiceId))
-    .catch((err) => {
-      if (err) {
-        return dbFun.SetInvoicePendingStatusToFalse(invoiceId)
-      } else {
-        console.error(err)
-      }
-    })
     .then(() => {
       const givenCustomerData = {
         'storeId': snap.data().storeUid,
@@ -30,6 +28,9 @@ function MainHandler (snap, context) {
         'totalPrice': snap.data().totalPrice,
         'totalQuantity': snap.data().totalQuantity
       }
+      return db
+        .update
+        .customerReward(givenCustomerData)
       return dbFun.updateCustomerReward(givenCustomerData)
     }).then(() => {
       let Message = ` your invoice id : ${invoiceId} to read your invoice click here >>> https://www.spoteasy.in/u/invoice/${invoiceId} `
@@ -47,8 +48,14 @@ function MainHandler (snap, context) {
         return Promise.resolve(0)
       }
     })
+         .catch((err) => {
+      if (err) {
+        return dbFun.SetInvoicePendingStatusToFalse(invoiceId)
+      } else {
+        console.error(err)
+      }
+    })
 
-    .catch((err) => console.log(err))
 }
 
 // ==================================================================================================
