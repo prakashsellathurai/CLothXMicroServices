@@ -6,6 +6,15 @@ function functionNameGenerator (file) {
   const snake = `${split.join('_')}${event}`
   return camel(snake)
 }
+function generateId () {
+  var text = ''
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  for (var i = 0; i < 10; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
+
+  return text
+}
 module.exports = {
-  functionNameGenerator: functionNameGenerator
+  functionNameGenerator: functionNameGenerator,
+  generateId: generateId
 }

@@ -1,8 +1,5 @@
 module.exports = {
-  OFFICIAL_EMAIL: 'hello@clothx.net',
-  OFFICIAL_PASS: 'clothxnet',
-  APP_NAME: 'clothX',
-  CLOTH_WILDCARD: 'user/{userId}/clothes/{clothId}',
+  COMPANY_NAME: 'CLOTHX',
   SECRET_TOKEN: 'qbjbEmQT64UiHe3FXHR',
   MSG_91_API_KEY: '187762AxiHe71B5b2bf557',
   SIZE_ARRAY_OBJECT: { 'S': 0, 'M': 1, 'L': 2, 'XL': 3, '2XL': 4, '3XL': 5 },
