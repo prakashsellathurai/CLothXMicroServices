@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-const db = require('../../../shared/firestore/CRUD/index')
+const db = require('../../../shared/firestore/CRUD/db')
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
@@ -9,8 +9,6 @@ module.exports = functions
   .onCreate((snap, context) => {
     let storeId = context.params.storeId
     let pendingBillId = context.params.pendingBillId
-    return db
-      .assign
-      .randomPendingBillToken(storeId, pendingBillId)
+    return db.assignRandomPendingBillToken(storeId, pendingBillId)
   }
   )
