@@ -1,7 +1,6 @@
-const db = require('./index')
-const firestore = db.firestore
-const admin = db.admin
-const update = require('./update')
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
+let update = require('./update')
 function invoicePendingStatusToFalse (invoiceId) {
   return update.invoicePendingStatus(invoiceId, 'false')
 }

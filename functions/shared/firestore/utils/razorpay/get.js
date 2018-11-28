@@ -1,5 +1,5 @@
-const db = require('./../../CRUD/index')
-const firestore = db.firestore
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 
 function id (storeId) {
   return firestore

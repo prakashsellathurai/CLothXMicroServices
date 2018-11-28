@@ -1,5 +1,5 @@
-const db = require('./index')
-const firestore = db.firestore
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 function randomPendingBillToken (storeId, pendingBillId) {
   let obj = {
     pendingBillToken: getRndInteger(1, 10000)

@@ -1,6 +1,5 @@
-const db = require('./index')
-const firestore = db.firestore
-const admin = db.admin
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 function OnCreateReturn (storeId, returnId) {
   return firestore
     .doc(`stores/${storeId}/returns/${returnId}`)

@@ -1,6 +1,6 @@
-const db = require('./../../CRUD/index')
-const firestore = db.firestore
-const admin = db.admin
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
+
 function onAccessTokenTrigger (storeId, response) {
   let obj = {
     response: JSON.parse(response),

@@ -1,5 +1,6 @@
-const db = require('./../../CRUD/index')
-const firestore = db.firestore
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
+
 function accessTokenCredentials (storeId, clientId, clientSecret, accessToken) {
   let obj = {
     accessToken: `${accessToken}`,

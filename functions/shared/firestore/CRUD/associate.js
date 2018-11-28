@@ -1,7 +1,5 @@
-const db = require('./index')
-const firestore = db.firestore
-const admin = db.admin
-
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 function storeInfoToUser (uid, storeId) {
 
   let docRef = firestore

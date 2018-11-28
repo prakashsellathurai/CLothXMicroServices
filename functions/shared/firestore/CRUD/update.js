@@ -1,7 +1,8 @@
-const db = require('./index')
-const firestore = db.firestore
-const reduce = db.reduce
-const admin = db.admin
+let db = require('./index')
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
+let reduce = db.reduce
+
 function customerReward (customer) {
   let customerDocRef = firestore
     .doc(`customers/${customer.customerNo}`)

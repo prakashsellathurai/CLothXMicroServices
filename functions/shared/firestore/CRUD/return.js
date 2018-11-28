@@ -1,5 +1,5 @@
-const db = require('./index')
-const firestore = db.firestore
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 function productsOnLocalInventory (cartProducts) {
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {

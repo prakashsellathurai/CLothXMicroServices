@@ -1,5 +1,5 @@
-const db = require('./index')
-const firestore = db.firestore
+let admin = require('firebase-admin')
+let firestore = admin.firestore()
 
 function UserEmailByUUID (uid) {
   return firestore
