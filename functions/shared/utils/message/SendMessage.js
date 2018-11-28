@@ -23,7 +23,8 @@ module.exports = function (PhoneNumber, Message) {
 
       res.on('end', function () {
         var body = Buffer.concat(chunks)
-        resolve(JSON.parse(JSON.stringify(body.toString())))
+        console.log(body.toString())
+        resolve(body.toString())
       })
       req.on('error', function (err) {
         console.log(err)
@@ -31,7 +32,7 @@ module.exports = function (PhoneNumber, Message) {
       })
     })
 
-    req.write(JSON.stringify({ sender: env.COMPANY_NAME,
+    req.write(JSON.stringify({ sender: 'CLOTHX',
       route: '4',
       country: '91',
       sms:

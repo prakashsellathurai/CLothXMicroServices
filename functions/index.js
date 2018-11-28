@@ -1,4 +1,6 @@
 'use strict'
+let initAdmin = require('../../environment/initAdmin')
+initAdmin.setCredentials()
 
 let init = require('./exports/export.js')
 let exportFunctions = init.functions_aggregrator()

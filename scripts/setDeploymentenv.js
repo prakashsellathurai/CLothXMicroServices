@@ -18,5 +18,5 @@ process
       , 'utf8',
       (err, data) => (err)
         ? console.error('error writing .dotenv file' + err)
-        : console.log('\x1b[32m', '\t ✓✓✓✓ environment set sucessfully'))
+        : console.log('\x1b[32m', '\t ✓✓✓✓ environment set sucessfully  \tproject' + ':' + val))
   })
