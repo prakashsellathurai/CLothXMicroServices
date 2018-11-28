@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 const functions = require('firebase-functions')
-const dbFun = require('../../../shared/firestore/CRUD/db')
+const db = require('../../../shared/firestore/CRUD/index')
 const razorpayApi = require('./../../../shared/utils/payment/razorpay')
 function OnCreateStoreHandler (snap, context) {
   let storeId = context.params.storeId
@@ -8,14 +8,19 @@ function OnCreateStoreHandler (snap, context) {
   let contactNo = snap.data().contactNo
   let notes = snap.data().description
   let name = snap.data().usn
-  return dbFun
-    .AssociateStoreInfoToUser(registerUid, storeId)
+  return db
+    .associate
+    .storeInfoToUser(registerUid, storeId)
     .then((email) =>
       razorpayApi
         .CreateCustomer(name, email, contactNo, notes))
     .then((res) => {
       let razorPayId = res.id
-      return dbFun.saveRazorPayId(storeId, razorPayId)
+      return db
+        .utils
+        .razorpay
+        .save
+        .id(storeId, razorPayId)
     })
 }
 

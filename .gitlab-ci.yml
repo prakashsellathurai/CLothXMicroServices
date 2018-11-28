@@ -17,11 +17,7 @@ stages:
     - test_server_deployment
 test:
    stage: test
-   environment:
-     name: test_environment
-   <<: *node
    script:
-     - npm install
      - npm run test
    only:
      - develop
