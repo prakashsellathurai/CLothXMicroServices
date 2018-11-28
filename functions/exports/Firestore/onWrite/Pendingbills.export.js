@@ -1,17 +1,13 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-const db = require('../../../shared/firestore/CRUD/index')
+const db = require('../../../shared/firestore/CRUD/db')
 function StockUpdater (document, oldDocument, storeId) {
   if (document === null) {
     let cartproducts = oldDocument.cartproducts
-    return db
-      .return
-      .productsOnLocalInventory(storeId, cartproducts)
+    return db.LocalInventoryProductReturner(storeId, cartproducts)
   } else {
     let cartProducts = document.cartProducts
-    return db
-      .reduce
-      .productsOnLocalInventory(storeId, cartProducts)
+    return db.LocalInventoryProductReducer(storeId, cartProducts)
   }
 }
 // ==================================================================================================
@@ -25,7 +21,5 @@ module.exports = functions
     const storeId = context.params.storeId
     const pendingBillId = context.params.pendingBillId
     return StockUpdater(document, oldDocument, storeId)
-      .then(() => db
-        .timestamp
-        .OnUpdatedPendingBill(storeId, pendingBillId))
+      .then(() => db.TimestampOnUpdatedPendingBill(storeId, pendingBillId))
   })

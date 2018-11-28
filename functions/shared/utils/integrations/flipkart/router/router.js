@@ -2,7 +2,7 @@
 const express = require('express')
 const flipkartRouter = express.Router()
 const getAccesToken = require('../Get_access_token')
-const db = require('../../../../firestore/CRUD/index')
+const db = require('../../../../firestore/CRUD/db')
 const createlisting = require('./../create_listings')
 const updatelisting = require('./../update_listings')
 const priceUpdate = require('./../update_price')
@@ -31,7 +31,7 @@ function accesstokenRouteHandler (req, res) {
   } else {
     return getAccesToken(clientid, clientSecret)
       .then((response) => (!response.error)
-        ? db.utils.flipkart.save.accessTokenCredentials(storeId, clientid, clientSecret, response.access_token)
+        ? db.saveFlipkartAccessTokenCredentials(storeId, clientid, clientSecret, response.access_token)
           .then(() => response)
         : response)
       .then((response) => db.LogOnflipkartAccessTokenTrigger(storeId, response))

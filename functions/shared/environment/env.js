@@ -2,6 +2,7 @@ module.exports = {
   APP_NAME: 'clothX',
   SECRET_TOKEN: 'qbjbEmQT64UiHe3FXHR',
   MSG_91_API_KEY: '187762AxiHe71B5b2bf557',
+  SIZE_ARRAY_OBJECT: { 'S': 0, 'M': 1, 'L': 2, 'XL': 3, '2XL': 4, '3XL': 5 },
   GET_SIGNED_URL_SETTINGS: {
     action: 'read',
     expires: '03-09-2491'

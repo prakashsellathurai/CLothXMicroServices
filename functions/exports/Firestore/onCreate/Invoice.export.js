@@ -40,6 +40,6 @@ function MainHandler (snap, context) {
 // ==================================================================================================
 // =====================================export module================================================
 module.exports = functions
-  .firestore
-  .document('invoices/{invoiceId}')
-  .onCreate((snap, context) => MainHandler(snap, context))
+    .firestore
+    .document('invoices/{invoiceId}')
+    .onCreate((snap, context) => MainHandler(snap, context))
