@@ -1,5 +1,5 @@
 'use strict'
-let initAdmin = require('../../environment/initAdmin')
+let initAdmin = require('./shared/environment/initAdmin')
 initAdmin.setCredentials()
 
 let init = require('./exports/export.js')
