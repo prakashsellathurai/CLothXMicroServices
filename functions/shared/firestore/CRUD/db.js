@@ -510,7 +510,20 @@ function TimestampOnUpdatedPendingBill(storeId, pendingBillId) {
         .doc(`stores/${storeId}/pendingbills/${pendingBillId}`)
         .update(obj)
 }
-
+function LogsmsOnInvoiceReport (storeId, smsId, customerNo, status, errorDescription) {
+    return firestore
+      .collection(`stores/${storeId}/sms`)
+      .doc(smsId)
+      .set({
+        smsId: smsId,
+        storeId: storeId,
+        purpose: 'invoice',
+        to: customerNo,
+        status: status,
+        errorDescription: errorDescription,
+        createdOn: admin.firestore.FieldValue.serverTimestamp()
+      })
+  }
 module.exports = {
     AssociateStoreInfoToUser: AssociateStoreInfoToUser,
     ReduceProductQuantity: ReduceProductQuantity,
@@ -538,5 +551,6 @@ module.exports = {
     assignRandomPendingBillToken: assignRandomPendingBillToken,
     TimestampOnCreateReturn: TimestampOnCreateReturn,
     TimestampOnUpdatedPendingBill: TimestampOnUpdatedPendingBill,
-    GetUserEmailByUUID: GetUserEmailByUUID
+    GetUserEmailByUUID: GetUserEmailByUUID,
+    LogsmsOnInvoiceReport: LogsmsOnInvoiceReport 
 }
