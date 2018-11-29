@@ -31,7 +31,7 @@ module.exports = function (PhoneNumber, Message) {
       })
     })
 
-    req.write(JSON.stringify({ sender: env.COMPANY_NAME,
+    req.write(JSON.stringify({ sender: env.APP_NAME,
       route: '4',
       country: '91',
       sms:
