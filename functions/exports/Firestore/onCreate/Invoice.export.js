@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-var dbFun = require('../../../shared/firestore/CRUD/db')
+var dbFun = require('../../../shared/firestore/CRUD/index')
 var sendMessage = require('./../../../shared/utils/message/SendMessage')
 var utils = require('./../../../shared/utils/general_utils')
 
