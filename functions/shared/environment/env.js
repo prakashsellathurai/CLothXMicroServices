@@ -1,5 +1,5 @@
 module.exports = {
-  APP_NAME: 'clothX',
+  APP_NAME: 'CLOTHX',
   SECRET_TOKEN: 'qbjbEmQT64UiHe3FXHR',
   MSG_91_API_KEY: '187762AxiHe71B5b2bf557',
   GET_SIGNED_URL_SETTINGS: {

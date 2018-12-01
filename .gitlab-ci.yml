@@ -18,10 +18,9 @@ stages:
 test:
    stage: test
    environment:
-     name: test_environment
+     name: production
    <<: *node
    script:
-     - npm install
      - npm run test
    only:
      - develop
