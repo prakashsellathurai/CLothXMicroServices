@@ -11,21 +11,23 @@ const destinationAdmin = firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccountDestination)
 }, 'destination')
 
-const schema = {
+const DatabaseSchema = {
   customers: {},
   discounts: {},
   invoices: {},
   products: {},
   stores: {
-    customers: {}
+    customers: {},
+    sms: {}
   },
-  users: {}
+  users: {},
+  people: {}
 }
 
 var source = sourceAdmin.firestore()
 var destination = destinationAdmin.firestore()
 
-const copy = (sourceDBrep, destinationDBref, aux) => {
+const copyFirestoreDb = (sourceDBrep, destinationDBref, aux) => {
   return Promise.all(Object.keys(aux).map((collection) => {
     return sourceDBrep.collection(collection).get()
       .then((data) => {
@@ -34,7 +36,7 @@ const copy = (sourceDBrep, destinationDBref, aux) => {
           const data = doc.data()
           promises.push(
             destinationDBref.collection(collection).doc(doc.id).set(data).then((data) => {
-              return copy(sourceDBrep.collection(collection).doc(doc.id),
+              return copyFirestoreDb(sourceDBrep.collection(collection).doc(doc.id),
                 destinationDBref.collection(collection).doc(doc.id),
                 aux[collection])
             })
@@ -45,6 +47,6 @@ const copy = (sourceDBrep, destinationDBref, aux) => {
   }))
 }
 
-copy(source, destination, schema).then(() => {
+copyFirestoreDb(source, destination, DatabaseSchema).then(() => {
   console.log('copied')
 })
