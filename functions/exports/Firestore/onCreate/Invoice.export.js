@@ -8,7 +8,6 @@ var utils = require('./../../../shared/utils/general_utils')
 function MainHandler (snap, context) {
   const cartProducts = snap.data().cartProducts
   const sendSmsBoolean = snap.data().sendSms
-  const cartProducts = snap.data().cartProducts
   const invoiceId = context.params.invoiceId
   return db
     .reduce
