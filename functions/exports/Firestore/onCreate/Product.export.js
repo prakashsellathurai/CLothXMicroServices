@@ -1,12 +1,8 @@
 //= ===================================== IMPORTS ===============================================//
 const db = require('./../../../shared/firestore/CRUD/index')
-const env = require('../../../shared/environment/env')
-
-var functions = require('firebase-functions')
-var algoliasearch = require('algoliasearch')
-const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
-const index = client.initIndex('product_search')
-
+const functions = require('firebase-functions')
+const algolia = require('./../../../shared/utils/integrations/algolia/index')
+const index = algolia.initIndex.productIndex
 function PrnAssigner (context) {
   let productId = context.params.productId
   return db
