@@ -249,6 +249,7 @@ function calculatedCustomerReward(exitingCustomerData) {
     const currentStateOfCustomerReward = getCurrentStateOfCustomer(exitingCustomerData.customerNo)
     return {
         'customerNo': exitingCustomerData.customerNo,
+        'customerName': exitingCustomerData.customerName,
         'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
         'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
         'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
@@ -263,8 +264,9 @@ function getCurrentStateOfCustomer(customerNo) {
         .then((customer) => customer.data())
 }
 
-function setAndUpdateCustomerRewards({customerNo, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
+function setAndUpdateCustomerRewards({customerNo, customerName, noOfItemsPurchased, totalCostOfPurchase, totalNoOfVisit, lastVisit}) {
     const data = {
+        'customerName': customerName,
         'noOfItemsPurchased': noOfItemsPurchased,
         'totalCostOfPurchase': totalCostOfPurchase,
         'totalNoOfVisit': totalNoOfVisit,
