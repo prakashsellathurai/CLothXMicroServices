@@ -12,9 +12,19 @@ cache:
         -   node_modules/
 
 stages:
+    - test
     - production_server_deployment
     - test_server_deployment
-
+test:
+   stage: test
+   environment:
+     name: production
+   <<: *node
+   script:
+     - npm run test
+   only:
+     - develop
+ 
 production_server_deployment:
   stage: production_server_deployment
   environment:
