@@ -2,7 +2,7 @@
 const db = require('./../../../shared/firestore/CRUD/index')
 const functions = require('firebase-functions')
 const algolia = require('./../../../shared/utils/integrations/algolia/index')
-const index = algolia.initIndex.productIndex
+
 function PrnAssigner (context) {
   let productId = context.params.productId
   return db
@@ -16,16 +16,13 @@ function PrnAssigner (context) {
     })
 }
 
-function IndexItInAlgolia (snap, prn) {
-  const data = snap.data()
-  data.objectID = snap.id
-  data.prn = prn
-  return index.addObject(data)
+function IndexItInAlgolia (data) {
+  return algolia.save.product(data)
 }
 
 function MainHandler (snap, context) {
   return PrnAssigner(context)
-    .then((prn) => IndexItInAlgolia(snap, prn))
+    .then((prn) => IndexItInAlgolia(snap.data()))
 }
 
 // ==================================================================================================
