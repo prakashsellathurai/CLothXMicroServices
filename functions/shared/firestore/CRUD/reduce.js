@@ -7,9 +7,8 @@ function productsOnLocalInventory (cartProducts) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
     let size = cartProduct.size
-    let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(reduceProductQuantity(productUid, size, singleUnitPrize, quantityToReduce))
+    promises.push(reduceProductQuantity(productUid, size, quantityToReduce))
   }
   return Promise.all(promises)
 }
