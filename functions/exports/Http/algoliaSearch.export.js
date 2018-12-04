@@ -6,11 +6,12 @@ const algoliaClient = require('../../shared/environment/initAlgoliaClient').with
 app.use(cors({origin: true}))
 app.post('/product_search', (req, res) => {
     let query = req.body.query
-    console.log(req.body)
+    let filters = req.body.filters
+    let sortBy = req.body.sortBy
     if (typeof query === 'undefined') {
         res.json({error: 'invaild query', error_description: 'query key is undefined'})
     } else {
-        const filters = `isListable:true AND isDeleted:false`
+        const filters = `isListable:true AND isDeleted:false AND gender: ${filters.categories.gender}`
         let index = algoliaClient.initIndex('product_search')
         return index
             .search({query: query, filters: filters})
