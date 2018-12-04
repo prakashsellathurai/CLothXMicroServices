@@ -1,6 +1,6 @@
-var sendMessage = require('./../../../functions/shared/utils/message/SendMessage');
+var sendMessage = require('./../../../functions/shared/utils/message/SendMessage')
 sendMessage('', 'helloooooo')
-.then((body) => JSON.parse(body))
-.then((body) => {
+  .then((body) => JSON.parse(body))
+  .then((body) => {
     console.log(body)
-})
+  })
