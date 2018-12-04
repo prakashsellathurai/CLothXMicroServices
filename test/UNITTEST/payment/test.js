@@ -1,6 +1,6 @@
 const razorpay = require('./razorpay')
 const createCustomer = () =>
-  razorpay.CreateCustomer('kash', 'a@b.com', 9843158807, 'hello')
+  razorpay.CreateCustomer('kashfe', 'a@bd.com',)
     .then((res) => {
       console.log(res.id)
     })
@@ -31,7 +31,7 @@ const createSubscription = () => razorpay
     'plan_id': 'plan_BEyQ9Yg4vCIlsa',
     'customer_notify': 1,
     'total_count': 6,
-    'start_at':1844118954,
+    'start_at': 1844118954,
     'addons': [
       {
         'item': {
@@ -47,4 +47,4 @@ const createSubscription = () => razorpay
   }).catch((err) => {
     if (err) console.log(err)
   })
-  createSubscription()
+createCustomer()

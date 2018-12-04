@@ -1,9 +1,9 @@
 let admin = require('firebase-admin')
 let firestore = admin.firestore()
 
-function id (storeId, razorPayId) {
+function id (emailId, razorPayId) {
   return firestore
-    .doc(`stores/${storeId}`)
+    .doc(`users/${emailId}`)
     .update({
       razorPayPaymentId: razorPayId
     })
