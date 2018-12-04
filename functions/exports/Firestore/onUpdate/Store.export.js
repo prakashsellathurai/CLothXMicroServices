@@ -1,8 +1,6 @@
 const functions = require('firebase-functions')
-const razorpayApi = require('../../../shared/utils/payment/razorpay')
-const db = require('./../../../shared/firestore/CRUD/index')
 const algolia = require('./../../../shared/utils/integrations/algolia/index')
-const storeIndex = algolia.initIndex.storeIndex
+const storeIndex = algolia.initIndex.store
 
 module.exports = functions
   .firestore

@@ -15,5 +15,5 @@ firestore
         docs.forEach(doc => promises.push(doc.id))
         return Promise.all(promises)
       })
-  }).then((ids) => product_index.deleteObjects(ids))
+  }).then((ids) => product_index.clearIndex())
   .then((content) => console.log(content))

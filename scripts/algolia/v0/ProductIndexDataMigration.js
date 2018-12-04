@@ -24,21 +24,29 @@ firestore
   }).then((data) => console.log('done'))
 function DATA_MIGRATOR_V0 (data) {
   let variants = data.variants
-  let filtered_object = filterVariant(data)
+  let filteredObject = filterVariant(data)
   let promises = []
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
-    let Denorm_data = ObjectCopy(filtered_object, variant)
-    promises.push(product_index.addObject(Denorm_data))
+    let DenormedData = DeformTheData(filteredObject, variant, index)
+    promises.push(AddToIndex(DenormedData))
   }
   return Promise.all(promises)
 }
 
-function filterVariant (data) {
-  delete data['variants']
-  return data
+function AddToIndex (DenormedData) {
+  return product_index.addObject(DenormedData)
 }
-function ObjectCopy (firstObject, secondObject) {
-  for (var k in firstObject) secondObject[k] = firstObject[k]
-  return secondObject
+function filterVariant (data) {
+  let obj = data
+  delete obj['variants']
+  return obj
+}
+function DeformTheData (filteredObject, variant, index) {
+  for (var k in variant) { filteredObject[k] = variant[k] }
+  filteredObject['objectID'] = ObjectIdgenerator(filteredObject, index)
+  return filteredObject
+}
+function ObjectIdgenerator (filteredObject, index) {
+  return filteredObject['productUid'] + '_' + 'size' + '_' + filteredObject['size']
 }
