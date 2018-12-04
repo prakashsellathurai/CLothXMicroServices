@@ -31,7 +31,9 @@ function MainHandler (snap, context) {
         .update
         .customerReward(givenCustomerData)
     }).then(() => {
-      let Message = `https://www.spoteasy.in/u/invoice/${invoiceId}`
+      let Message = `We hope you enjoyed your shopping.
+                           We would Love to hear your feedback.
+                           Click https://www.spoteasy.in/u/invoice/${invoiceId}`
       if (sendSmsBoolean) {
         return sendMessage(customerNo, Message)
           .then((body) => JSON.parse(body))
