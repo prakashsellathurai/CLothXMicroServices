@@ -9,6 +9,8 @@ function MainHandler (snap, context) {
   const cartProducts = snap.data().cartProducts
   const sendSmsBoolean = snap.data().sendSms
   const invoiceId = context.params.invoiceId
+  const customerNo = snap.data().customerNumber
+  const storeId = snap.data().storeUid
   return db
     .reduce
     .productsOnLocalInventory(cartProducts)
@@ -42,15 +44,15 @@ function MainHandler (snap, context) {
           })
       } else {
         return Promise.resolve(0)
-      } })
-         .catch((err) => {
+      }
+    })
+    .catch((err) => {
       if (err) {
-        return dbFun.SetInvoicePendingStatusToFalse(invoiceId)
+        return db.set.invoicePendingStatusToFalse(invoiceId)
       } else {
         console.error(err)
       }
     })
-
 }
 
 // ==================================================================================================

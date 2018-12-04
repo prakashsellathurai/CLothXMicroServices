@@ -1,7 +1,6 @@
 let admin = require('firebase-admin')
 let firestore = admin.firestore()
 function storeInfoToUser (uid, storeId) {
-
   let docRef = firestore
     .collection('users')
     .where('uid', '==', `${uid}`)
