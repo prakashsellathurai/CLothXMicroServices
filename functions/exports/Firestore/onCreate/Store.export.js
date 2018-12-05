@@ -1,7 +1,7 @@
 //= ===================================== IMPORTS ===============================================//
 const functions = require('firebase-functions')
 const algolia = require('./../../../shared/utils/integrations/algolia/index')
-const storeIndex = algolia.initIndex.storeIndex
+const storeIndex = algolia.initIndex.store
 const db = require('../../../shared/firestore/CRUD/index')
 
 function OnCreateStoreHandler (snap, context) {
