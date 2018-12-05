@@ -16,13 +16,14 @@ function PrnAssigner (context) {
     })
 }
 
-function IndexItInAlgolia (data) {
-  return algolia.save.product(data)
+function IndexItInAlgolia (snap) {
+  return algolia.save.product(snap.data())
+    .then((variants) => db.set.objectIDtoProduct(snap.id, variants))
 }
 
 function MainHandler (snap, context) {
   return PrnAssigner(context)
-    .then((prn) => IndexItInAlgolia(snap.data()))
+    .then((prn) => IndexItInAlgolia(snap))
 }
 
 // ==================================================================================================
