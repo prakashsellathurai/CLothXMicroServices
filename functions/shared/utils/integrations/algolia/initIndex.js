@@ -1,6 +1,5 @@
-const env = require('../../../../shared/environment/env')
-var algoliasearch = require('algoliasearch')
-const client = algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
+'use strict'
+const client = require('./../../../environment/initAlgoliaClient').withCredentials()
 
 module.exports = {
   product: client.initIndex('product_search'),
