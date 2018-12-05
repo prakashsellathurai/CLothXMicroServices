@@ -19,7 +19,14 @@ firestore
   }).then((dataArray) => {
     let promises = []
     for (let index = 0; index < dataArray.length; index++) {
-      promises.push(DATA_MIGRATOR_V0(dataArray[index]))
+      promises.push(DATA_MIGRATOR_V0(dataArray[index]).then((variants) => {
+        return firestore.doc(`products/${dataArray[index].productUid}`)
+        .set({
+          variants: variants
+        } , {
+          merge: true
+        })
+      }))
     }
     return Promise.all(promises)
   }).then((data) => console.log('done'))
@@ -31,10 +38,12 @@ function DATA_MIGRATOR_V0 (data) {
   let promises = []
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
-    let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant, index)
+    let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
+
     promises.push(addProductInalgolia(DenormedData, variant))
   }
-  return Promise.all(promises).then((variants) => console.log(variants))
+
+  return Promise.all(promises)
 }
 
 function addProductInalgolia (DenormedData, variant) {

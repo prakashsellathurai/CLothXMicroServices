@@ -7,7 +7,7 @@ function product (data) {
   let promises = []
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
-    let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant, index)
+    let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
     promises.push(addProductInalgolia(DenormedData, variant))
   }
   return Promise.all(promises)

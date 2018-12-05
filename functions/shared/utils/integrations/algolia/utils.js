@@ -5,9 +5,10 @@ function filterVariantInProduct (data) {
   delete obj['variants']
   return obj
 }
-function DeNormalizeTheProductData (filteredObject, variant, index) {
-  for (var k in variant) { filteredObject[k] = variant[k] }
-  return filteredObject
+function DeNormalizeTheProductData (filteredObject, variant) {
+  let DenormedData = filteredObject
+  for (var k in variant) { DenormedData[k] = variant[k] }
+  return DenormedData
 }
 function extractVariantInProduct (data) {
   return data.variants
