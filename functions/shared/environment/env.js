@@ -8,10 +8,16 @@ module.exports = {
   },
   FIRESTORE_SETTINGS: {timestampsInSnapshots: true},
   ALGOLIA: {
-    appId: 'K5TY9WEM1N',
-    adminApiKey: '87a91ddef91e0868d76405c2467122e9',
-    SEARCH_ONLY_API_KEY: 'c34f0706878bc2a520600b07f9587757'
-  },
+    test: {
+      appId: 'K5TY9WEM1N',
+      adminApiKey: '87a91ddef91e0868d76405c2467122e9',
+      SEARCH_ONLY_API_KEY: 'c34f0706878bc2a520600b07f9587757'
+    },
+    production: {
+      appId: 'XYNZX5WQ9A',
+      adminApiKey: '3e1e9d17ce08b6941dfa0a06c1adf943',
+      SEARCH_ONLY_API_KEY: 'a38933be7a758f30bd0b1681b35fc15b'
+    }},
   OMNI_CHANNEL_INTEGRATION: {
     FLIKART: {
       AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token',

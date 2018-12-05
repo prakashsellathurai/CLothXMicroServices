@@ -1,8 +1,12 @@
 const env = require('./env')
 const algoliasearch = require('algoliasearch')
+var path = require('path')
+var fs = require('fs')
 function withCredentials () {
   try {
-    return algoliasearch(env.ALGOLIA.appId, env.ALGOLIA.adminApiKey)
+    let deploymentProjectConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '/.deployenv'), 'utf8'))
+    let keyConfig = (deploymentProjectConfig.production) ? env.ALGOLIA.production : env.ALGOLIA.test
+    return algoliasearch(keyConfig.appId, keyConfig.adminApiKey)
   } catch (error) {
     console.log(error)
   }

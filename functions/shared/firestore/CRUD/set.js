@@ -8,12 +8,22 @@ function invoicePendingStatusToFalse (invoiceId) {
 function productPRN (productId, PRN_VALUE) {
   return firestore
     .doc(`/products/${productId}`)
-    .update({
+    .set({
       prn: PRN_VALUE,
       createdOn: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true })
+}
+function objectIDtoProduct (productId, variants) {
+  return firestore
+    .doc(`/products/${productId}`)
+    .set({
+      variants: variants
+    }, {
+      merge: true
     })
 }
 module.exports = {
   invoicePendingStatusToFalse: invoicePendingStatusToFalse,
-  productPRN: productPRN
+  productPRN: productPRN,
+  objectIDtoProduct: objectIDtoProduct
 }

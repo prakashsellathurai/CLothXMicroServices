@@ -5,8 +5,9 @@ const firestoreAdmin = firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccountSource)
 })
 const firestore = firestoreAdmin.firestore()
-const product_index = require('./../../../functions/shared/utils/integrations/algolia/initIndex').product
+const productIndex = require('./../../../functions/shared/utils/integrations/algolia/initIndex').product
 let productRef = firestore.collection('products')
+let utils = require('./../../../functions/shared/utils/integrations/algolia/utils')
 firestore
   .runTransaction(t => {
     return t.get(productRef)
@@ -18,35 +19,35 @@ firestore
   }).then((dataArray) => {
     let promises = []
     for (let index = 0; index < dataArray.length; index++) {
-      promises.push(DATA_MIGRATOR_V0(dataArray[index]))
+      promises.push(DATA_MIGRATOR_V0(dataArray[index]).then((variants) => {
+        return firestore.doc(`products/${dataArray[index].productUid}`)
+        .set({
+          variants: variants
+        } , {
+          merge: true
+        })
+      }))
     }
     return Promise.all(promises)
   }).then((data) => console.log('done'))
+
 function DATA_MIGRATOR_V0 (data) {
-  let variants = data.variants
-  let filteredObject = filterVariant(data)
+  data = utils.dataPreprocessor(data)
+  let variants = utils.extractVariantInProduct(data)
+  let filteredObject = utils.filterVariantInProduct(data)
   let promises = []
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
-    let DenormedData = DeformTheData(filteredObject, variant, index)
-    promises.push(AddToIndex(DenormedData))
+    let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
+
+    promises.push(addProductInalgolia(DenormedData, variant))
   }
+
   return Promise.all(promises)
 }
 
-function AddToIndex (DenormedData) {
-  return product_index.addObject(DenormedData)
-}
-function filterVariant (data) {
-  let obj = data
-  delete obj['variants']
-  return obj
-}
-function DeformTheData (filteredObject, variant, index) {
-  for (var k in variant) { filteredObject[k] = variant[k] }
-  filteredObject['objectID'] = ObjectIdgenerator(filteredObject, index)
-  return filteredObject
-}
-function ObjectIdgenerator (filteredObject, index) {
-  return filteredObject['productUid'] + '_' + 'size' + '_' + filteredObject['size']
+function addProductInalgolia (DenormedData, variant) {
+  return productIndex.addObject(DenormedData)
+    .then((content) => content.objectID)
+    .then((objectId) => utils.updateVariantWithObjectId(variant, objectId))
 }
