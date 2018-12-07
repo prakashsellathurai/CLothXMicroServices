@@ -1,21 +1,22 @@
+'use strict'
+
+// imports for testing
 const chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
-let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
-let db = require('../../../functions/shared/firestore/CRUD/index')
-const assert = chai.assert
 var expect = chai.expect
-let test_data = {
-  storeId: 'o5TJXffUXswTmtpEmYcY',
-  user_UID: 'w2DUjxHxBIQCuYg4LB0ZlALpD7r2',
-  userEmail: 'nponmuthuselvam@gmail.com'
-}
+
+// initiate test admin environment
+let init = require('./../../../scripts/firestore/mockups/initiateClothxtestAdmin')
+let admin = init.test_admin()
+
+// test_data
+let testDataprovider = require('./createtestdata')
+
 describe('firebase admin sdk', () => {
   it('should intiliaze admin', () => {
     expect(() => admin).to.not.throw()
   })
-})
-describe('db', async () => {
   describe('#firestore', function () {
     let firestore = admin.firestore()
     it('should have collection property', () => {
@@ -25,31 +26,25 @@ describe('db', async () => {
       expect(firestore).to.have.property('doc')
     })
   })
+})
+describe('db', async () => {
+  let user = testDataprovider.user
+  let store = testDataprovider.store
 
-  describe('#associate store info to user()', function () {
-    it('should complete the execution', () => {
-      let operation = db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(operation).to.eventually.fulfilled
+  describe('#associate', () => {
+    before(async function () {
+      await user.save()
+      store.details = await user.registerTheStore(store.details)
     })
-    it('should return a valid email', async () => {
-      let email = await db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(email).to.equal(test_data.userEmail)
+
+    let db = require('../../../functions/shared/firestore/CRUD/index')
+    it('should associate store info to user ', async () => {
+      expect(() => db.associate.storeInfoToUser(user.uid, store.registerUid)).to.not.throw()
     })
-    it('should throw error on invalid return value', async () => {
-      let email = await db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(email).to.not.equal('')
-    })
-    it('should reject on invalid input data', () => {
-      let email = db
-        .associate
-        .storeInfoToUser('error in data', test_data.storeId)
-      expect(email).to.eventually.rejected
-    })
+
+  })
+  after(async function () {
+    await user.delete()
+    await store.delete()
   })
 })

@@ -4,6 +4,7 @@ const _reduce = require('./reduce')
 const _return = require('./return')
 const _associate = require('./associate')
 const _delete = require('./delete')
+const _create = require('./create')
 const _get = require('./get')
 const _set = require('./set')
 const _assign = require('./assign')
@@ -11,6 +12,7 @@ const _timestamp = require('./timestamp')
 
 const utils = require('./../utils/index')
 module.exports = {
+  create: _create,
   update: _update,
   reduce: _reduce,
   return: _return,
