@@ -14,15 +14,15 @@ app.post('/product_search', (req, res) => {
     if (typeof query === 'undefined') {
         res.json({error: 'invaild query', error_description: 'query key is undefined'})
     } else {
-        const filters = `isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
+        const filters = `isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} ${reqFilters.size ? `AND size: ${reqFilters.size}` : ''} AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
 
-        if(reqSortBy === 'high2low') {
+        if (reqSortBy === 'high2low') {
             index = algoliaClient.initIndex('product_price_desc')
-        } else if (reqSortBy === 'low2high'){
+        } else if (reqSortBy === 'low2high') {
             index = algoliaClient.initIndex('product_price_asc')
-        } else if ('newest'){
+        } else if ('newest') {
             index = algoliaClient.initIndex('product_newest')
-        }else {
+        } else {
             index = algoliaClient.initIndex('product_search')
         }
         return index
@@ -45,12 +45,12 @@ app.post('/store_search', (req, res) => {
     } else if (typeof storeId === 'undefined') {
         res.json({error: 'invaild storeId', error_description: 'storeid is undefined'})
     } else {
-        const filters = `storeId:${storeId} AND isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} AND size: ${reqFilters.size} AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
-        if(reqSortBy === 'high2low') {
+        const filters = `storeId:${storeId} AND isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} ${reqFilters.size ? `AND size: ${reqFilters.size}` : '' }  AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
+        if (reqSortBy === 'high2low') {
             index = algoliaClient.initIndex('product_price_desc')
-        } else if (reqSortBy === 'low2high'){
+        } else if (reqSortBy === 'low2high') {
             index = algoliaClient.initIndex('product_price_asc')
-        } else if ('newest'){
+        } else if ('newest') {
             index = algoliaClient.initIndex('product_newest')
         } else {
             index = algoliaClient.initIndex('product_search')
