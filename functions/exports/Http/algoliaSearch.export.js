@@ -20,7 +20,9 @@ app.post('/product_search', (req, res) => {
             index = algoliaClient.initIndex('product_price_desc')
         } else if (reqSortBy === 'low2high'){
             index = algoliaClient.initIndex('product_price_asc')
-        } else {
+        } else if ('newest'){
+            index = algoliaClient.initIndex('product_newest')
+        }else {
             index = algoliaClient.initIndex('product_search')
         }
         return index
@@ -48,6 +50,8 @@ app.post('/store_search', (req, res) => {
             index = algoliaClient.initIndex('product_price_desc')
         } else if (reqSortBy === 'low2high'){
             index = algoliaClient.initIndex('product_price_asc')
+        } else if ('newest'){
+            index = algoliaClient.initIndex('product_newest')
         } else {
             index = algoliaClient.initIndex('product_search')
         }
