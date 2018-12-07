@@ -43,7 +43,7 @@ app.post('/store_search', (req, res) => {
     } else if (typeof storeId === 'undefined') {
         res.json({error: 'invaild storeId', error_description: 'storeid is undefined'})
     } else {
-        const filters = `storeId:${storeId} AND isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
+        const filters = `storeId:${storeId} AND isListable:true AND isDeleted:false AND gender: ${reqFilters.categories.gender} AND size: ${reqFilters.size} AND sellingPrice>=${reqFilters.price.min} AND sellingPrice<=${reqFilters.price.max}`
         if(reqSortBy === 'high2low') {
             index = algoliaClient.initIndex('product_price_desc')
         } else if (reqSortBy === 'low2high'){
