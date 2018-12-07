@@ -1,9 +1,9 @@
 'use strict'
 var admin = require('firebase-admin')
-var ProductionEnvServiceAccount = require('./clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
-var TestEnvServiceAccount = require('./clothxtest-firebase-adminsdk-0bpps-e18156c08d.json')
 var path = require('path')
 let env = require('./env')
+var ProductionEnvServiceAccount = env.FIRESTORE.PRODUCTION_CREDENTIALS
+var TestEnvServiceAccount = env.FIRESTORE.TEST_CREDENTIALS
 function setCredentials () {
   try {
     var fs = require('fs')
@@ -15,7 +15,7 @@ function setCredentials () {
       storageBucket: storageBucket
     })
     let firestore = admin.firestore()
-    firestore.settings(env.FIRESTORE_SETTINGS)
+    firestore.settings(env.FIRESTORE.SETTINGS)
     return admin
   } catch (e) {
     console.error(e)
