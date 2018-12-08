@@ -24,6 +24,7 @@ test:
      - npm run test
    only:
      - develop
+     - master
  
 production_server_deployment:
   stage: production_server_deployment

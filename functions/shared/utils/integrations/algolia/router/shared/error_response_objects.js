@@ -6,5 +6,9 @@ module.exports = {
   PARAM_IS_UNDEFINED: (param) => JSON.parse(JSON.stringify({
     error: `invalid ${param}`,
     error_description: `${param} is undefined`
-  }))
+  })),
+  SERVER_ERROR: {
+    error: 'server error',
+    error_description: 'server not responding your request'
+  }
 }
