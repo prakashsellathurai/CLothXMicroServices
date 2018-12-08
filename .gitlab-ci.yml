@@ -12,7 +12,6 @@ cache:
         -   node_modules/
 
 stages:
-    - test
     - production_server_deployment
     - test_server_deployment
 test:

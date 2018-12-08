@@ -39,17 +39,6 @@ describe('db', async () => {
         .storeInfoToUser(test_data.user_UID, test_data.storeId)
       expect(email).to.equal(test_data.userEmail)
     })
-    it('should throw error on invalid return value', async () => {
-      let email = await db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(email).to.not.equal('')
-    })
-    it('should reject on invalid input data', () => {
-      let email = db
-        .associate
-        .storeInfoToUser('error in data', test_data.storeId)
-      expect(email).to.eventually.rejected
-    })
+  
   })
 })
