@@ -13,18 +13,17 @@ module.exports = {
             }
           }
           if (reqFilters.hasOwnProperty('size')) {
-            filterString += `AND size: ${reqFilters.size} `
+            filterString += ConcatfacetWithAND(`size: ${reqFilters.size}`)
           }
           if (reqFilters.hasOwnProperty('price')) {
-            if (reqFilters.price.hasOwnProperty('min')) {
-              filterString += `AND sellingPrice>=${reqFilters.price.min}`
+            if (reqFilters.price.hasOwnProperty('min') && typeof reqFilters.price.min === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice>=${reqFilters.price.min}`)
             }
-            if (reqFilters.price.hasOwnProperty('min')) {
-              filterString += `AND sellingPrice<=${reqFilters.price.max}`
+            if (reqFilters.price.hasOwnProperty('max') && typeof reqFilters.price.max === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice<=${reqFilters.price.max}`)
             }
           }
-          filterString = filterString.trim() // remove whitespace
-
+      
           return filterString
         }
       },

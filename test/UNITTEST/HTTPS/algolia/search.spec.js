@@ -128,7 +128,7 @@ describe('/POST product', () => {
           categories: {}
         }
       },
-      
+
       {
         description: 'with gender with a none value',
         filters: {
@@ -136,7 +136,7 @@ describe('/POST product', () => {
             gender: {}
           }
         }
-      } ,
+      },
       {
         description: 'with gender with  a value',
         filters: {
@@ -144,7 +144,49 @@ describe('/POST product', () => {
             gender: 'male'
           }
         }
-      } 
+      },
+      {
+        description: 'with size',
+        filters: {
+          categories: {
+            gender: 'male'
+          },
+          size: 6
+        }
+      },
+      {
+        description: 'with min price value',
+        filters: {
+          categories: {
+            gender: 'male'
+          },
+          size: 6,
+          price: {
+            min: 6
+          }
+        }
+      },
+      {
+        description: 'with max price value',
+        filters: {
+          categories: {
+            gender: 'male'
+          },
+          size: 6,
+          price: { max: 565664
+          }}
+      },
+      {
+        description: 'with both max and min price value',
+        filters: {
+          categories: {
+            gender: 'male'
+          },
+          size: '6',
+          price: { max: '565664',
+            min: '56'
+          }}
+      }
     ]
 
     PossibleInputs.forEach(function (inputObject) {
