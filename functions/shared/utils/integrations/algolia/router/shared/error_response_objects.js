@@ -10,5 +10,9 @@ module.exports = {
   SERVER_ERROR: {
     error: 'server error',
     error_description: 'server not responding your request'
-  }
+  },
+  INVALID_REQUEST_OBJECT: (param, message) => JSON.parse(JSON.stringify({
+    error: `invalid ${param}`,
+    error_description: `${param} in request object is invalid ${message}`
+  }))
 }

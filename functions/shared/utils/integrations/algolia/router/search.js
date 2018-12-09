@@ -15,21 +15,29 @@ searchRouter
     let query = body.query
     let page = (isDefined(body.page)) ? body.page : 0
     if (typeof query === 'string') {
-    //  let reqFilters = (isDefined(body.filters)) ? body.filters : {}
-      let reqSortBy = (isDefined(body.sortBy)) ? body.sortBy : null
-      //  let occasion = (isDefined(reqFilters.occasion)) ? reqFilters.occasion : ''
+      let reqFilters = (isDefined(body.filters) && typeof body.filters === 'object') ? body.filters : {}
+      let reqSortBy = (isDefined(body.sortBy)) ? body.sortBy : ''
+      let occasion = (isDefined(reqFilters.occasion) && typeof reqFilters.occasion === 'string') ? reqFilters.occasion : ''
 
-      //  query += occasion
-      //   const filters = GENERATE_FILTER_STRING._for._post.product(reqFilters)
+      query = query.concat(occasion)
 
-      let index = sortByProductIndexSelector(reqSortBy)
+      let filters = GENERATE_FILTER_STRING._for._post.product(reqFilters)
 
-      return index
-        .search({ query: query,
-          page: page}/*, filters: filters} */)
-        .then((response) => {
-          res.json(response.hits)
-        })
+      console.log(filters)
+      if (typeof filters === 'string') {
+        let index = sortByProductIndexSelector(reqSortBy)
+        return index
+          .search({
+            query: query,
+            page: page,
+            filters: filters
+          })
+          .then((response) => {
+            res.json(response.hits)
+          })
+      } else {
+        res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
+      }
     } else {
       res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('query'))
     }

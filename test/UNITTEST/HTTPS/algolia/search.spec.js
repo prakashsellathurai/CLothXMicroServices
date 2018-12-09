@@ -113,8 +113,57 @@ describe('/POST product', () => {
       })
     })
   })
-  it('should respond on request without filter', () => {
+  describe('#responses based on filter', () => {
+    let PossibleInputs = [
+      {
+        description: 'with empty filter object',
+        filters: {}
+      }, {
+        description: 'with empty filter string',
+        filters: ''
+      },
+      {
+        description: 'with categories object',
+        filters: {
+          categories: {}
+        }
+      },
       
+      {
+        description: 'with gender with a none value',
+        filters: {
+          categories: {
+            gender: {}
+          }
+        }
+      } ,
+      {
+        description: 'with gender with  a value',
+        filters: {
+          categories: {
+            gender: 'male'
+          }
+        }
+      } 
+    ]
+
+    PossibleInputs.forEach(function (inputObject) {
+      it(`${inputObject.description}`, (done) => {
+        let body = {
+          query: 'black',
+          page: 1,
+          sortBy: '',
+          filters: inputObject.filters
+        }
+        request
+          .post('/product')
+          .send(body)
+          .end((_err, res) => {
+            res.body.should.be.an('array')
+            done()
+          })
+      })
+    })
   })
 
   afterEach(function () {
