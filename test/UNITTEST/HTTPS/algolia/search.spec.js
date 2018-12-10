@@ -207,7 +207,36 @@ describe('/POST product', () => {
       })
     })
   })
+  describe('#response with required number of results', () => {
+    it('should respond with 20 results', async () => {
+      let body = {
+        query: '',
+        page: 1,
+        sortBy: '',
+        filters: {}
+      }
 
+      let res = await request
+        .post('/product')
+        .send(body)
+      res.body.should.be.an('array')
+      res.body.should.have.length(20)
+    })
+    it('should respond with 20 results on less producst', async () => {
+      let body = {
+        query: 'black',
+        page: 1,
+        sortBy: '',
+        filters: {}
+      }
+
+      let res = await request
+        .post('/product')
+        .send(body)
+      res.body.should.be.an('array')
+      res.body.should.have.length(20)
+    })
+  })
   afterEach(function () {
     request.close()
   })

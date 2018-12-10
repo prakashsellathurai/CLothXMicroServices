@@ -4,6 +4,7 @@ const searchRouter = express.Router()
 const initIndex = require('./../initIndex')
 const ERROR_RESPONSE = require('./shared/error_response_objects')
 const GENERATE_FILTER_STRING = require('./shared/generate_filter_string')
+const dataParser = require('./shared/algolia_data_parser')
 searchRouter
   .get('/product',
     (req, res) =>
@@ -25,14 +26,9 @@ searchRouter
 
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
-        return index
-          .search({
-            query: query,
-            page: page,
-            filters: filters
-          })
+        return dataParser(index, query, page, filters, [])
           .then((response) => {
-            res.json(response.hits)
+            res.json(response)
           })
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
