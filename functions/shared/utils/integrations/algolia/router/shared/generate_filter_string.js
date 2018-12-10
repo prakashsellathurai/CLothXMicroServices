@@ -23,17 +23,60 @@ module.exports = {
               filterString += ConcatfacetWithAND(`sellingPrice<=${reqFilters.price.max}`)
             }
           }
-      
+
           return filterString
         }
       },
       store: (storeId, reqFilters) => {
-        return `storeId:${storeId}` +
-        ` AND isListable:true AND isDeleted:false ` +
-         `AND gender: ${reqFilters.categories.gender}` +
-          `AND size: ${reqFilters.size}` +
-           ` AND sellingPrice>=${reqFilters.price.min}` +
-             ` AND sellingPrice<=${reqFilters.price.max}`
+        let filterString = `storeId:${storeId} AND isDeleted:false`
+        if (isEmptyObj(reqFilters)) {
+          return filterString
+        } else {
+          if (reqFilters.hasOwnProperty('categories')) {
+            if (reqFilters.categories.hasOwnProperty('gender') && typeof reqFilters.categories.gender === 'string') {
+              filterString += ConcatfacetWithAND(`gender:${reqFilters.categories.gender}`)
+            }
+          }
+          if (reqFilters.hasOwnProperty('size')) {
+            filterString += ConcatfacetWithAND(`size: ${reqFilters.size}`)
+          }
+          if (reqFilters.hasOwnProperty('price')) {
+            if (reqFilters.price.hasOwnProperty('min') && typeof reqFilters.price.min === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice>=${reqFilters.price.min}`)
+            }
+            if (reqFilters.price.hasOwnProperty('max') && typeof reqFilters.price.max === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice<=${reqFilters.price.max}`)
+            }
+          }
+
+          return filterString
+        }
+      },
+
+      store_all: (storeId, reqFilters) => {
+        let filterString = `storeId:${storeId}`
+        if (isEmptyObj(reqFilters)) {
+          return filterString
+        } else {
+          if (reqFilters.hasOwnProperty('categories')) {
+            if (reqFilters.categories.hasOwnProperty('gender') && typeof reqFilters.categories.gender === 'string') {
+              filterString += ConcatfacetWithAND(`gender:${reqFilters.categories.gender}`)
+            }
+          }
+          if (reqFilters.hasOwnProperty('size')) {
+            filterString += ConcatfacetWithAND(`size: ${reqFilters.size}`)
+          }
+          if (reqFilters.hasOwnProperty('price')) {
+            if (reqFilters.price.hasOwnProperty('min') && typeof reqFilters.price.min === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice>=${reqFilters.price.min}`)
+            }
+            if (reqFilters.price.hasOwnProperty('max') && typeof reqFilters.price.max === 'number') {
+              filterString += ConcatfacetWithAND(`sellingPrice<=${reqFilters.price.max}`)
+            }
+          }
+
+          return filterString
+        }
       }
     }
   }

@@ -27,9 +27,7 @@ searchRouter
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])
-          .then((response) => {
-            res.json(response)
-          })
+          .then((response) => res.json(response))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
       }
@@ -43,46 +41,62 @@ searchRouter
       res
         .json(ERROR_RESPONSE.GET_METHOD_NOT_SUPPORTED))
 searchRouter.post('/store', (req, res) => {
-  let reqFilters = req.body.filters
-  let reqSortBy = req.body.sortBy
-  const query = req.body.query + `${reqFilters.occasion}`
-
-  let storeId = req.body.storeId
-  if (typeof query === 'undefined') {
-    res.json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('query'))
-  } else if (typeof storeId === 'undefined') {
-    res.json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('storeId'))
+  let body = req.body
+  let query = body.query
+  let page = (isDefined(body.page)) ? body.page : 0
+  let storeId = body.storeId
+  if (typeof storeId === 'undefined') {
+    res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('storeId'))
   } else {
-    let filters = GENERATE_FILTER_STRING._for._post.store(storeId, reqFilters)
+    if (typeof query === 'string') {
+      let reqFilters = (isDefined(body.filters) && typeof body.filters === 'object') ? body.filters : {}
+      let reqSortBy = (isDefined(body.sortBy)) ? body.sortBy : ''
+      let occasion = (isDefined(reqFilters.occasion) && typeof reqFilters.occasion === 'string') ? reqFilters.occasion : ''
 
-    let index = sortByProductIndexSelector(reqSortBy)
-    return index
-      .search({query: query, filters: filters})
-      .then((response) => {
-        res.json(response.hits)
-      })
+      query = query.concat(occasion)
+      let filters = GENERATE_FILTER_STRING._for._post.store(storeId, reqFilters)
+      if (typeof filters === 'string') {
+        let index = sortByProductIndexSelector(reqSortBy)
+        return dataParser(index, query, page, filters, [])
+          .then((response) => res.json(response))
+      } else {
+        res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
+      }
+    } else {
+      res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('query'))
+    }
   }
 })
 searchRouter
-  .get('/store',
+  .get('/store_all',
     (req, res) =>
       res
         .json(ERROR_RESPONSE.GET_METHOD_NOT_SUPPORTED))
 searchRouter.post('/store_all', (req, res) => {
-  let query = req.body.query
-  let storeId = req.body.storeId
-  if (typeof query === 'undefined') {
-    res.json({error: 'invaild body', error_description: 'query key is undefined'})
-  } else if (typeof storeId === 'undefined') {
-    res.json({error: 'invaild storeId', error_description: 'storeid is undefined'})
+  let body = req.body
+  let query = body.query
+  let page = (isDefined(body.page)) ? body.page : 0
+  let storeId = body.storeId
+  if (typeof storeId === 'undefined') {
+    res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('storeId'))
   } else {
-    const filters = `storeId:${storeId} AND isDeleted:false`
-    let index = initIndex.product.unsorted
-    return index
-      .search({query: query, filters: filters})
-      .then((response) => {
-        res.json(response.hits)
-      })
+    if (typeof query === 'string') {
+      let reqFilters = (isDefined(body.filters) && typeof body.filters === 'object') ? body.filters : {}
+      let reqSortBy = (isDefined(body.sortBy)) ? body.sortBy : ''
+      let occasion = (isDefined(reqFilters.occasion) && typeof reqFilters.occasion === 'string') ? reqFilters.occasion : ''
+
+      query = query.concat(occasion)
+      let filters = GENERATE_FILTER_STRING._for._post.store_all(storeId, reqFilters)
+      if (typeof filters === 'string') {
+        let index = sortByProductIndexSelector(reqSortBy)
+        return dataParser(index, query, page, filters, [])
+          .then((response) => res.json(response))
+      } else {
+        res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
+      }
+    } else {
+      res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('query'))
+    }
   }
 })
 function sortByProductIndexSelector (reqSortBy) {
