@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 const functions = require('firebase-functions')
-const algoliaIndex = require('./../../../shared/utils/integrations/algolia/index').initIndex.store
+const algoliaIndex = require('./../../../shared/utils/integrations/algolia/index').initIndex.store.unsorted
 
 function DeleteIndexInAlgolia (snap) {
   const objectID = snap.id

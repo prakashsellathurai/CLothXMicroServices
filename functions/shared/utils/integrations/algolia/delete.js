@@ -1,5 +1,5 @@
 'use strict'
-const productIndex = require('./initIndex').product
+const productIndex = require('./initIndex').product.unsorted
 const utils = require('./utils')
 function product (data) {
   let variants = utils.extractVariantInProduct(data)

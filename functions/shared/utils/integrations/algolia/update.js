@@ -1,6 +1,6 @@
 'use strict'
 const utils = require('./utils')
-const ProductIndex = require('./initIndex').product
+const ProductIndex = require('./initIndex').product.unsorted
 function product (data) {
   let variants = utils.extractVariantInProduct(data)
   let filteredObject = utils.filterVariantInProduct(data)

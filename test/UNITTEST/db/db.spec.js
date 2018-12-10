@@ -41,7 +41,7 @@ describe('db', async () => {
     it('should associate store info to user ', async () => {
       expect(() => db.associate.storeInfoToUser(user.uid, store.registerUid)).to.not.throw()
     })
-
+  
   })
   after(async function () {
     await user.delete()
