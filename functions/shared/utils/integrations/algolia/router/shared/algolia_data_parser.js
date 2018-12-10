@@ -40,8 +40,7 @@ function mainEngine (_index, _query, _page, _filters, groupedResults) {
       let normalizeddata = merger(groupedResults, dataNormalizer(groupByProductUid(results)), 'productUid')
       if (normalizeddata.length < RESULTS_PER_PAGE) {
         // do recall here
-        let requiredlength = RESULTS_PER_PAGE - normalizeddata.length
-        console.log(requiredlength)
+        // let requiredlength = RESULTS_PER_PAGE - normalizeddata.length
         // return mainEngine(_index, _query, _page + 1, _filters, normalizeddata)
         return normalizeddata
       } else {
