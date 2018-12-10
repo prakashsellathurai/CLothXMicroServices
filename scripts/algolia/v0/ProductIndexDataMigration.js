@@ -5,7 +5,7 @@ const firestoreAdmin = firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccountSource)
 })
 const firestore = firestoreAdmin.firestore()
-const productIndex = require('./../../../functions/shared/utils/integrations/algolia/initIndex').product
+const productIndex = require('./../../../functions/shared/utils/integrations/algolia/initIndex').product.unsorted
 let productRef = firestore.collection('products')
 let utils = require('./../../../functions/shared/utils/integrations/algolia/utils')
 firestore
