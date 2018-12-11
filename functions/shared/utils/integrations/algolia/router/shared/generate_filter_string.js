@@ -7,12 +7,12 @@ module.exports = {
         return filterDeterminantEngine(reqFilters, filterString)
       },
       store: (storeId, reqFilters) => {
-        let filterString = `storeId:${storeId} AND isDeleted:false`
+        let filterString = `storeId:${storeId} AND isDeleted:false AND isListable:true`
         return filterDeterminantEngine(reqFilters, filterString)
       },
 
       store_all: (storeId, reqFilters) => {
-        let filterString = `storeId:${storeId}`
+        let filterString = `storeId:${storeId} AND isDeleted:false`
         return filterDeterminantEngine(reqFilters, filterString)
       }
     }
