@@ -23,7 +23,7 @@ searchRouter
       query = query.concat(occasion)
 
       let filters = GENERATE_FILTER_STRING._for._post.product(reqFilters)
-
+// console.log(filters)
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])

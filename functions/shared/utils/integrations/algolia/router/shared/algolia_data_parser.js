@@ -31,7 +31,7 @@ function makeRequest (_index, _query, _page, _filters) {
       query: _query,
       filters: _filters,
       page: _page,
-      hitsPerPage: 20
+      hitsPerPage: 50
     }).then((res) => res.hits)
 }
 function mainEngine (_index, _query, _page, _filters, groupedResults) {
