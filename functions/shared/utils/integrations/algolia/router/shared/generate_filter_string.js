@@ -35,11 +35,11 @@ function filterDeterminantEngine (reqFilters, filterString) {
   if (isEmptyObj(reqFilters)) {
     return filterString
   } else {
-    if (reqFilters.hasOwnProperty('categories') && StringTest(reqFilters.categories)) {
-      if (reqFilters.categories.hasOwnProperty('gender') && typeof reqFilters.categories.gender === 'string' && StringTest(reqFilters.categories.gender)) {
-        filterString += ConcatfacetWithAND(`gender:${reqFilters.categories.gender}`)
-      }
+  //  if (reqFilters.hasOwnProperty('categories') && StringTest(reqFilters.categories)) {
+    if (reqFilters.categories.gender && typeof reqFilters.categories.gender === 'string' && StringTest(reqFilters.categories.gender)) {
+      filterString += ConcatfacetWithAND(`gender:${reqFilters.categories.gender}`)
     }
+    //  }
     if (reqFilters.hasOwnProperty('size') && StringTest(reqFilters.size)) {
       filterString += ConcatfacetWithAND(`size: ${reqFilters.size}`)
     }

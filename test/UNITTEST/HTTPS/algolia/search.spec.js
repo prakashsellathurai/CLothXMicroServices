@@ -196,16 +196,16 @@ describe('/POST product', () => {
           categories: {
             gender: 'male'
           },
-          location: 'coimbatore'
-          ,size: "",
-          price :{
-            inMin: 0
-            ,inMax: 1000,
+          location: 'coimbatore',
+          size: '',
+          price: {
+            inMin: 0,
+            inMax: 1000,
             min: 0,
             max: 1000
           },
           sortBy: 'high2low',
-          page: 0 
+          page: 0
         }
       },
       {
@@ -216,18 +216,18 @@ describe('/POST product', () => {
           categories: {
             gender: ''
           },
-          location: ''
-          ,size: '',
-          price :{
-            inMin: ''
-            ,inMax: '',
+          location: '',
+          size: '',
+          price: {
+            inMin: '',
+            inMax: '',
             min: '',
             max: ''
           },
           sortBy: '',
           page: 1
         }
-      },  {
+      }, {
         description: 'with proper values',
         query: 'black',
         filters: {
@@ -235,11 +235,31 @@ describe('/POST product', () => {
           categories: {
             gender: 'male'
           },
-          location: 'coimbatore'
-          ,size: 5,
-          price :{
-            inMin: 0
-            ,inMax: 1000,
+          location: 'coimbatore',
+          size: 5,
+          price: {
+            inMin: 0,
+            inMax: 1000,
+            min: 0,
+            max: 500
+          },
+          sortBy: '',
+          page: 1
+        }
+      },
+      {
+        description: 'with gender',
+        query: 'black',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore',
+          size: 5,
+          price: {
+            inMin: 0,
+            inMax: 1000,
             min: 0,
             max: 500
           },
@@ -311,6 +331,33 @@ describe('/POST product', () => {
 
           done()
         })
+    })
+    let genders = ['male', 'female']
+    genders.forEach(gender => {
+      it(`respond with ${gender}`, (done) => {
+        let body = {
+          query: 'black',
+          filters: {
+            allowOutOfStock: false,
+            categories: {
+              gender: gender
+            },
+            size: 'g'
+          }
+        }
+        request
+          .post('/product')
+          .send(body)
+          .end((_err, res) => {
+            let firebaseProducts = []
+            res.body.forEach((product) => firebaseProducts.push(product))
+            //   console.log(res.body.length)
+            firebaseProducts.forEach(product => {
+              expect(product).to.have.property('gender', gender)
+            })
+            done()
+          })
+      })
     })
   })
   afterEach(function () {
