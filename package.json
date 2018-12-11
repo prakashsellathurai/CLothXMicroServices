@@ -45,6 +45,7 @@
     "firebase-functions-test": "^0.1.5",
     "mocha": "^5.2.0",
     "chai": "^4.2.0",
-    "chai-http": "^4.2.0"
+    "chai-http": "^4.2.0",
+    "node-cmd": "^3.0.0"
   }
 }

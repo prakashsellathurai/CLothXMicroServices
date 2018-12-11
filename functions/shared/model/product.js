@@ -8,7 +8,7 @@ module.exports = class product {
     this.productName = data.productName
     this.categories = data.categories
     this.description = data.description
-    this.variants = data.variants
+    this.variants = (data.variants) ? data.variants : []
     this.addedBy = data.addedBy
     this.storeId = data.storeId
     this.tags = data.tags
@@ -22,7 +22,21 @@ module.exports = class product {
   get save () {
     return db.create.product(this.details())
   }
-
+  get delete () {
+    return db.delete.product(this.productUid)
+  }
+  addVariantByProperty (size, stock, purchasedPrice, sellingPrice) {
+    let obj = {
+      size: size,
+      stock: stock,
+      purchasedPrice: purchasedPrice,
+      sellingPrice: sellingPrice
+    }
+    this.variants.push(obj)
+  }
+  set addVariantByObj (obj) {
+    this.variants.push(obj)
+  }
   get details () {
     return {
       'brandName': this.brandName,
