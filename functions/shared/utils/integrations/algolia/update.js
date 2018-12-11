@@ -13,7 +13,7 @@ function product (data) {
   return Promise.all(promises)
 }
 function updateProductInalgolia (DenormedData) {
-  return ProductIndex.addObject(DenormedData)
+  return ProductIndex.saveObject(DenormedData)
 }
 function productsWithSamePRN (data) {
 
