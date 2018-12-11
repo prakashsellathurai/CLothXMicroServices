@@ -185,8 +185,69 @@ describe('/POST product', () => {
           size: '6',
           price: { max: '565664',
             min: '56'
-          }}
+          }
+        }
+      },
+      {
+        description: 'with custom input',
+        query: 't shirt',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore'
+          ,size: "",
+          price :{
+            inMin: 0
+            ,inMax: 1000,
+            min: 0,
+            max: 1000
+          },
+          sortBy: 'high2low',
+          page: 0 
+        }
+      },
+      {
+        description: 'with single quote',
+        query: '',
+        filters: {
+          allowOutOfStock: '',
+          categories: {
+            gender: ''
+          },
+          location: ''
+          ,size: '',
+          price :{
+            inMin: ''
+            ,inMax: '',
+            min: '',
+            max: ''
+          },
+          sortBy: '',
+          page: 1
+        }
+      },  {
+        description: 'with proper values',
+        query: 'black',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore'
+          ,size: 5,
+          price :{
+            inMin: 0
+            ,inMax: 1000,
+            min: 0,
+            max: 500
+          },
+          sortBy: '',
+          page: 1
+        }
       }
+
     ]
 
     PossibleInputs.forEach(function (inputObject) {
@@ -202,6 +263,7 @@ describe('/POST product', () => {
           .send(body)
           .end((_err, res) => {
             res.body.should.be.an('array')
+            res.should.not.have.property('status', 500)
             done()
           })
       })
