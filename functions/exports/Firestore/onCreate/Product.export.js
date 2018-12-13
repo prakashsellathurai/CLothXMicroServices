@@ -5,25 +5,16 @@ const algolia = require('./../../../shared/utils/integrations/algolia/index')
 
 function PrnAssigner (context) {
   let productId = context.params.productId
-  return db
-    .utils
-    .prnCheckLoop()
-    .then(prn => {
-      return db
-        .set
-        .productPRN(productId, prn)
-        .then(() => Promise.resolve(prn))
-    })
+  return db.set.RandomObjectIdToProduct(productId)
 }
 
-function IndexItInAlgolia (snap) {
-  return algolia.save.product(snap.data())
-    .then((variants) => db.set.objectIDtoProduct(snap.id, variants))
+function IndexItInAlgolia (data) {
+  return algolia.save.product(data)
 }
 
 function MainHandler (snap, context) {
   return PrnAssigner(context)
-    .then((prn) => IndexItInAlgolia(snap))
+    .then((data) => IndexItInAlgolia(data))
 }
 
 // ==================================================================================================

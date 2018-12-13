@@ -26,19 +26,12 @@ describe('db', async () => {
     })
   })
 
-  describe('#associate store info to user()', function () {
-    it('should complete the execution', () => {
-      let operation = db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(operation).to.eventually.fulfilled
+  describe('# objectId setter for products', function () {
+    it('should return the refined object', async () => {
+      let res = await db.set.RandomObjectIdToProduct('yDnUCTZCDyVbJz11b1Sv')
+      expect(res).to.have.property('variants')
+      expect(res).to.have.property('prn')
+      expect(res).to.be.an('object')
     })
-    it('should return a valid email', async () => {
-      let email = await db
-        .associate
-        .storeInfoToUser(test_data.user_UID, test_data.storeId)
-      expect(email).to.equal(test_data.userEmail)
-    })
-  
   })
 })

@@ -2,6 +2,7 @@
 const productIndex = require('./initIndex').product.unsorted
 const utils = require('./utils')
 function product (data) {
+  data = utils.dataPreprocessor(data)
   let variants = utils.extractVariantInProduct(data)
   let filteredObject = utils.filterVariantInProduct(data)
   let promises = []
@@ -14,8 +15,6 @@ function product (data) {
 }
 function addProductInalgolia (DenormedData, variant) {
   return productIndex.addObject(DenormedData)
-    .then((content) => content.objectID)
-    .then((objectId) => utils.updateVariantWithObjectId(variant, objectId))
 }
 module.exports = {
   product: product
