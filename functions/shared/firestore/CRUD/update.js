@@ -102,7 +102,6 @@ function returnCountInReward (customerNo, totalReturn) {
         })
     })
 }
-
 module.exports = {
   customerReward: customerReward,
   invoiceOnProductsReturn: invoiceOnProductsReturn,
