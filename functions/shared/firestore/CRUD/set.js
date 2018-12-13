@@ -32,18 +32,18 @@ function RandomObjectIdToProduct (productId) {
       return t.get(productDocRef)
         .then((doc) => {
           let data = doc.data()
-          let productUid = data.productUid
+          let productUid = doc.id
           let variants = data.variants
           for (let index = 0; index < variants.length; index++) {
             variants[index].objectID = productUid + '_' + index
           }
           return utils.prnCheckLoop()
             .then((prn) => {
-              t.set(doc.ref, {
+              t.update(doc.ref, {
                 prn: prn,
                 variants: variants,
                 createdOn: admin.firestore.FieldValue.serverTimestamp()
-              }, { merge: true })
+              })
               data.prn = prn
               data.variants = variants
               return data
