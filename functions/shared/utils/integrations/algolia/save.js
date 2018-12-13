@@ -14,7 +14,7 @@ function product (data) {
   return Promise.all(promises)
 }
 function addProductInalgolia (DenormedData, variant) {
-  return productIndex.addObject(DenormedData)
+  return productIndex.saveObject(DenormedData)
 }
 module.exports = {
   product: product
