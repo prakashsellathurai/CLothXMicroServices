@@ -15,6 +15,7 @@ function product (data) {
 }
 function addProductInalgolia (DenormedData, variant) {
   return productIndex.saveObject(DenormedData)
+    .then(content => console.log(content.objectID))
 }
 module.exports = {
   product: product
