@@ -9,13 +9,12 @@ function product (data) {
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
     let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
-    promises.push(updateProductInalgolia(DenormedData))
+    promises.push(DenormedData)
   }
-  return Promise.all(promises)
+  return ProductIndex.saveObjects(promises)
+    .then(content => console.log(content))
 }
-function updateProductInalgolia (DenormedData) {
-  return ProductIndex.saveObject(DenormedData)
-}
+
 function productsWithSamePRN (data) {
 
 }
