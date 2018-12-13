@@ -9,12 +9,10 @@ function product (data) {
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
     let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
-    promises.push(addProductInalgolia(DenormedData, variant))
+    promises.push(DenormedData)
   }
-  return Promise.all(promises)
-}
-function addProductInalgolia (DenormedData, variant) {
-  return productIndex.addObject(DenormedData)
+  return productIndex.saveObjects(promises)
+    .then(content => console.log(content))
 }
 module.exports = {
   product: product
