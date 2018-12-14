@@ -37,6 +37,7 @@ function makeRequest (_index, _query, _page, _filters) {
 function mainEngine (_index, _query, _page, _filters, groupedResults) {
   return makeRequest(_index, _query, _page, _filters)
     .then((results) => {
+      console.log(results.length)
       let normalizeddata = merger(groupedResults, dataNormalizer(groupByProductUid(results)), 'productUid')
       if (normalizeddata.length < RESULTS_PER_PAGE) {
         // do recall here
