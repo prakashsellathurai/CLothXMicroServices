@@ -332,7 +332,7 @@ describe('/POST product', () => {
           done()
         })
     })
-    let genders = ['male', 'female']
+    let genders = ['Men', 'Women']
     genders.forEach(gender => {
       it(`respond with ${gender}`, (done) => {
         let body = {
@@ -341,8 +341,7 @@ describe('/POST product', () => {
             allowOutOfStock: false,
             categories: {
               gender: gender
-            },
-            size: 'g'
+            }
           }
         }
         request
