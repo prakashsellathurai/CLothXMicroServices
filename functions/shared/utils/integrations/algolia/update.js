@@ -2,19 +2,19 @@
 const utils = require('./utils')
 const ProductIndex = require('./initIndex').product.unsorted
 function product (data) {
+  data = utils.dataPreprocessor(data)
   let variants = utils.extractVariantInProduct(data)
   let filteredObject = utils.filterVariantInProduct(data)
   let promises = []
   for (let index = 0; index < variants.length; index++) {
     let variant = variants[index]
     let DenormedData = utils.DeNormalizeTheProductData(filteredObject, variant)
-    promises.push(updateProductInalgolia(DenormedData))
+    promises.push(DenormedData)
   }
-  return Promise.all(promises)
+  return ProductIndex.saveObjects(promises)
+    .then(content => console.log(content))
 }
-function updateProductInalgolia (DenormedData) {
-  return ProductIndex.addObject(DenormedData)
-}
+
 function productsWithSamePRN (data) {
 
 }

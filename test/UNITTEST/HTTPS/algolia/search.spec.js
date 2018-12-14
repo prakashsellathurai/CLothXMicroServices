@@ -185,8 +185,89 @@ describe('/POST product', () => {
           size: '6',
           price: { max: '565664',
             min: '56'
-          }}
+          }
+        }
+      },
+      {
+        description: 'with custom input',
+        query: 't shirt',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore',
+          size: '',
+          price: {
+            inMin: 0,
+            inMax: 1000,
+            min: 0,
+            max: 1000
+          },
+          sortBy: 'high2low',
+          page: 0
+        }
+      },
+      {
+        description: 'with single quote',
+        query: '',
+        filters: {
+          allowOutOfStock: '',
+          categories: {
+            gender: ''
+          },
+          location: '',
+          size: '',
+          price: {
+            inMin: '',
+            inMax: '',
+            min: '',
+            max: ''
+          },
+          sortBy: '',
+          page: 1
+        }
+      }, {
+        description: 'with proper values',
+        query: 'black',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore',
+          size: 5,
+          price: {
+            inMin: 0,
+            inMax: 1000,
+            min: 0,
+            max: 500
+          },
+          sortBy: '',
+          page: 1
+        }
+      },
+      {
+        description: 'with gender',
+        query: 'black',
+        filters: {
+          allowOutOfStock: false,
+          categories: {
+            gender: 'male'
+          },
+          location: 'coimbatore',
+          size: 5,
+          price: {
+            inMin: 0,
+            inMax: 1000,
+            min: 0,
+            max: 500
+          },
+          sortBy: '',
+          page: 1
+        }
       }
+
     ]
 
     PossibleInputs.forEach(function (inputObject) {
@@ -202,6 +283,7 @@ describe('/POST product', () => {
           .send(body)
           .end((_err, res) => {
             res.body.should.be.an('array')
+            res.should.not.have.property('status', 500)
             done()
           })
       })
@@ -249,6 +331,32 @@ describe('/POST product', () => {
 
           done()
         })
+    })
+    let genders = ['Men', 'Women']
+    genders.forEach(gender => {
+      it(`respond with ${gender}`, (done) => {
+        let body = {
+          query: 'black',
+          filters: {
+            allowOutOfStock: false,
+            categories: {
+              gender: gender
+            }
+          }
+        }
+        request
+          .post('/product')
+          .send(body)
+          .end((_err, res) => {
+            let firebaseProducts = []
+            res.body.forEach((product) => firebaseProducts.push(product))
+            //   console.log(res.body.length)
+            firebaseProducts.forEach(product => {
+              expect(product).to.have.property('gender', gender)
+            })
+            done()
+          })
+      })
     })
   })
   afterEach(function () {

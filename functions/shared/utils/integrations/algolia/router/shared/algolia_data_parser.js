@@ -31,12 +31,13 @@ function makeRequest (_index, _query, _page, _filters) {
       query: _query,
       filters: _filters,
       page: _page,
-      hitsPerPage: 20
+      hitsPerPage: 50
     }).then((res) => res.hits)
 }
 function mainEngine (_index, _query, _page, _filters, groupedResults) {
   return makeRequest(_index, _query, _page, _filters)
     .then((results) => {
+      console.log(results.length)
       let normalizeddata = merger(groupedResults, dataNormalizer(groupByProductUid(results)), 'productUid')
       if (normalizeddata.length < RESULTS_PER_PAGE) {
         // do recall here
