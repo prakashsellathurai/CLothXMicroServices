@@ -19,7 +19,8 @@ function storeInfoToUser (uid, storeId) {
       .then(array => array[0])
       .then(userDoc => {
         if (typeof userDoc === 'undefined') {
-          console.error('userDoc is not defined')
+          console.log('log ==> make sure user saved with given uuid')
+          return Promise.resolve(0)
         }
         let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
         let storeArray = MergeAndRemoveDuplicatesArray(registeredStores, storeId)

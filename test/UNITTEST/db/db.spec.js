@@ -49,7 +49,7 @@ describe('db', async () => {
     expect(() => operation).to.not.throw()
     expect(operation).to.have.property('prn')
     expect(operation).to.have.property('variants')
-    expect(operation.variants).to.have.nested.property('[0].objectID')
+    expect(operation).to.have.nested.property('variants[0].objectID')
   })
   after(async function () {
     await user.delete()
