@@ -19,10 +19,10 @@ module.exports = class product {
     this.isVariantsWithSamePrice = data.isVariantsWithSamePrice
     this.hasNoGstNumber = data.hasNoGstNumber
   }
-  get save () {
-    return db.create.product(this.details())
+  save () {
+    return db.create.product(this.details)
   }
-  get delete () {
+  delete () {
     return db.delete.product(this.productUid)
   }
   addVariantByProperty (size, stock, purchasedPrice, sellingPrice) {
@@ -39,26 +39,30 @@ module.exports = class product {
   }
   get details () {
     return {
-      'brandName': this.brandName,
-      'productName': this.productName,
-      'description': this.description,
-      'categories': this.categories,
-      'gender': this.gender,
-      'isVariantsWithSamePrice': this.isVariantsWithSamePrice,
-      'variants': this.variants,
-      'picturesPath': this.picturesPath,
-      'picturesUrl': this.picturesUrl,
-      'tags': this.tags,
-      'hasNoGstNumber': this.hasNoGstNumber,
-      'taxType': this.taxType,
-      'otherTax': this.otherTax,
-      'hsnCode': this.hsnCode,
-      'inclusiveAllTaxes': this.inclusiveAllTaxes,
-      'addedBy': this.addedBy,
-      'storeId': this.storeId,
+      'productUid' : returnIfDefined(this.productUid),
+      'brandName': returnIfDefined(this.brandName),
+      'productName': returnIfDefined(this.productName),
+      'description': returnIfDefined(this.description),
+      'categories': returnIfDefined(this.categories),
+      'gender': returnIfDefined(this.gender),
+      'isVariantsWithSamePrice': returnIfDefined(this.isVariantsWithSamePrice),
+      'variants': returnIfDefined(this.variants),
+      'picturesPath': returnIfDefined(this.picturesPath),
+      'picturesUrl': returnIfDefined(this.picturesUrl),
+      'tags': returnIfDefined(this.tags),
+      'hasNoGstNumber': returnIfDefined(this.hasNoGstNumber),
+      'taxType': returnIfDefined(this.taxType),
+      'otherTax': returnIfDefined(this.otherTax),
+      'hsnCode': returnIfDefined(this.hsnCode),
+      'inclusiveAllTaxes': returnIfDefined(this.inclusiveAllTaxes),
+      'addedBy': returnIfDefined(this.addedBy),
+      'storeId': returnIfDefined(this.storeId),
       'createdOn': Date.now(),
-      'isListable': this.isListable,
+      'isListable': returnIfDefined(this.isListable),
       'isDeleted': false
     }
   }
+}
+function returnIfDefined (param) {
+  return (param) || ''
 }

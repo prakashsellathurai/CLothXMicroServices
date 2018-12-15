@@ -30,21 +30,30 @@ describe('firebase admin sdk', () => {
 describe('db', async () => {
   let user = testDataprovider.user
   let store = testDataprovider.store
+  let product = testDataprovider.product
+  before(async function () {
 
-  describe('#associate', () => {
-    before(async function () {
-      await user.save()
+  })
+  let db = require('../../../functions/shared/firestore/CRUD/index')
+  it('should associate store info to user ', async () => {
+    expect(async () => {
       store.details = await user.registerTheStore(store.details)
-    })
-
-    let db = require('../../../functions/shared/firestore/CRUD/index')
-    it('should associate store info to user ', async () => {
-      expect(() => db.associate.storeInfoToUser(user.uid, store.registerUid)).to.not.throw()
-    })
-  
+      await store.save()
+      await user.save()
+      return db.associate.storeInfoToUser(user.uid, store.registerUid)
+    }).to.not.throw()
+  })
+  it('should assign random id to products', async () => {
+    product.save()
+    let operation = await db.set.RandomObjectIdToProduct(product.productUid)
+    expect(() => operation).to.not.throw()
+    expect(operation).to.have.property('prn')
+    expect(operation).to.have.property('variants')
+    expect(operation.variants).to.have.nested.property('[0].objectID')
   })
   after(async function () {
     await user.delete()
     await store.delete()
+    await product.delete()
   })
 })

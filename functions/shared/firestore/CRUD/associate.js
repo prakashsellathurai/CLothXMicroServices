@@ -18,6 +18,9 @@ function storeInfoToUser (uid, storeId) {
       })
       .then(array => array[0])
       .then(userDoc => {
+        if (typeof userDoc === 'undefined') {
+          console.error('userDoc is not defined')
+        }
         let registeredStores = (userDoc.registerOf == null) ? [] : userDoc.registerOf
         let storeArray = MergeAndRemoveDuplicatesArray(registeredStores, storeId)
         let dataToUpdate = ((userDoc.isRegister == null) ? false : userDoc.isRegister) ? {
@@ -27,7 +30,6 @@ function storeInfoToUser (uid, storeId) {
           registerOf: storeArray,
           role: 'Register'
         }
-
         let userDocRef = firestore.doc(`users/${userDoc.email}`)
         t.update(userDocRef, dataToUpdate)
         let StorePropertyObj = {
@@ -37,7 +39,7 @@ function storeInfoToUser (uid, storeId) {
         let StoreDOcRef = firestore.doc(`stores/${storeId}`)
         t.update(StoreDOcRef, StorePropertyObj)
         return userDoc.email
-      })
+      }).catch(e => console.error(e))
   })
 }
 function MergeAndRemoveDuplicatesArray (array, string) {
