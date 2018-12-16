@@ -104,7 +104,15 @@
             ]
           }
         }
-      }
+        ,
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+       "options": {
+       "outputPath": "dist/server",
+       "main": "src/main.server.ts",
+      "tsConfig": "src/tsconfig.server.json"
+        }
+      } }
     },
     "dashboard-angular-app-e2e": {
       "root": "e2e/",
