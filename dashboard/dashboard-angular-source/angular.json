@@ -3,21 +3,17 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dashboard-angular-app": {
+    "dashboard-angular-source": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "sass"
-        }
-      },
+      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/dashboard-angular-app",
+            "outputPath": "dist/dashboard-angular-source",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -27,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -61,18 +57,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dashboard-angular-app:build"
+            "browserTarget": "dashboard-angular-source:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "dashboard-angular-app:build:production"
+              "browserTarget": "dashboard-angular-source:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dashboard-angular-app:build"
+            "browserTarget": "dashboard-angular-source:build"
           }
         },
         "test": {
@@ -83,7 +79,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.sass"
+              "src/styles.css"
             ],
             "scripts": [],
             "assets": [
@@ -103,18 +99,17 @@
               "**/node_modules/**"
             ]
           }
-        }
-        ,
-        "server": {
+        }, "server":{
           "builder": "@angular-devkit/build-angular:server",
-       "options": {
-       "outputPath": "dist/server",
-       "main": "src/main.server.ts",
-      "tsConfig": "src/tsconfig.server.json"
+          "options": {
+            "outputPath": "dist/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "src/tsconfig.server.json"
+          }
         }
-      } }
+      }
     },
-    "dashboard-angular-app-e2e": {
+    "dashboard-angular-source-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -123,11 +118,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "dashboard-angular-app:serve"
+            "devServerTarget": "dashboard-angular-source:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "dashboard-angular-app:serve:production"
+              "devServerTarget": "dashboard-angular-source:serve:production"
             }
           }
         },
@@ -143,5 +138,5 @@
       }
     }
   },
-  "defaultProject": "dashboard-angular-app"
+  "defaultProject": "dashboard-angular-source"
 }
