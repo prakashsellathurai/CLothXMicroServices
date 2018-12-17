@@ -116,12 +116,26 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "none",
+              "outputHashing": "media",
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false
             }}
+        },
+        "udk": {
+          "builder": "udk:udk-builder",
+          "options": {
+            "browserTarget": "dashboard-angular-source:build",
+            "serverTarget": "dashboard-angular-source:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "dashboard-angular-source:build:production",
+              "serverTarget": "dashboard-angular-source:server:production",
+              "verbose": true
+            }
+          }
         }
       }
     },
@@ -139,6 +153,20 @@
           "configurations": {
             "production": {
               "devServerTarget": "dashboard-angular-source:serve:production"
+            }
+          }
+        },
+        "udk": {
+          "builder": "udk:udk-builder",
+          "options": {
+            "browserTarget": "angular:build",
+            "serverTarget": "angular:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular:build:production",
+              "serverTarget": "angular:server:production",
+              "verbose": true
             }
           }
         },
