@@ -14,7 +14,8 @@
     "now-build": "ng run dashboard-angular-source:udk:production",
     "now-start": "node ./dist/server/main.js",
     "start": "npm run now-start",
-    "postinstall": "npm run build:prod"
+    "postinstall": "npm run build:prod",
+    "heroku-prebuild": "npm install && npm run build:prod"
   },
   "private": true,
   "dependencies": {
