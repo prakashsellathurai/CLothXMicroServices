@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 module.exports = {
+  mode: 'production',
   entry: { server: './server.ts' },
   resolve: { extensions: ['.js', '.ts'] },
   target: 'node',
@@ -11,6 +12,7 @@ module.exports = {
     filename: '[name].js'
   },
   module: {
+
     rules: [
       { test: /\.ts$/, loader: 'ts-loader' }
     ]
@@ -20,12 +22,12 @@ module.exports = {
     // for "WARNING Critical dependency: the request of a dependency is an expression"
     new webpack.ContextReplacementPlugin(
       /(.+)?angular(\\|\/)core(.+)?/,
-      path.join(__dirname, 'src'), // location of your src
+      path.resolve(__dirname, 'src'), // location of your src
       {} // a map of your routes
     ),
     new webpack.ContextReplacementPlugin(
       /(.+)?express(\\|\/)(.+)?/,
-      path.join(__dirname, 'src'),
+      path.resolve(__dirname, 'src'),
       {}
     )
   ]
