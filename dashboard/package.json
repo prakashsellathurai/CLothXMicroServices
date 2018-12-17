@@ -1,0 +1,12 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dashboard-angular-source/dist/server/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dashboard-angular-source/dist/server/main.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

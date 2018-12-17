@@ -1,6 +1,10 @@
 {
   "name": "dashboard-angular-source",
   "version": "0.0.0",
+  "engines": {
+    "node": "8.11.1",
+    "npm":"6.4.1"
+  },
   "scripts": {
     "ng": "ng",
     "prestart": "npm run build:prod",
@@ -13,9 +17,8 @@
     "e2e": "ng e2e",
     "now-build": "ng run dashboard-angular-source:udk:production",
     "now-start": "node ./dist/server/main.js",
-    "start": "npm run now-start",
-    "postinstall": "npm run build:prod",
-    "heroku-prebuild": "npm install && npm run build:prod"
+    "start": "npm run now-start"
+
   },
   "private": true,
   "dependencies": {
