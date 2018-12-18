@@ -1,6 +1,5 @@
-.node: &node
-  image: node:8.11.1
-  before_script:
+image: node:8.11.1
+before_script:
     - npm run gtfd
     - npm install
     - npm run goback
