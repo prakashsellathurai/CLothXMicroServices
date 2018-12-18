@@ -31,5 +31,5 @@ dashboard_deployment:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - cd dashboard/angukar
+    - cd dashboard/angular
     - dpl --provider=heroku --app=clothx-dashboard --api-key=$HEROKU_API_KEY
