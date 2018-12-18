@@ -11,11 +11,6 @@ cache:
      paths:
         -   node_modules/
 
-stages:
-    - production_server_deployment
-    - test_server_deployment
-    - dashboard_deployment
-
 production_server_deployment:
   stage: production_server_deployment
   environment:
