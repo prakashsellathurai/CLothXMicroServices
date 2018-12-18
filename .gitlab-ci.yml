@@ -24,12 +24,3 @@ test_server_deployment:
      - npm run deploy
   only:
     -  develop
-
-dashboard_deployment:
-   image: ruby:latest
-   script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - cd dashboard/angular
-    - dpl --provider=heroku --app=clothx-dashboard --api-key=$HEROKU_API_KEY
