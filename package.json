@@ -1,7 +1,9 @@
 {
   "name": "functions",
+  "private": true,
   "engines": {
-    "node": "8"
+    "node": "8",
+    "npm": "6.4.1"
   },
   "description": "Cloud Functions for Firebase",
   "scripts": {
@@ -38,7 +40,6 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
-  "private": true,
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
