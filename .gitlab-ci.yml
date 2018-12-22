@@ -1,6 +1,5 @@
-.node: &node
-  image: node:8.11.1
-  before_script:
+image: node:8.11.1
+before_script:
     - npm run gtfd
     - npm install
     - npm run goback
@@ -11,15 +10,7 @@ cache:
      paths:
         -   node_modules/
 
-stages:
-    - production_server_deployment
-    - test_server_deployment
-
 production_server_deployment:
-  stage: production_server_deployment
-  environment:
-    name: production
-  <<: *node
   script:
      - npm run set_production_environment
      - npm run deploy
@@ -27,13 +18,8 @@ production_server_deployment:
      - master
 
 test_server_deployment:
-  stage: test_server_deployment
-  environment:
-     name: testDeployment
-  <<: *node
   script:
      - npm run set_development_environment
      - npm run deploy
   only:
     -  develop
-     

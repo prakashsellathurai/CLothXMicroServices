@@ -99,3 +99,4 @@ $RECYCLE.BIN/
 
 .deployenv
 package-lock.json
+/dist
