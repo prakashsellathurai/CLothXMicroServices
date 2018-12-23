@@ -26,6 +26,7 @@
     "camelcase": "5.0.0",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
+    "csv": "^5.0.1",
     "express": "^4.16.3",
     "firebase": "^5.1.0",
     "firebase-admin": "^6.2.0",

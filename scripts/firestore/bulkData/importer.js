@@ -10,54 +10,36 @@ function setTestEnv () {
       }
     })
 }
-setTestEnv()
-let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
-let firestore = admin.firestore()
-let productRef = firestore.collection('/products')
-firestore.runTransaction(t => {
-  return t
-    .get(productRef)
-    .then((docs) => {
-      let promises = []
-      docs.forEach(doc => {
-        promises.push(doc.data())
+
+function GetProductsData () {
+  let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
+  let firestore = admin.firestore()
+  let productRef = firestore.collection('/products')
+  firestore.runTransaction(t => {
+    return t
+      .get(productRef)
+      .then((docs) => {
+        let promises = []
+        docs.forEach(doc => {
+          promises.push(doc.data())
+        })
+        return promises
+      }).then((dataArray) => {
+        dataArray.forEach(data => {
+          for (var key in data) {
+            console.log(key, ':', data[key])
+          }
+        })
       })
-      return promises
-    }).then((dataArray) => {
-      dataArray.forEach(data => {
-        for (var key in data) {
-          console.log(key, ':', data[key])
-        }
-      })
-    })
-})
-function convertArrayOfObjectsToCSV (args) {
-  var result, ctr, keys, columnDelimiter, lineDelimiter, data
-
-  data = args.data || null
-  if (data == null || !data.length) {
-    return null
-  }
-
-  columnDelimiter = args.columnDelimiter || ','
-  lineDelimiter = args.lineDelimiter || '\n'
-
-  keys = Object.keys(data[0])
-
-  result = ''
-  result += keys.join(columnDelimiter)
-  result += lineDelimiter
-
-  data.forEach(function (item) {
-    ctr = 0
-    keys.forEach(function (key) {
-      if (ctr > 0) result += columnDelimiter
-
-      result += item[key]
-      ctr++
-    })
-    result += lineDelimiter
   })
-
-  return result
 }
+setTestEnv()
+const stringify = require('csv-stringify')
+stringify([{ a: '1', b: '2' }], {
+  columns: [ { key: 'a' }, { key: 'b' } ]
+}, function (err, records) {
+  console.log(records)
+  if (err) {
+    console.error(err)
+  }
+})
