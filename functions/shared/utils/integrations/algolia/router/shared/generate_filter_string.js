@@ -36,7 +36,7 @@ function filterDeterminantEngine (reqFilters, filterString) {
     return filterString
   } else {
   //  if (reqFilters.hasOwnProperty('categories') && StringTest(reqFilters.categories)) {
-    if (reqFilters.categories.gender && typeof reqFilters.categories.gender === 'string' && StringTest(reqFilters.categories.gender)) {
+    if (reqFilters.categories.gender && typeof reqFilters.categories.gender === 'string' && StringTest(reqFilters.categories.gender) && reqFilters.categories.gender !== 'ALL') {
       filterString += ConcatfacetWithAND(`gender:${reqFilters.categories.gender}`)
     }
     //  }
