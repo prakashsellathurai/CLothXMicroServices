@@ -1,16 +1,18 @@
-function readStream (filePath ) {
-  var fs = require('fs')
-  var readline = require('readline')
-  var stream = require('stream')
+function readStream (data) {
+  let stringify = require('csv-stringify')
+  let fs = require('fs')
 
-  var instream = fs.createReadStream(filePath)
-  var outstream = new stream()
-  var rl = readline.createInterface(instream, outstream)
-  rl.on('line', (line) => {
-    console.log(line)
-  })
-  rl.on('close', function () {
-    console.log('file eNEd')
+  let columns = {}
+  for (let item of Object.keys(data[0])) {
+    columns[item] = item
+  }
+ 
+  stringify(data, { header: true, columns: columns }, (err, output) => {
+    if (err) throw err
+    fs.writeFile('my.csv', output, (err) => {
+      if (err) throw err
+      console.log('my.csv saved.')
+    })
   })
 }
 module.exports = readStream
