@@ -1,5 +1,5 @@
 'use strict'
-let read = require('./reader')
+let read = require('./dataHandler')
 function setTestEnv () {
   const exec = require('child_process').exec
   exec('node ./scripts/setDeploymentenv.js clothxtest',
