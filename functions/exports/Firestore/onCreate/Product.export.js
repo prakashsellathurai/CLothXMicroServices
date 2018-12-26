@@ -8,11 +8,11 @@ function PrnAssigner (context, cloudinaryUrl) {
   let productId = context.params.productId
   return db.set.RandomObjectIdToProduct(productId, cloudinaryUrl)
 }
-async function saveToCloudinary (urlArray) {
+async function saveToCloudinary (urlArray, productId) {
   let promises = []
   for (const url of urlArray) {
-    let result = await cloudinary.save.product(url)
-    promises.push(result.secure_url)
+    let result = await cloudinary.save.product(url, productId)
+    promises.push(result)
   }
   return Promise.all(promises)
 }
@@ -21,7 +21,7 @@ function IndexItInAlgolia (data) {
 }
 
 async function MainHandler (snap, context) {
-  let cloudinaryUrl = await saveToCloudinary(snap.data().picturesUrl)
+  let cloudinaryUrl = await saveToCloudinary(snap.data().picturesUrl, snap.id)
   let data = await PrnAssigner(context, cloudinaryUrl)
 
   return IndexItInAlgolia(data)
