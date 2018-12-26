@@ -18,13 +18,6 @@ module.exports = {
       adminApiKey: '3e1e9d17ce08b6941dfa0a06c1adf943',
       SEARCH_ONLY_API_KEY: 'a38933be7a758f30bd0b1681b35fc15b'
     }},
-  OMNI_CHANNEL_INTEGRATION: {
-    FLIKART: {
-      AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token',
-      Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login',
-      FLIPKART_SELLER_API_BASE_URL: 'https://api.flipkart.net/sellers'
-    }
-  },
   RAZOR_PAY: {
     KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
     KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'

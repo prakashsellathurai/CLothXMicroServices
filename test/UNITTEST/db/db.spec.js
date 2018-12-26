@@ -26,12 +26,4 @@ describe('db', async () => {
     })
   })
 
-  describe('# objectId setter for products', function () {
-    it('should return the refined object', async () => {
-      let res = await db.set.RandomObjectIdToProduct('mJbVseEpJmoJdlvPB833')
-      expect(res).to.have.property('variants')
-      expect(res).to.have.property('prn')
-      expect(res).to.be.an('object')
-    })
-  })
 })
