@@ -56,7 +56,7 @@ function RandomObjectIdToProduct (productId, cloudinaryUrl) {
               t.update(doc.ref, {
                 prn: prn,
                 variants: variants,
-                cloudinaryUrl: cloudinaryUrl,
+                cloudinaryUrls: cloudinaryUrl,
                 createdOn: admin.firestore.FieldValue.serverTimestamp()
               })
               data.prn = prn
