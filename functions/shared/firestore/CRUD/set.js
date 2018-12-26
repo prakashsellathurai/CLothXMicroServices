@@ -6,6 +6,19 @@ let utils = require('./../utils/index')
 function invoicePendingStatusToFalse (invoiceId) {
   return update.invoicePendingStatus(invoiceId, 'false')
 }
+function cloudUrlInStore (storeId, logoUrlResult, picturesurlArrayResult) {
+  let obj = {
+    storeLogo: {
+      cloudinary: logoUrlResult
+    },
+    storePictures: {
+      cloudinary: picturesurlArrayResult
+    }
+  }
+  return firestore
+    .doc(`stores/${storeId}`)
+    .set(obj, {merge: true})
+}
 
 function productPRN (productId, PRN_VALUE) {
   return firestore
@@ -24,15 +37,7 @@ function objectIDtoProduct (productId, variants) {
       merge: true
     })
 }
-function cloudinaryUrl (productId, urlArray) {
-  return firestore
-    .doc(`/products/${productId}`)
-    .set({
-      cloudinaryUrl: urlArray
-    }, {
-      merge: true
-    })
-}
+
 function RandomObjectIdToProduct (productId, cloudinaryUrl) {
   let productDocRef = firestore
     .doc(`/products/${productId}`)
@@ -65,5 +70,6 @@ module.exports = {
   invoicePendingStatusToFalse: invoicePendingStatusToFalse,
   productPRN: productPRN,
   objectIDtoProduct: objectIDtoProduct,
-  RandomObjectIdToProduct: RandomObjectIdToProduct
+  RandomObjectIdToProduct: RandomObjectIdToProduct,
+  cloudUrlInStore: cloudUrlInStore
 }
