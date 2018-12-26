@@ -1,11 +1,26 @@
 let cloudinaryClient = require('./../../../environment/initCloudinary').withCredentials()
-const product = (url) => cloudinaryClient
+const product = (url, productId) => cloudinaryClient
   .v2
   .uploader
   .upload(
     url,
     {
-      folder: 'products',
+      folder: `products/${productId}`,
+      use_filename: true
+    }
+    , function (err, result) {
+      if (err) console.error(err)
+      else {
+        return result
+      }
+    })
+const store = (url, storeId) => cloudinaryClient
+  .v2
+  .uploader
+  .upload(
+    url,
+    {
+      folder: `store/${storeId}`,
       use_filename: true
     }
     , function (err, result) {
@@ -15,5 +30,6 @@ const product = (url) => cloudinaryClient
       }
     })
 module.exports = {
-  product: product
+  product: product,
+  store: store
 }
