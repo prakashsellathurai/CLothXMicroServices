@@ -22,6 +22,14 @@ module.exports = {
     KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
     KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'
   },
+    OMNI_CHANNEL_INTEGRATION: {
+    FLIKART: {
+      AUTH_API_URL: 'https://api.flipkart.net/oauth-service/oauth/token',
+      Seller_APIs_Developer_Admin_LOGIN_URL: 'https://api.flipkart.net/oauth-register/login',
+      FLIPKART_SELLER_API_BASE_URL: 'https://api.flipkart.net/sellers'
+    }
+  },
+
   CLOUDINARY: {
     prod: {
       cloud_name: 'spoteasy',
