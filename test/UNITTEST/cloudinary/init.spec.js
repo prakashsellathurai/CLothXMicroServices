@@ -15,5 +15,23 @@ describe('cloudinary client', () => {
     expect(sv).to.be.a('object')
     expect(sv.secure_url).to.be.a('string')
   })
+  it('should save array of pictures',async () => {
+    let urlarray = [
+      'https://opensource.org/files/osi_keyhole_300X300_90ppi_0.png',
+      'https://gadget.co.za/wp-content/uploads/2018/11/1YNBTPaCNBNWLoT7XAbJ1Lw.png',
+      'https://imgs.xkcd.com/comics/christmas_eve_eve.png',
+      'https://imgs.xkcd.com/comics/phone_alarm.png'
+    ]
+    let saveToCloudinary = async (urlArray) => {
+      let promises = []
+      for (const url of urlArray) {
+        let result = await save.product(url)
+        promises.push(result.secure_url)
+      }
+      return Promise.all(promises)
+    }
+    let save__ = await saveToCloudinary(urlarray)
+    expect(() => save__).to.not.throw()
+    expect(save__).to.be.a('array')
+  })
 })
-

@@ -23,7 +23,7 @@ function IndexItInAlgolia (data) {
 async function MainHandler (snap, context) {
   let cloudinaryUrl = await saveToCloudinary(snap.data().picturesUrl)
   let data = await PrnAssigner(context, cloudinaryUrl)
- 
+
   return IndexItInAlgolia(data)
 }
 
