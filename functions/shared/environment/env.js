@@ -21,5 +21,17 @@ module.exports = {
   RAZOR_PAY: {
     KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
     KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'
+  },
+  CLOUDINARY: {
+    prod: {
+      cloud_name: 'spoteasy',
+      api_key: '225699151327223',
+      api_secret: '-PGISz3YDOADpehEuUTkCI7__No'
+    },
+    test: {
+      cloud_name: 'selfegeg',
+      api_key: '133558435818499',
+      api_secret: 'pyoe_PbqSoMHmtdEF3nERWG5Cuc'
+    }
   }
 }

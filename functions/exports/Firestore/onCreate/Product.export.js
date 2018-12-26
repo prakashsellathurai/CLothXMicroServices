@@ -2,19 +2,29 @@
 const db = require('./../../../shared/firestore/CRUD/index')
 const functions = require('firebase-functions')
 const algolia = require('./../../../shared/utils/integrations/algolia/index')
+const cloudinary = require('./../../../shared/utils/integrations/cloudinary/index')
 
-function PrnAssigner (context) {
+function PrnAssigner (context, cloudinaryUrl) {
   let productId = context.params.productId
-  return db.set.RandomObjectIdToProduct(productId)
+  return db.set.RandomObjectIdToProduct(productId, cloudinaryUrl)
 }
-
+async function saveToCloudinary (urlArray) {
+  let promises = []
+  for (const url of urlArray) {
+    let result = await cloudinary.save.product(url)
+    promises.push(result.secure_url)
+  }
+  return Promise.all(promises)
+}
 function IndexItInAlgolia (data) {
   return algolia.save.product(data)
 }
 
-function MainHandler (snap, context) {
-  return PrnAssigner(context)
-    .then((data) => IndexItInAlgolia(data))
+async function MainHandler (snap, context) {
+  let cloudinaryUrl = await saveToCloudinary(snap.data().picturesUrl)
+  let data = await PrnAssigner(context, cloudinaryUrl)
+ 
+  return IndexItInAlgolia(data)
 }
 
 // ==================================================================================================
