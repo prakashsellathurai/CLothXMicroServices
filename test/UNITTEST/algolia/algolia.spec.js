@@ -9,4 +9,3 @@ describe('algolia client', () => {
     expect(() => admin).to.not.throw()
   })
 })
-

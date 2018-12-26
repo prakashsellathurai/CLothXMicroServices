@@ -24,7 +24,16 @@ function objectIDtoProduct (productId, variants) {
       merge: true
     })
 }
-function RandomObjectIdToProduct (productId) {
+function cloudinaryUrl (productId, urlArray) {
+  return firestore
+    .doc(`/products/${productId}`)
+    .set({
+      cloudinaryUrl: urlArray
+    }, {
+      merge: true
+    })
+}
+function RandomObjectIdToProduct (productId, cloudinaryUrl) {
   let productDocRef = firestore
     .doc(`/products/${productId}`)
   return firestore
@@ -42,6 +51,7 @@ function RandomObjectIdToProduct (productId) {
               t.update(doc.ref, {
                 prn: prn,
                 variants: variants,
+                cloudinaryUrl: cloudinaryUrl,
                 createdOn: admin.firestore.FieldValue.serverTimestamp()
               })
               data.prn = prn
