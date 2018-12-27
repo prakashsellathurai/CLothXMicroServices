@@ -33,6 +33,8 @@ async function StorePicturesSync (document, oldDocument, storeId) {
           if (cloudinary.length === localDownloadUrls.length) {
             return updatePictures(cloudinary, localDownloadUrls)
             // edit it
+          } else if (localDownloadUrls.length === 0) {
+            return false
           } else {
             let cloudinaryResults = await savepictures(localDownloadUrls, storeId)
             return db.update.store(storeId, {
@@ -74,6 +76,8 @@ async function LogoImagesync (document, oldDocument, storeId) {
             }
           })
           // create in cloudinary
+        } else if (document.storeLogo.localDownloadUrl === '') {
+          return false
         } else {
           let publicId = document.cloudinary.public_id
           return cloudinary.update.image(localDownloadUrl, publicId)
