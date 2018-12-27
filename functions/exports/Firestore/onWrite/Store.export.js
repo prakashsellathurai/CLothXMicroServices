@@ -38,20 +38,16 @@ async function StorePicturesSync (document, oldDocument, storeId) {
             return false
           } else {
             let cloudinaryResults = await savepictures(localDownloadUrls, storeId)
-            return db.update.store(storeId, {
-              storePictures: {
-                cloudinary: cloudinaryResults
-              }
-            })
+            let obj = {}
+            obj['storePictures.cloudinary'] = cloudinaryResults
+            return db.update.store(storeId, obj)
             // create in cloudinary
           }
         } else {
           let cloudinaryResults = await savepictures(localDownloadUrls, storeId)
-          return db.update.store(storeId, {
-            storePictures: {
-              cloudinary: cloudinaryResults
-            }
-          })
+          let obj = {}
+          obj['storePictures.cloudinary'] = cloudinaryResults
+          return db.update.store(storeId, obj)
           // create it
         }
       }
@@ -71,11 +67,9 @@ async function LogoImagesync (document, oldDocument, storeId) {
       if (checkNested(document, 'storeLogo', 'cloudinary')) {
         if (document.storeLogo.cloudinary === '') {
           let result = await cloudinary.save.store.logo(localDownloadUrl, storeId)
-          return db.update.store(storeId, {
-            storeLogo: {
-              cloudinary: result
-            }
-          })
+          let obj = {}
+          obj['storeLogo.cloudinary'] = result
+          return db.update.store(storeId, obj)
           // create in cloudinary
         } else if (document.storeLogo.localDownloadUrl === '') {
           // delete it
@@ -89,10 +83,9 @@ async function LogoImagesync (document, oldDocument, storeId) {
         }
       } else {
         let result = await cloudinary.save.store.logo(localDownloadUrl, storeId)
-        return db.update.store(storeId, {
-          storeLogo: {
-            cloudinary: result
-          }})
+        let obj = {}
+        obj['storeLogo.cloudinary'] = result
+        return db.update.store(storeId, obj)
         // create it
       }
     }
