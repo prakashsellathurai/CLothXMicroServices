@@ -21,7 +21,7 @@ module.exports = functions
 async function StorePicturesSync (document, oldDocument, storeId) {
   if (checkNested(document, 'storePictures', 'localDownloadUrls')) {
     let localDownloadUrls = document.storePictures.localDownloadUrls
-    let oldLocalDownloadurls = oldDocument.storePictures.localDownloadUrls
+    let oldLocalDownloadurls = checkNested(oldDocument, 'storePictures', 'localDownloadUrls') ? oldDocument.storePictures.localDownloadUrls : []
 
     if (isArrayEqual(localDownloadUrls, oldLocalDownloadurls)) {
       console.log('storePictures not modified')
@@ -34,6 +34,7 @@ async function StorePicturesSync (document, oldDocument, storeId) {
             return updatePictures(cloudinary, localDownloadUrls)
             // edit it
           } else if (localDownloadUrls.length === 0) {
+            // delete it
             return false
           } else {
             let cloudinaryResults = await savepictures(localDownloadUrls, storeId)
@@ -61,7 +62,7 @@ async function StorePicturesSync (document, oldDocument, storeId) {
 async function LogoImagesync (document, oldDocument, storeId) {
   if (checkNested(document, 'storeLogo', 'localDownloadUrl')) {
     let localDownloadUrl = document.storeLogo.localDownloadUrl
-    let oldLocalDownloadurl = oldDocument.storeLogo.localDownloadUrl
+    let oldLocalDownloadurl = checkNested(oldDocument, 'storeLogo', 'localDownloadUrl') ? oldDocument.storeLogo.localDownloadUrl : ''
 
     if (_.isEqual(localDownloadUrl, oldLocalDownloadurl)) {
       console.log('storeLogo not modified')
@@ -77,11 +78,14 @@ async function LogoImagesync (document, oldDocument, storeId) {
           })
           // create in cloudinary
         } else if (document.storeLogo.localDownloadUrl === '') {
+          // delete it
           return false
-        } else {
+        } else if (checkNested(document, 'cloudinary', 'public_id')) {
           let publicId = document.cloudinary.public_id
           return cloudinary.update.image(localDownloadUrl, publicId)
           // edit it
+        } else {
+          return false
         }
       } else {
         let result = await cloudinary.save.store.logo(localDownloadUrl, storeId)
@@ -117,8 +121,10 @@ async function updatePictures (cloudinaryArray, localDownloadUrls) {
   let promises = []
   for (let index = 0; index < cloudinaryArray.length; index++) {
     const cloudinaryObj = cloudinaryArray[index]
-    let result = await cloudinary.update.image(localDownloadUrls[index], cloudinaryObj.public_id)
-    promises.push(result)
+    if (!checkNested(cloudinaryObj, 'public_id')) {
+      let result = await cloudinary.update.image(localDownloadUrls[index], cloudinaryObj.public_id)
+      promises.push(result)
+    }
   }
   return Promise.all(promises)
 }
