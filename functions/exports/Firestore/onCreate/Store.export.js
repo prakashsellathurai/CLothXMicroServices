@@ -63,7 +63,6 @@ function OnCreateStoreHandler (snap, context) {
   return db
     .associate
     .storeInfoToUser(registerUid, storeId)
-    .then(savecloudinaryurlToDb(snap))
     .then(() => {
       const data = snap.data()
       data.objectID = snap.id
