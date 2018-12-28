@@ -31,22 +31,25 @@ function MainHandler (snap, context) {
         .update
         .customerReward(givenCustomerData)
     }).then(() => {
-      let Message = `We hope you enjoyed your shopping.
-                           We would Love to hear your feedback.
-                           Click https://www.spoteasy.in/u/invoice/${invoiceId}`
-      if (sendSmsBoolean) {
-        return sendMessage(customerNo, Message)
-          .then((body) => JSON.parse(body))
-          .then((body) => {
-            let messageSuccess = (body.type === 'success')
-            let smsId = (messageSuccess) ? body.message : utils.generateId()
-            let status = body.type
-            let errorDescription = body.message
-            return db.utils.sms.log.OnInvoiceReport(storeId, smsId, customerNo, status, errorDescription)
-          })
-      } else {
-        return Promise.resolve(0)
-      }
+      return utils.checkEnv().then((bool) => {
+        let link = (bool) ? `https://www.spoteasy.in/u/invoice/${invoiceId}` : `https://spoteasytest.firebaseapp.com/u/invoice/${invoiceId}`
+        let Message = `We hope you enjoyed your shopping.
+        We would Love to hear your feedback.
+        Click ${link}`
+        if (sendSmsBoolean) {
+          return sendMessage(customerNo, Message)
+            .then((body) => JSON.parse(body))
+            .then((body) => {
+              let messageSuccess = (body.type === 'success')
+              let smsId = (messageSuccess) ? body.message : utils.generateId()
+              let status = body.type
+              let errorDescription = body.message
+              return db.utils.sms.log.OnInvoiceReport(storeId, smsId, customerNo, status, errorDescription)
+            })
+        } else {
+          return Promise.resolve(0)
+        }
+      })
     })
     .catch((err) => {
       if (err) {
