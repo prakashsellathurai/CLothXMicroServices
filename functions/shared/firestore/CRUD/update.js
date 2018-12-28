@@ -56,7 +56,7 @@ function customerReward (customer) {
                   'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
                   'lastVisit': exitingCustomerData.createdOn
                 }
-                transaction.set(customerOnStoreDocRef, rewardData,  { merge: true })
+                transaction.set(customerOnStoreDocRef, rewardData, { merge: true })
               }
             })
             .then(() => Promise.resolve())
@@ -102,9 +102,15 @@ function returnCountInReward (customerNo, totalReturn) {
         })
     })
 }
+function store (storeid, obj) {
+  return firestore
+    .doc(`stores/${storeid}`)
+    .update(obj)
+}
 module.exports = {
   customerReward: customerReward,
   invoiceOnProductsReturn: invoiceOnProductsReturn,
   invoicePendingStatus: invoicePendingStatus,
-  returnCountInReward: returnCountInReward
+  returnCountInReward: returnCountInReward,
+  store: store
 }
