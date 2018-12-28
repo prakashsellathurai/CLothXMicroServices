@@ -44,8 +44,8 @@ describe('db', async () => {
     }).to.not.throw()
   })
   it('should assign random id to products', async () => {
-    product.save()
-    let operation = await db.set.RandomObjectIdToProduct(product.productUid)
+    await product.save()
+    let operation = await db.set.RandomObjectIdToProduct(product.productUid, [])
     expect(() => operation).to.not.throw()
     expect(operation).to.have.property('prn')
     expect(operation).to.have.property('variants')

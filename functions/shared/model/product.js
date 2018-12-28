@@ -19,7 +19,7 @@ module.exports = class product {
     this.isVariantsWithSamePrice = data.isVariantsWithSamePrice
     this.hasNoGstNumber = data.hasNoGstNumber
   }
-  save () {
+  async save () {
     return db.create.product(this.details)
   }
   delete () {
