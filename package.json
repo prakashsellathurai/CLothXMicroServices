@@ -14,7 +14,8 @@
     "set_production_environment": "firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxnet",
     "set_development_environment": "firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxtest",
     "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_ACCESS_TOKEN",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "setup:dev":"npm install && npm test"
   },
   "dependencies": {
     "@google-cloud/storage": "^1.7.0",
