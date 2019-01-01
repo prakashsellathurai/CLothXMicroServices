@@ -36,4 +36,5 @@ function GetProductsData () {
 }
 
 setTestEnv()
-GetProductsData().then(data => read(data))
+GetProductsData()
+.then(data => read(data))
