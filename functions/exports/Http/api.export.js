@@ -1,13 +1,17 @@
+/**
+ * cloud https request module to handle api request
+ *
+ * @async
+ * @description api request handler for clothx.net
+ */
 const functions = require('firebase-functions')
 const express = require('express')
 const cors = require('cors')
 const app = express()
 
-// router imports
-const searchRouter = require('./../../shared/utils/integrations/algolia/router/search')
-
-// router redirects
 app.use(cors({ origin: true }))
-app.use('/search', searchRouter)
+
+const apiHandler = require('./../../shared/utils/api/index')
+app.use('/', apiHandler)
 
 module.exports = functions.https.onRequest(app)

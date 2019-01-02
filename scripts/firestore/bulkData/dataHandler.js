@@ -1,6 +1,4 @@
 const _ = require('lodash')
-const timestamp = require('firebase').firestore.Timestamp
-const geopoint = require('firebase').firestore.GeoPoint
 async function readStream (data) {
   let stringify = require('csv-stringify')
   let fs = require('fs')
@@ -26,46 +24,45 @@ async function readStream (data) {
  */
 async function columnEstimator (data) {
   let maxlength = 0
- for (let product of data) {
-  let length = await keyCalculator(product)
-  maxlength = (maxlength > length) ? maxlength : length
- }
-return data
+  for (let product of data) {
+    let length = await keyCalculator(product)
+    maxlength = (maxlength > length) ? maxlength : length
+  }
+  return data
 }
 /**
- * 
- * @param {object} product data 
+ * calculates the key length of product data
+ * @param {object} product data
  * @returns {number} key length of the product data
  */
-async function keyCalculator(product) {
+async function keyCalculator (product) {
   let length = 0
   for (const key in product) {
     if (product.hasOwnProperty(key)) {
-      const element = product[key];
+      const element = product[key]
       if (key === 'variants') {
-       length += product[key].length
+        length += element.length
       } else {
-        length+=1
+        length += 1
       }
-   
     }
   }
-  
+
   return length
 }
 /**
  * formats the firetsore data
  * @param {array} data json data from firetsore
- * @returns {array} data formatted data 
+ * @returns {array} data formatted data
  */
-async function dataFormatter(data) {
-  
+async function dataFormatter (data) {
+
 }
 /**
  * writes data to the file
- * @param {data} data 
+ * @param {data} data
  */
-async function dataWriter(data) {
-  
+async function dataWriter (data) {
+
 }
 module.exports = readStream

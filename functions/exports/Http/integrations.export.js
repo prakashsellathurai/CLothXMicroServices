@@ -7,11 +7,11 @@ const FlipKartRouter = require('../../shared/utils/integrations/flipkart/router/
 app.use(cors({ origin: true }))
 app.post('/', (req, res) => {
   console.log(req)
-  res.json({success: true})
+  res.json({ success: true })
 })
 app.get('/', (req, res) => {
   console.log(req)
-  res.json({success: true})
+  res.json({ success: true })
 })
 app.use('/flipkart', FlipKartRouter)
 
