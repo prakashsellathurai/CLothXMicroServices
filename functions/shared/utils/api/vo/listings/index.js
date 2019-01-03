@@ -100,4 +100,17 @@ listingsRouter.get('/:listId', (req, res) => {
 listingsRouter.post('delete/all', (req, res) => {
 
 })
+/**
+ * Route to generate listings from uploaded products
+ * @name post:api/v0/listings/generate
+ * @function
+ * @memberof module:api/v0/listings
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+listingsRouter.post('/generate', (req, res) => {
+
+})
+
 module.exports = listingsRouter

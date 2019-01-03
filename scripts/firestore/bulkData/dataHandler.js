@@ -1,11 +1,19 @@
 const _ = require('lodash')
+const FILTER_FIELDS = [
+  'cloudinaryUrl',
+  'isDeleted',
+  'addedBy',
+  'hasNoGstNumber',
+  'isvariantsWithSamePrice',
+  'productUid'
+]
 async function readStream (data) {
   let stringify = require('csv-stringify')
   let fs = require('fs')
   let path = require('path')
   let DESTINATION_FILE = path.resolve(__dirname, 'data.csv')
   let columns = await columnEstimator(data)
-  console.log(data)
+  console.log(columns)
   data = await dataFormatter(data)
   return dataWriter(data)
 
@@ -24,11 +32,14 @@ async function readStream (data) {
  */
 async function columnEstimator (data) {
   let maxlength = 0
+  let columnns = []
   for (let product of data) {
     let length = await keyCalculator(product)
+    columnns = _.union(columnns, _.keys(product))
     maxlength = (maxlength > length) ? maxlength : length
   }
-  return data
+  columnns = _.filter(columnns, FILTER_FIELDS)
+  return columnns
 }
 /**
  * calculates the key length of product data
