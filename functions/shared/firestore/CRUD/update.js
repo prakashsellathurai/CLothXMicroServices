@@ -24,7 +24,9 @@ function customerReward (customer) {
                   'totalCostOfPurchase': customer.totalPrice,
                   'firstVisit': customer.createdOn,
                   'totalNoOfVisit': 1,
-                  'totalProductsReturn': 0
+                  'totalProductsReturn': 0,
+                  'lastVisitInMilli': Date.now(),
+                  'differenceInVisits': null
                 }
                 transaction.set(customerDocRef, data)
               } else {
@@ -35,26 +37,34 @@ function customerReward (customer) {
                   'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
                   'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
                   'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-                  'lastVisit': exitingCustomerData.createdOn
+                  'lastVisit': exitingCustomerData.createdOn,
+                  'lastVisitInMilli': Date.now(),
+                  'differenceInVisits': Date.now() - currentStateOfCustomerReward.lastVisitInMilli
                 }
                 transaction.set(customerDocRef, data, {merge: true})
               }
               if (!storeDocDataSnapshot.exists) {
                 const rewardData = {
+                  'customerName': customer.customerName,
                   'noOfItemsPurchased': customer.totalQuantity,
                   'totalCostOfPurchase': customer.totalPrice,
                   'firstVisit': customer.createdOn,
-                  'totalNoOfVisit': 1
+                  'totalNoOfVisit': 1,
+                  'lastVisitInMilli': Date.now(),
+                  'differenceInVisits': null
                 }
                 transaction.set(customerOnStoreDocRef, rewardData)
               } else {
                 let currentStateOfCustomerReward = storeDocDataSnapshot.data()
                 let exitingCustomerData = customer
                 let rewardData = {
+                  'customerName': customer.customerName,
                   'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
                   'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
                   'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-                  'lastVisit': exitingCustomerData.createdOn
+                  'lastVisit': exitingCustomerData.createdOn,
+                  'lastVisitInMilli': Date.now(),
+                  'differenceInVisits': Date.now() - currentStateOfCustomerReward
                 }
                 transaction.set(customerOnStoreDocRef, rewardData, { merge: true })
               }
