@@ -17,7 +17,9 @@ function dataNormalizer (dataArray) {
     let variants = []
     dataGroup.forEach(element => {
       let variant = parseVariants(element)
-      variants.push(variant)
+      if (variant.stock !== 0) {
+        variants.push(variant)
+      }
     })
     refinedObject = _.cloneDeep(_.omit(dataGroup[0], DISTINCT_PRODUCT_PROPERTIES))
     refinedObject['variants'] = variants
