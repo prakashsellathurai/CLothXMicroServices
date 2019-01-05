@@ -5,7 +5,12 @@ const FILTER_FIELDS = [
   'addedBy',
   'hasNoGstNumber',
   'isvariantsWithSamePrice',
-  'productUid'
+  'isVariantsWithSamePrice',
+  'productUid',
+  'cloudinaryUrls',
+  'views',
+  'isListable',
+  'picturesPath'
 ]
 async function readStream (data) {
   let stringify = require('csv-stringify')
@@ -33,12 +38,17 @@ async function readStream (data) {
 async function columnEstimator (data) {
   let maxlength = 0
   let columnns = []
+  let clearance = 0
   for (let product of data) {
     let length = await keyCalculator(product)
     columnns = _.union(columnns, _.keys(product))
     maxlength = (maxlength > length) ? maxlength : length
+    clearance = maxlength - length
   }
-  columnns = _.filter(columnns, FILTER_FIELDS)
+  columnns = _.difference(columnns, FILTER_FIELDS)
+  columnns = _.sortBy(columnns, (o) => o.charCodeAt(0))
+  let columnnsLength = columnns.length + clearance
+  console.log(columnnsLength)
   return columnns
 }
 /**
