@@ -19,7 +19,7 @@ searchRouter
     let page = (isDefined(body.page)) ? body.page : 0
 
     let logObject = {
-      query: body,
+      body: body,
       requestHeaders: req.headers
     }// @depreceted : will change in future
 
@@ -37,7 +37,7 @@ searchRouter
         return dataParser(index, query, page, filters, [])
           .then((response) => Promise.all([
             Promise.resolve(res.json(response)),
-            db.log.productSearch(logObject)
+            Promise.resolve((notValidToLog(query)) ? 0 : db.log.productSearch(logObject))
           ]))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
@@ -55,7 +55,7 @@ searchRouter.post('/store', (req, res) => {
   let body = req.body
   let query = body.query
   let logObject = {
-    query: body,
+    body: body,
     requestHeaders: req.headers
   }
   let page = (isDefined(body.page)) ? body.page : 0
@@ -74,8 +74,8 @@ searchRouter.post('/store', (req, res) => {
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])
           .then((response) => Promise.all([
-            res.json(response),
-            db.log.storeSearch(logObject, storeId)
+            Promise.resolve(res.json(response)),
+            Promise.resolve((notValidToLog(query)) ? 0 : db.log.storeSearch(logObject, storeId))
           ]))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
@@ -96,7 +96,7 @@ searchRouter.post('/store_all', (req, res) => {
   let page = (isDefined(body.page)) ? body.page : 0
   let storeId = body.storeId
   let logObject = {
-    query: body,
+    body: body,
     requestHeaders: req.headers
   }
   if (typeof storeId === 'undefined') {
@@ -111,10 +111,11 @@ searchRouter.post('/store_all', (req, res) => {
       let filters = GENERATE_FILTER_STRING._for._post.store_all(storeId, reqFilters)
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
+
         return dataParser(index, query, page, filters, [])
           .then((response) => Promise.all([
-            res.json(response),
-            db.log.storeSearch(logObject, storeId)
+            Promise.resolve(res.json(response)),
+            Promise.resolve((notValidToLog(query)) ? 0 : db.log.storeSearch(logObject, storeId))
           ]))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
@@ -142,5 +143,7 @@ searchRouter.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send(ERROR_RESPONSE.SERVER_ERROR)
 })
-
+function notValidToLog (query) {
+  return (query === '') || query === null || query === undefined
+}
 module.exports = searchRouter
