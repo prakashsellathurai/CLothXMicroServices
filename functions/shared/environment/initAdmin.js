@@ -10,11 +10,14 @@ function setCredentials () {
     let deploymentProjectConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '/.deployenv'), 'utf8'))
     let serviceAccount = (deploymentProjectConfig.production) ? ProductionEnvServiceAccount : TestEnvServiceAccount
     let storageBucket = deploymentProjectConfig.storage.bucket
+    let databaseURL = deploymentProjectConfig.databaseURL
     admin.initializeApp({
+      databaseURL: databaseURL,
       credential: admin.credential.cert(serviceAccount),
       storageBucket: storageBucket
     })
     let firestore = admin.firestore()
+    let db = admin.database()
     firestore.settings(env.FIRESTORE_SETTINGS)
     return admin
   } catch (e) {
