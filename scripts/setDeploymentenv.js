@@ -7,7 +7,8 @@ process
       production: (val === 'clothxnet'),
       storage: {
         bucket: `${val}.appspot.com`
-      }
+      },
+      databaseURL: `https://${val}.firebaseio.com`
     }
     var path = require('path')
     var json = JSON.stringify(obj)

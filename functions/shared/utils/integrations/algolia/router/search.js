@@ -36,7 +36,7 @@ searchRouter
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])
           .then((response) => Promise.all([
-            res.json(response),
+            Promise.resolve(res.json(response)),
             db.log.productSearch(logObject)
           ]))
       } else {
@@ -54,6 +54,10 @@ searchRouter
 searchRouter.post('/store', (req, res) => {
   let body = req.body
   let query = body.query
+  let logObject = {
+    query: body,
+    requestHeaders: req.headers
+  }
   let page = (isDefined(body.page)) ? body.page : 0
   let storeId = body.storeId
   if (typeof storeId === 'undefined') {
@@ -69,7 +73,10 @@ searchRouter.post('/store', (req, res) => {
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])
-          .then((response) => res.json(response))
+          .then((response) => Promise.all([
+            res.json(response),
+            db.log.storeSearch(logObject, storeId)
+          ]))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
       }
@@ -88,6 +95,10 @@ searchRouter.post('/store_all', (req, res) => {
   let query = body.query
   let page = (isDefined(body.page)) ? body.page : 0
   let storeId = body.storeId
+  let logObject = {
+    query: body,
+    requestHeaders: req.headers
+  }
   if (typeof storeId === 'undefined') {
     res.status(400).json(ERROR_RESPONSE.PARAM_IS_UNDEFINED('storeId'))
   } else {
@@ -101,7 +112,10 @@ searchRouter.post('/store_all', (req, res) => {
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
         return dataParser(index, query, page, filters, [])
-          .then((response) => res.json(response))
+          .then((response) => Promise.all([
+            res.json(response),
+            db.log.storeSearch(logObject, storeId)
+          ]))
       } else {
         res.status(400).json(ERROR_RESPONSE.INVALID_REQUEST_OBJECT('filters', 'filters in body should not satisfy the server request'))
       }
