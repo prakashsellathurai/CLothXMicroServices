@@ -11,7 +11,11 @@ const productSearch = (query) => db
     ...query,
     timestamp: admin.database.ServerValue.TIMESTAMP
   })
-
+/**
+ * logs the store search queries
+ * @param {object} object representing search query
+ * @returns {object} A Promise resolved with a DocumentReference pointing to the newly created document after it has been written to the backend.
+*/
 const storeSearch = (query, storId) => db
   .ref(`logs/searches/stores/${storId}`)
   .push({
