@@ -1,5 +1,6 @@
-const util = require('util')
+var Promise = require('bluebird')
 const exec = require('child_process').exec
+const _ = require('lodash')
 async function setTestEnv () {
   try {
     return execPromise('node ./scripts/setDeploymentenv.js clothxtest')
@@ -7,21 +8,49 @@ async function setTestEnv () {
     console.error(e.message)
   }
 }
-function execPromise (command) {
-  return new Promise(function (resolve, reject) {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-        return
-      }
-
-      resolve(stdout.trim())
+function execPromise (cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) return resolve(false)
+      if (stderr) return resolve(false)
+      resolve(true)
     })
   })
 }
-function getdb () {
-  let admin = require('firebase-admin')
+async function getdb () {
+  let admin = require('./../../../../functions/shared/environment/initAdmin').setCredentials()
   let db = admin.database()
-  return db.ref('logs/searches/products').toJSON()
+  let values = await db
+    .ref('logs/searches/products')
+    .orderByChild('timestamp')
+    .once('value')
+    .then((data) => _.values(data.val()))
+  return values
 }
-setTestEnv().then(() => console.log(getdb()))
+function checkIFInside (coordinates) {
+  var geolib = require('geolib')
+  return geolib.isPointInCircle(
+    { latitude: 10.9416207, longitude: 76.9583311 },
+    coordinates,
+    200
+  )
+}
+setTestEnv().then((val) => {
+  if (val) {
+    return getdb()
+      .then(logs => {
+        for (const log of logs) {
+          let location = log.body.location
+          if (typeof location !== 'undefined') {
+            if (checkIFInside({
+              latitude: location.latlong._lat,
+              longitude: location.latlong._long
+            })) {
+              console.log('true')
+            }
+            console.log(location)
+          }
+        }
+      })
+  }
+})
