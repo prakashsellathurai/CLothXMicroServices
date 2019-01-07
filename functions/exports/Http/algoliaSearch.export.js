@@ -7,7 +7,7 @@ const app = express()
 const searchRouter = require('./../../shared/utils/integrations/algolia/router/search')
 
 // router redirects
-app.use(cors({origin: true}))
+app.use(cors({ origin: true }))
 app.use('/search', searchRouter)
 
 module.exports = functions.https.onRequest(app)
