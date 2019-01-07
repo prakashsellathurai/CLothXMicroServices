@@ -23,7 +23,7 @@ function reduceProductQuantity (productUid, size, quantityToReduce) {
         .then((doc) => {
           let variants = doc.data().variants
           let reducedVariants = reduceStock(variants, size, quantityToReduce)
-          return transaction.update(doc.ref, {variants: reducedVariants})
+          return transaction.update(doc.ref, { variants: reducedVariants })
         })
     })
 }
@@ -58,7 +58,7 @@ function productsOnInvoice (invoiceId, productUid, size, singleUnitPrize, quanti
               }
             }
           }
-          return transaction.update(doc.ref, {cartProducts: cartProductsToUpdate})
+          return transaction.update(doc.ref, { cartProducts: cartProductsToUpdate })
         })
     })
 }
