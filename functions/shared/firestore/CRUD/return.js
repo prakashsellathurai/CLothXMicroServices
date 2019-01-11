@@ -13,6 +13,7 @@ function productsOnLocalInventory (cartProducts) {
 }
 
 function ReturnProductQuantity (productUid, size, quantityToReturn) {
+  console.log(productUid)
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
