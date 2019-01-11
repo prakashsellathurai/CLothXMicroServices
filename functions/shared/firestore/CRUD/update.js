@@ -1,7 +1,6 @@
-let db = require('./index')
-let admin = require('firebase-admin')
-let firestore = admin.firestore()
-
+const admin = require('firebase-admin')
+const firestore = admin.firestore()
+const db = require('./../../../shared/firestore/CRUD/index')
 
 function customerReward (customer) {
   let customerDocRef = firestore
