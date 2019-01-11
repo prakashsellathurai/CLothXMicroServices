@@ -16,14 +16,11 @@ function ReturnProductQuantity (productUid, size, quantityToReturn) {
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((doc) => {
-          let variants = doc.data().variants
-          let returnedVariants = returnStock(variants, size, quantityToReturn)
-          return transaction.update(doc.ref, {variants: returnedVariants})
-        })
+    .runTransaction(async transaction => {
+      const doc = await transaction.get(productDocRef);
+      let variants = doc.data().variants;
+      let returnedVariants = returnStock(variants, size, quantityToReturn);
+      return transaction.update(doc.ref, { variants: returnedVariants });
     })
 }
 
