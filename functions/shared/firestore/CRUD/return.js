@@ -1,6 +1,7 @@
 let admin = require('firebase-admin')
 let firestore = admin.firestore()
-function productsOnLocalInventory (cartProducts) {
+function productsOnLocalInventory () {
+  console.log(cartProducts)
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
@@ -13,7 +14,7 @@ function productsOnLocalInventory (cartProducts) {
 }
 
 function ReturnProductQuantity (productUid, size, quantityToReturn) {
-  console.log(productUid)
+
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
