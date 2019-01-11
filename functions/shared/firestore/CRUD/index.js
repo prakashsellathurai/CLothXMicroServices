@@ -8,7 +8,7 @@ const _get = require('./get')
 const _set = require('./set')
 const _assign = require('./assign')
 const _timestamp = require('./timestamp')
-
+const _log = require('./log')
 const utils = require('./../utils/index')
 module.exports = {
   update: _update,
@@ -20,5 +20,6 @@ module.exports = {
   get: _get,
   set: _set,
   timestamp: _timestamp,
-  utils: utils
+  utils: utils,
+  log: _log
 }
