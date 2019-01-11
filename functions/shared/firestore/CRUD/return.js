@@ -26,7 +26,7 @@ function ReturnProductQuantity (productUid, size, quantityToReturn) {
 
 function returnStock (variants, size, quantityToReturn) {
   for (var i = 0; i < variants.length; i++) {
-    if (variants[i].size === size || variants[i].size === size) { // leave == since it compares two numbers
+    if (variants[i].size === size || variants[i].size == size) { // leave == since it compares two numbers
       variants[i].stock += quantityToReturn
       return variants
     }
