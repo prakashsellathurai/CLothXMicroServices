@@ -13,14 +13,16 @@ function productsOnLocalInventory (cartProducts) {
 }
 
 function ReturnProductQuantity (productUid, size, quantityToReturn) {
+  console.log(productUid)
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
     .runTransaction(async transaction => {
-      const doc = await transaction.get(productDocRef);
-      let variants = doc.data().variants;
-      let returnedVariants = returnStock(variants, size, quantityToReturn);
-      return transaction.update(doc.ref, { variants: returnedVariants });
+      const doc = await transaction.get(productDocRef)
+      console.log(doc.data())
+      let variants = doc.data().variants
+      let returnedVariants = returnStock(variants, size, quantityToReturn)
+      return transaction.update(doc.ref, { variants: returnedVariants })
     })
 }
 
