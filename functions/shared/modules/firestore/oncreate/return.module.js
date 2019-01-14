@@ -1,5 +1,5 @@
 const db = require('./../../../firestore/CRUD/index')
-
+const _ = require('lodash')
 function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
   return invoiceUpdater(isAllReturn, invoiceId, cartProducts)
     .then(() => db
@@ -17,6 +17,15 @@ function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
       .invoiceOnProductsReturn(invoiceId, cartProducts)
   }
 }
+function isParamsValid (storeId, returnId, isAllReturn, cartProducts, invoiceId, customerNo) {
+  if (_.isUndefined(storeId)) {
+    console.log('storeId is undefined')
+    return false
+  } else if (_.isUndefined(returnId)) {
+    console.log('returnId is undefined')
+    return false
+  }
+}
 /**
  * module handles the oncreate return trigger
  * @namespace OnCreateReturnModule
@@ -29,7 +38,11 @@ function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
  * @returns {Promise} resolvedPromise
  */
 module.exports = (storeId, returnId, isAllReturn, cartProducts, invoiceId, customerNo) => {
-  return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
-    .then(() => db.timestamp.OnCreateReturn(storeId, returnId))
-    .then(() => db.update.returnCountInReward(customerNo, cartProducts.length))
+  if (isParamsValid(storeId, returnId, isAllReturn, cartProducts, invoiceId, customerNo)) {
+    return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
+      .then(() => db.timestamp.OnCreateReturn(storeId, returnId))
+      .then(() => db.update.returnCountInReward(customerNo, cartProducts.length))
+  } else {
+    return Promise.reject(new Error('invalid params'))
+  }
 }
