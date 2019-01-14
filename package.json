@@ -5,7 +5,7 @@
   },
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "test": "node ./scripts/setDeploymentenv.js clothxtest && mocha --timeout 10000 --exit",
+    "test": "node ./scripts/setDeploymentenv.js clothxtest && mocha --opts ./mocha.opts",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -14,7 +14,9 @@
     "set_production_environment": "firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxnet",
     "set_development_environment": "firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN && node ./scripts/setDeploymentenv.js clothxtest",
     "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_ACCESS_TOKEN",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test:unit": "mocha \"test/unit_test/**/*.spec.js\" --opts ./mocha.opts",
+    "test:integration":"mocha \"test/integration_test/**/*.spec.js\" --opts ./mocha.opts"
   },
   "dependencies": {
     "@google-cloud/storage": "^1.7.0",

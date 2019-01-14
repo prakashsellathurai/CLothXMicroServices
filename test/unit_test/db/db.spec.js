@@ -15,15 +15,13 @@ describe('firebase admin sdk', () => {
     expect(() => admin).to.not.throw()
   })
 })
-describe('db', async () => {
-  describe('#firestore', function () {
-    let firestore = admin.firestore()
-    it('should have collection property', () => {
-      expect(firestore).to.have.property('collection')
-    })
-    it('should have doc property', () => {
-      expect(firestore).to.have.property('doc')
-    })
-  })
 
+describe('#firestore', function () {
+  let firestore = admin.firestore()
+  it('should have collection property', () => {
+    expect(firestore).to.have.property('collection')
+  })
+  it('should have doc property', () => {
+    expect(firestore).to.have.property('doc')
+  })
 })
