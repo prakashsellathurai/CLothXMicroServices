@@ -1,27 +1,11 @@
 //= ===================================== IMPORTS ===============================================//
-
 const functions = require('firebase-functions')
-const db = require('./../../../shared/firestore/CRUD/index')
-function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
-  return invoiceUpdater(isAllReturn, invoiceId, cartProducts)
-    .then(() => db
-      .return
-      .productsOnLocalInventory(storeId, cartProducts))
-}
-function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
-  if (isAllReturn) {
-    return db
-      .delete
-      .invoice(invoiceId)
-  } else {
-    return db
-      .update
-      .invoiceOnProductsReturn(invoiceId, cartProducts)
-  }
-}
+const oncreatereturnModule = require('./../../../shared/modules/firestore/oncreate/return.module')
 // ==================================================================================================
 // =====================================export module================================================
-
+/**
+ * firestore oncreate trigger which intiates on return products
+ */
 module.exports = functions
   .firestore
   .document('stores/{storeId}/returns/{returnId}')
@@ -32,7 +16,5 @@ module.exports = functions
     let cartProducts = snap.data().cartProducts
     let invoiceId = snap.data().invoiceId
     let customerNo = snap.data().customerNumber
-    return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
-      .then(() => db.timestamp.OnCreateReturn(storeId, returnId))
-      .then(() => db.update.returnCountInReward(customerNo, cartProducts.length))
+    return oncreatereturnModule(storeId, returnId, isAllReturn, cartProducts, invoiceId, customerNo)
   })
