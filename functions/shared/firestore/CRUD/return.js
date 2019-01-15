@@ -1,6 +1,8 @@
 let admin = require('firebase-admin')
 let firestore = admin.firestore()
-function productsOnLocalInventory (cartProducts) {
+
+function productsOnLocalInventory (storeId, cartProducts) {
+  console.log(cartProducts)
   let promises = []
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
@@ -13,17 +15,16 @@ function productsOnLocalInventory (cartProducts) {
 }
 
 function ReturnProductQuantity (productUid, size, quantityToReturn) {
+
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
-    .runTransaction(transaction => {
-      return transaction
-        .get(productDocRef)
-        .then((doc) => {
-          let variants = doc.data().variants
-          let returnedVariants = returnStock(variants, size, quantityToReturn)
-          return transaction.update(doc.ref, {variants: returnedVariants})
-        })
+    .runTransaction(async transaction => {
+      const doc = await transaction.get(productDocRef)
+      console.log(doc.data())
+      let variants = doc.data().variants
+      let returnedVariants = returnStock(variants, size, quantityToReturn)
+      return transaction.update(doc.ref, { variants: returnedVariants })
     })
 }
 

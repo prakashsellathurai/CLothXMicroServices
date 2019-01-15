@@ -1,7 +1,6 @@
-let db = require('./index')
-let admin = require('firebase-admin')
-let firestore = admin.firestore()
-let reduce = db.reduce
+const admin = require('firebase-admin')
+const firestore = admin.firestore()
+const db = require('./../../../shared/firestore/CRUD/index')
 
 function customerReward (customer) {
   let customerDocRef = firestore
@@ -82,7 +81,7 @@ function invoiceOnProductsReturn (invoiceId, cartProducts) {
     let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReturn = cartProduct.totalQuantity
-    promises.push(reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+    promises.push(db.reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
   }
   return Promise.all(promises)
 }
