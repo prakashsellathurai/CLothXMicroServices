@@ -4,7 +4,7 @@ function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
   return invoiceUpdater(isAllReturn, invoiceId, cartProducts)
     .then(() => db
       .return
-      .productsOnLocalInventory(storeId, cartProducts))
+      .productsOnLocalInventory(cartProducts))
 }
 function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
   if (isAllReturn) {
@@ -17,12 +17,21 @@ function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
       .invoiceOnProductsReturn(invoiceId, cartProducts)
   }
 }
+/**
+ * checks whether the input is valid or not
+ * @param {string} storeId
+ * @param {string} returnId
+ * @param {boolean} isAllReturn
+ * @param {array} cartProducts
+ * @param {string} invoiceId
+ * @param {number} customerNo
+ */
 function isParamsValid (storeId, returnId, isAllReturn, cartProducts, invoiceId, customerNo) {
   if (_.isUndefined(storeId)) {
-    console.log('storeId is undefined')
+    console.error('storeId is undefined')
     return false
   } else if (_.isUndefined(returnId)) {
-    console.log('returnId is undefined')
+    console.error('returnId is undefined')
     return false
   }
 }

@@ -6,12 +6,12 @@ function StockUpdater (document, oldDocument, storeId) {
     let cartproducts = oldDocument.cartproducts
     return db
       .return
-      .productsOnLocalInventory(storeId, cartproducts)
+      .productsOnLocalInventory(cartproducts)
   } else {
     let cartProducts = document.cartProducts
     return db
       .reduce
-      .productsOnLocalInventory(storeId, cartProducts)
+      .productsOnLocalInventory(cartProducts)
   }
 }
 // ==================================================================================================
