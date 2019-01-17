@@ -6,14 +6,14 @@ function productsOnLocalInventory (cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    let size = cartProduct.size
+    //let size = cartProduct.size
     let quantityToReduce = cartProduct.totalQuantity
-    promises.push(reduceProductQuantity(productUid, size, quantityToReduce))
+    promises.push(reduceProductQuantity(productUid, quantityToReduce))
   }
   return Promise.all(promises)
 }
 
-function reduceProductQuantity (productUid, size, quantityToReduce) {
+function reduceProductQuantity (productUid, quantityToReduce) {
   let productDocRef = firestore
     .doc(`products/${productUid}`)
   return firestore
@@ -21,9 +21,11 @@ function reduceProductQuantity (productUid, size, quantityToReduce) {
       return transaction
         .get(productDocRef)
         .then((doc) => {
-          let variants = doc.data().variants
-          let reducedVariants = reduceStock(variants, size, quantityToReduce)
-          return transaction.update(doc.ref, { variants: reducedVariants })
+          // let variants = doc.data().variants
+          // let reducedVariants = reduceStock(variants, size, quantityToReduce)
+            doc.data().stock -= quantityToReduce
+            let reducedStock =  doc.data().stock 
+            return transaction.update(doc.ref, {stock: reducedStock})
         })
     })
 }
@@ -38,7 +40,7 @@ function reduceStock (variants, size, quantityToReduce) {
   return variants
 }
 
-function productsOnInvoice (invoiceId, productUid, size, singleUnitPrize, quantityToReturn) {
+function productsOnInvoice (invoiceId, productUid, singleUnitPrize, quantityToReturn) {
   let InvoiceDocRef = firestore
     .doc(`invoices/${invoiceId}`)
   return firestore
@@ -49,7 +51,7 @@ function productsOnInvoice (invoiceId, productUid, size, singleUnitPrize, quanti
           let cartProductsToUpdate = doc.data().cartProducts
           for (let index = 0; index < cartProductsToUpdate.length; index++) {
             const cartProduct = cartProductsToUpdate[index]
-            if (cartProduct.productUid === productUid && cartProduct.size === size && cartProduct.singleUnitPrice === singleUnitPrize) {
+            if (cartProduct.productUid === productUid && cartProduct.singleUnitPrice === singleUnitPrize) {
               cartProduct.totalQuantity -= quantityToReturn
               if (cartProduct.totalQuantity === 0) {
                 if (index > -1) {
