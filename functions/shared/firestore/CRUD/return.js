@@ -7,14 +7,14 @@ function productsOnLocalInventory (storeId, cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    //let size = cartProduct.size
+    let size = cartProduct.size
     let quantityToReturn = cartProduct.totalQuantity
-    promises.push(ReturnProductQuantity(productUid, quantityToReturn))
+    promises.push(ReturnProductQuantity(productUid, size, quantityToReturn))
   }
   return Promise.all(promises)
 }
 
-function ReturnProductQuantity (productUid, quantityToReturn) {
+function ReturnProductQuantity (productUid, size, quantityToReturn) {
 
   let productDocRef = firestore
     .doc(`products/${productUid}`)
@@ -22,11 +22,9 @@ function ReturnProductQuantity (productUid, quantityToReturn) {
     .runTransaction(async transaction => {
       const doc = await transaction.get(productDocRef)
       console.log(doc.data())
-      //let variants = doc.data().variants
-      //let returnedVariants = returnStock(variants, size, quantityToReturn)
-      doc.data().stock += quantityToReturn
-      let returnedStock = doc.data().stock;
-      return transaction.update(doc.ref, {stock: returnedStock}) })
+      let variants = doc.data().variants
+      let returnedVariants = returnStock(variants, size, quantityToReturn)
+      return transaction.update(doc.ref, { variants: returnedVariants })
     })
 }
 

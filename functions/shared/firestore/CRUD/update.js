@@ -78,10 +78,10 @@ function invoiceOnProductsReturn (invoiceId, cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    //let size = cartProduct.size
+    let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReturn = cartProduct.totalQuantity
-    promises.push(db.reduce.productsOnInvoice(invoiceId, productUid, singleUnitPrize, quantityToReturn))
+    promises.push(db.reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
   }
   return Promise.all(promises)
 }
