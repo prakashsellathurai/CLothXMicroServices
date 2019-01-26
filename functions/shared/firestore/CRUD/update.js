@@ -1,7 +1,7 @@
 'use strict'
 const admin = require('firebase-admin')
 const firestore = admin.firestore()
-const db = require('./index')
+const reduce = require('./reduce.js')
 
 function customerReward (customer) {
   let customerDocRef = firestore
@@ -82,7 +82,7 @@ function invoiceOnProductsReturn (invoiceId, cartProducts) {
     let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReturn = cartProduct.totalQuantity
-    promises.push(db.reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+    promises.push(reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
   }
   return Promise.all(promises)
 }
