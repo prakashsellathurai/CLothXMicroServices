@@ -1,10 +1,6 @@
-const db = require('./UNITTEST/db/db.spec')
-const algolia = require('./UNITTEST/algolia/algolia.spec')
-const cloudinary = require('./UNITTEST/cloudinary/init.spec')
-const search = require('./UNITTEST/HTTPS/algolia/search.spec')
+const unitTest = require('./unit_test')
+const integrationTest = require('./integration_test/index.spec')
 module.exports = {
-  db: db,
-  algolia: algolia,
-  cloudinary: cloudinary,
-  search: search
+  unitTest: unitTest,
+  integrationTest: integrationTest
 }
