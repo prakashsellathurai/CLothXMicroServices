@@ -24,6 +24,8 @@ describe('db', async () => {
     it('should have doc property', () => {
       expect(firestore).to.have.property('doc')
     })
+    it('should update the invoice on return of products', async () => {
+   
+    })
   })
-
 })
