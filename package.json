@@ -5,6 +5,7 @@
   },
   "description": "Cloud Functions for Firebase",
   "scripts": {
+    "postinstall": "cd functions && npm install & cd ..",
     "test": "node ./scripts/setDeploymentenv.js clothxtest && mocha --timeout 10000 --exit",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
