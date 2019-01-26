@@ -1,3 +1,4 @@
+'use strict'
 let admin = require('firebase-admin')
 let firestore = admin.firestore()
 

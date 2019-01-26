@@ -1,3 +1,4 @@
+'use strict'
 const admin = require('firebase-admin')
 const firestore = admin.firestore()
 const db = require('./index')
