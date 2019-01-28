@@ -8,6 +8,12 @@ const DISTINCT_PRODUCT_PROPERTIES = ['purchasedPrice', 'sellingPrice', 'objectID
 const groupByProductUid = (AlgoliaData) => convertObjToArr(_.mapValues(_.groupBy(AlgoliaData, 'productUid')))
 const convertObjToArr = (obj) => _.values(obj)
 const parseVariants = (v) => _.pick(v, DISTINCT_PRODUCT_PROPERTIES)
+/**
+ * merges two array of objects via common member
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @param {String} member
+ */
 const merger = (arr1, arr2, member) => [...arr1.concat(arr2).reduce((m, o) => m.set(o[member], Object.assign(m.get(o[member]) || {}, o)), new Map()).values()]
 // main functions
 function dataNormalizer (dataArray) {

@@ -6,7 +6,7 @@ function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
   return invoiceUpdater(isAllReturn, invoiceId, cartProducts)
     .then(() => db
       .return
-      .productsOnLocalInventory(storeId, cartProducts))
+      .productsOnLocalInventory(cartProducts))
 }
 function invoiceUpdater (isAllReturn, invoiceId, cartProducts) {
   if (isAllReturn) {
