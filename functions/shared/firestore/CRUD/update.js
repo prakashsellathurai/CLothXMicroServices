@@ -40,7 +40,7 @@ function customerReward (customer) {
                   'lastVisitInMilli': Date.now(),
                   'differenceInVisits': Date.now() - currentStateOfCustomerReward.lastVisitInMilli
                 }
-                transaction.set(customerDocRef, data, {merge: true})
+                transaction.set(customerDocRef, data, { merge: true })
               }
               if (!storeDocDataSnapshot.exists) {
                 const rewardData = {
@@ -78,7 +78,7 @@ function invoiceOnProductsReturn (invoiceId, cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    //let size = cartProduct.size
+    // let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReturn = cartProduct.totalQuantity
     promises.push(db.reduce.productsOnInvoice(invoiceId, productUid, singleUnitPrize, quantityToReturn))
@@ -107,7 +107,7 @@ function returnCountInReward (customerNo, totalReturn) {
         .then((customerDoc) => {
           let currentProductsReturn = customerDoc.data().totalProductsReturn
           currentProductsReturn = (typeof currentProductsReturn !== 'undefined') ? currentProductsReturn : 0
-          t.update(customerDocRef, {totalProductsReturn: currentProductsReturn + totalReturn})
+          t.update(customerDocRef, { totalProductsReturn: currentProductsReturn + totalReturn })
         })
     })
 }

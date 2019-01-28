@@ -1,6 +1,6 @@
 'use strict'
 const productIndex = require('./initIndex').product.unsorted
-const utils = require('./utils')
+// const utils = require('./utils')
 
 // function product (data) {
 //   let variants = utils.extractVariantInProduct(data)
@@ -14,7 +14,7 @@ const utils = require('./utils')
 //   return Promise.all(promises)
 // }
 
-function product (data){
+function product (data) {
   return productIndex.deleteObject(data.productUid)
 }
 

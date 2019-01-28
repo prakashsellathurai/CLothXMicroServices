@@ -12,7 +12,7 @@ module.exports = {
         },
         newest: client.initIndex('product_newest')
       }
-    }},
+    } },
   store: {
     unsorted: client.initIndex('store_search')
   }
