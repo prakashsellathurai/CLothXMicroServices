@@ -5,12 +5,11 @@
   },
   "description": "Cloud Functions for Firebase",
   "scripts": {
+    "postinstall": "cd functions && npm install && cd ..",
     "test": "./scripts/setenv.sh clothxtest && mocha --timeout 10000 --exit",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "gtfd": "cd functions",
-    "goback": "cd ..",
     "set_production_environment": "firebase use clothxnet --token $FIREBASE_ACCESS_TOKEN && ./scripts/setenv.sh clothxnet",
     "set_development_environment": "firebase use clothxtest --token $FIREBASE_ACCESS_TOKEN && ./scripts/setenv.sh clothxtest",
     "deploy": "firebase deploy --only functions --non-interactive --token $FIREBASE_ACCESS_TOKEN",
