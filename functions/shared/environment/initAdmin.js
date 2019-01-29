@@ -1,14 +1,18 @@
 'use strict'
 var admin = require('firebase-admin')
-var ProductionEnvServiceAccount = require('./clothxnet-firebase-adminsdk-wkk1h-a27faaab6d.json')
-var TestEnvServiceAccount = require('./clothxtest-firebase-adminsdk-0bpps-e18156c08d.json')
 var path = require('path')
 let env = require('./env')
+/**
+ * initializes firebase admin sdk
+ * @returns {Object}firebaseAdmin => admin with credentials
+ */
 function setCredentials () {
   try {
     var fs = require('fs')
     let deploymentProjectConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '/.deployenv'), 'utf8'))
-    let serviceAccount = (deploymentProjectConfig.production) ? ProductionEnvServiceAccount : TestEnvServiceAccount
+    let serviceAccount = (deploymentProjectConfig.production)
+      ? env.FIREBASE_PROJECT.prod.serviceAccount
+      : env.FIREBASE_PROJECT.test.serviceAccount
     let storageBucket = deploymentProjectConfig.storage.bucket
     let databaseURL = deploymentProjectConfig.databaseURL
     admin.initializeApp({

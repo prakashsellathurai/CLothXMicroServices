@@ -5,7 +5,7 @@ var fs = require('fs')
 function withCredentials () {
   try {
     let deploymentProjectConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '/.deployenv'), 'utf8'))
-    let keyConfig = (deploymentProjectConfig.production) ? env.ALGOLIA.production : env.ALGOLIA.test
+    let keyConfig = (deploymentProjectConfig.production) ? env.ALGOLIA.prod : env.ALGOLIA.test
     return algoliasearch(keyConfig.appId, keyConfig.adminApiKey)
   } catch (error) {
     console.log(error)
