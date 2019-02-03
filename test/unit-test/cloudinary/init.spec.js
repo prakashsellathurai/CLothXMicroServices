@@ -10,7 +10,7 @@ describe('cloudinary client', () => {
     expect(() => admin).to.not.throw()
   })
   it('should save product', async () => {
-    let sv = await save.product('https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png')
+    let sv = await save.product('https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png', 'testFolder')
     expect(() => sv).to.not.throw()
     expect(sv).to.be.a('object')
     expect(sv.secure_url).to.be.a('string')
@@ -25,7 +25,7 @@ describe('cloudinary client', () => {
     let saveToCloudinary = async (urlArray) => {
       let promises = []
       for (const url of urlArray) {
-        let result = await save.product(url)
+        let result = await save.product(url, 'testFolder')
         promises.push(result.secure_url)
       }
       return Promise.all(promises)

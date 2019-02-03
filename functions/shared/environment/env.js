@@ -37,6 +37,22 @@ module.exports = {
         'client_x509_cert_url': 'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-0bpps%40clothxtest.iam.gserviceaccount.com'
       }
 
+    },
+    rawdb: {
+      serviceAccount: {
+        'type': 'service_account',
+        'project_id': 'rawdb-f19d8',
+        'private_key_id': '350967545c8fb7b22b4edc115656f90eb51215d0',
+        'private_key': '-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDLxRq7VwmaTOet\nYKd/kbvWRqv0cz5tmMW1f4jTjBdFhvVM2j+GY+Av/i506OZwqKScUqR9p5ELT2bS\ny+yEzyu1w5nbuDyCLKXxG4IBkaekbM45K+D4Y4R2D7HAuytg4tKgbp4erTPSZxL+\nF9AVSdiei+h8/1mT3janN5r6NqyPRtKMCG+X53OqZ96iODUb2Mk3Z/T8fkyzTDWr\np/J78DMoWcsHlTuyWuhigJpDzk+6/rTlyIHftVZuxeB9Bqp71d4ZjqlY+PUowLnJ\ncRo5wBZPGOEPbHCjESMext2GeJuMxBLcPfVaPNIrt/c2VKl53krVJEJy1woqlDYE\noOJAT81DAgMBAAECggEABHj+lbca3FqsySbydj/eJh1l/9cZuzEbwdibSb1s81c7\ngiTWOR5vGM6U+Xb1O+rPtiiwOJvZeKyU/rKALggYFwTEl0iLd3YAbHLknyEx00+a\nFTIr3Xfdu/OrPKY/FQDVi7Tx3o2BsjAWACLIq/bzfMNoZnn6Xt8FRxVW3wAdOIXU\n2+m+yG9vN2stPlHia27deg+qGg9ZQNE7dC1TmnAWVc4uhrFDDmBnJ56FOK8I5EkL\n+Jg0+4udJsiyc+RZJN48cMugcItR5uQ42KCqL+URtO9UanADJaE+CG/rI9yFlC+l\n95SprS5F/JZGG4JTOxeBSmmC9nfQXJ17f30AmREp6QKBgQD9HLxElgtHUvyELery\nVBzyZdIyrcR1UuWZVhM7R+NUN1ll+/ABf7sxHOzPsGUx0UtlMlliqLJFIr77jxXr\n0XmtgLjDmfysxdwAXvn0Cs81XYJgeeF+AcHMaQdj4+h5Xy/0XthnT+x3ZQmWwDJy\nqJXJqA+ZeY/U5uJV2RNEF/YnaQKBgQDOGEFHARwI8/T6nysMn3agpFtyc3vxgfMQ\neK3CMKKUCbxDyez9wS3961GeDHgNZPNr4gdbDflsKlRxrrW+XCqpQBviVZXJGuKi\nqdF/mWgBxvWPqdfm2/fuCSHgAMQFONa9MTSRt2RYfMezsqcy6sdpyebEj8kmxecR\nBrb6mN2FywKBgQCKffWZhYvIS+T1IfbC/zkTfJkFt8Sd+Wy9eLZvIkeFpf9ZaP+K\nomw3VD9S6I6GMqGRTnpQHEPmxjs/g6wX6vcr8xmllRUHJ//XiCA14tA7v919klLK\nUoXKpdEwW9ywxF+F03uPE9EsBvG3NZSk3g+PVlCqxjPn5ykClhMPmBjMuQKBgQCS\nV5bCnH8TvGcQL0WaSQErQInO00IHU4cNAyQe5/oJtIACgrfN2AaYbygdWi1FFZHj\n4TPn7BxYOhaMQsq6ySdh1yv1o2Ag1P5pEry4Jm48FNL5mFi+jSOX2tQ7A1AthRa2\ncOIrNlYCn1gOuaUP+rZu3/cFTDRBW/WfmW0EtNdX0QKBgGarjo476DWEal72Ezxa\nfPaC5Z1i0ic/neC2l5oThSQT7SRN0h0CvOIUQu4kQm5C3i5mbVfYRQb2M4stgtFv\n2bS+5I99qrQkNrrhn8tuJYeZklMVGaoQlx0d2lWL8wQq06IS5WJB6RFAM8xlQe1K\n04x2RfFZmyVMI6Qf5fV8EcsK\n-----END PRIVATE KEY-----\n',
+        'client_email': 'firebase-adminsdk-walqt@rawdb-f19d8.iam.gserviceaccount.com',
+        'client_id': '116560315843901722055',
+        'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+        'token_uri': 'https://oauth2.googleapis.com/token',
+        'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+        'client_x509_cert_url': 'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-walqt%40rawdb-f19d8.iam.gserviceaccount.com'
+      },
+      databaseURL: 'https://rawdb-f19d8.firebaseio.com',
+      storageBucket: 'gs://rawdb-f19d8.appspot.com'
     }
   },
   ALGOLIA: {

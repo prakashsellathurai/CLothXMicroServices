@@ -28,6 +28,24 @@ function setCredentials () {
     console.error(e)
   }
 }
+function withrawdb () {
+  try {
+    let rawdb = env.FIREBASE_PROJECT.rawdb
+    admin.initializeApp({
+      databaseURL: rawdb.databaseURL,
+      credential: admin.credential.cert(rawdb.serviceAccount),
+      storageBucket: rawdb.storageBucket
+    })
+    let firestore = admin.firestore()
+    let db = admin.database()
+    firestore.settings(env.FIRESTORE_SETTINGS)
+    return admin
+  } catch (e) {
+    console.error(e)
+  }
+}
 module.exports = {
-  setCredentials: setCredentials
+  setCredentials: setCredentials,
+  withrawdb: withrawdb
+
 }

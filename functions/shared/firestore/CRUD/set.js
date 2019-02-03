@@ -17,7 +17,7 @@ function cloudUrlInStore (storeId, logoUrlResult, picturesurlArrayResult) {
   }
   return firestore
     .doc(`stores/${storeId}`)
-    .set(obj, {merge: true})
+    .set(obj, { merge: true })
 }
 
 function productPRN (productId, PRN_VALUE) {
@@ -47,25 +47,19 @@ function RandomObjectIdToProduct (productId, cloudinaryUrl) {
         .then((doc) => {
           let data = doc.data()
           let productUid = doc.id
-          let variants = data.variants
-          for (let index = 0; index < variants.length; index++) {
-            variants[index].objectID = productUid + '_' + index
-          }
-          return utils.prnCheckLoop()
-            .then((prn) => {
-              t.update(doc.ref, {
-                prn: prn,
-                variants: variants,
-                cloudinaryUrls: cloudinaryUrl,
-                createdOn: admin.firestore.FieldValue.serverTimestamp()
-              })
-              data.prn = prn
-              data.variants = variants
-              return data
-            })
+          let objectID = generateObjectId(productUid)
+          t.update(doc.ref, {
+            objectID: objectID,
+            cloudinaryUrl: cloudinaryUrl,
+            createdOn: admin.firestore.FieldValue.serverTimestamp()
+          })
+          data.objectID = objectID
+          data.cloudinaryUrl = cloudinaryUrl
+          return data
         })
     })
 }
+const generateObjectId = (productUid) => productUid + '_' + Math.random().toString(36).substring(7)
 module.exports = {
   invoicePendingStatusToFalse: invoicePendingStatusToFalse,
   productPRN: productPRN,

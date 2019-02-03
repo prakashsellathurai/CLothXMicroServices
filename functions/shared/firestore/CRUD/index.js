@@ -1,4 +1,5 @@
 'use strict'
+const _create = require('./create')
 const _update = require('./update')
 const _reduce = require('./reduce')
 const _return = require('./return')
@@ -11,6 +12,7 @@ const _timestamp = require('./timestamp')
 const _log = require('./log')
 const utils = require('./../utils/index')
 module.exports = {
+  create: _create,
   update: _update,
   reduce: _reduce,
   return: _return,
