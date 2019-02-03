@@ -2,7 +2,7 @@
 
 const functions = require('firebase-functions')
 const db = require('./../../../shared/firestore/CRUD/index')
-function StockUpdater (isAllReturn, storeId, invoiceId, cartProducts) {
+function StockUpdater (isAllReturn, invoiceId, cartProducts) {
   return invoiceUpdater(isAllReturn, invoiceId, cartProducts)
     .then(() => db
       .return
@@ -32,7 +32,7 @@ module.exports = functions
     let cartProducts = snap.data().cartProducts
     let invoiceId = snap.data().invoiceId
     let customerNo = snap.data().customerNumber
-    return StockUpdater(isAllReturn, storeId, invoiceId, cartProducts)
+    return StockUpdater(isAllReturn, invoiceId, cartProducts)
       .then(() => db.timestamp.OnCreateReturn(storeId, returnId))
       .then(() => db.update.returnCountInReward(customerNo, cartProducts.length))
   })

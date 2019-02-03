@@ -3,11 +3,17 @@
 const _ = require('lodash')
 // GLOBAl CONSTANT
 const RESULTS_PER_PAGE = 20
-const DISTINCT_PRODUCT_PROPERTIES = ['purchasedPrice', 'sellingPrice', 'objectID', 'size', 'stock']
+const DISTINCT_PRODUCT_PROPERTY = 'productUid'
+
 // support higher order functions
-const groupByProductUid = (AlgoliaData) => convertObjToArr(_.mapValues(_.groupBy(AlgoliaData, 'productUid')))
+/**
+ * groups the algolia search results
+ * @param {Array} AlgoliaData
+ * @returns {Array} grouped results
+ */
+const groupByGroupId = (AlgoliaData) => convertObjToArr((_.groupBy(AlgoliaData, DISTINCT_PRODUCT_PROPERTY)))
 const convertObjToArr = (obj) => _.values(obj)
-const parseVariants = (v) => _.pick(v, DISTINCT_PRODUCT_PROPERTIES)
+
 /**
  * merges two array of objects via common member
  * @param {Array} arr1
@@ -16,23 +22,14 @@ const parseVariants = (v) => _.pick(v, DISTINCT_PRODUCT_PROPERTIES)
  */
 const merger = (arr1, arr2, member) => [...arr1.concat(arr2).reduce((m, o) => m.set(o[member], Object.assign(m.get(o[member]) || {}, o)), new Map()).values()]
 // main functions
-function dataNormalizer (dataArray) {
-  let normalizedArray = []
-  dataArray.forEach(dataGroup => {
-    let refinedObject = {}
-    let variants = []
-    dataGroup.forEach(element => {
-      let variant = parseVariants(element)
-      if (variant.stock !== 0) {
-        variants.push(variant)
-      }
-    })
-    refinedObject = _.cloneDeep(_.omit(dataGroup[0], DISTINCT_PRODUCT_PROPERTIES))
-    refinedObject['variants'] = variants
-    normalizedArray.push(refinedObject)
-  })
-  return normalizedArray
-}
+/**
+ * makes request to the algolia Api
+ * @param {number} _index Object representing algolia index to search on
+ * @param {string} _query String representing the query passed
+ * @param {number} _page page no
+ * @param {String} _filters filter String supported by algolia API
+ * @returns {Array} results
+ */
 function makeRequest (_index, _query, _page, _filters) {
   return _index
     .search({
@@ -42,10 +39,19 @@ function makeRequest (_index, _query, _page, _filters) {
       hitsPerPage: 50
     }).then((res) => res.hits)
 }
+/**
+ * makes the search request to algolia and returns the sanitized result
+ * @param {number} _index Object representing algolia index to search on
+ * @param {string} _query String representing the query passed
+ * @param {number} _page page no
+ * @param {String} _filters filter String supported by algolia API
+ * @param {Array} groupedResults just pass the empty array
+ * @returns {Array} results
+ */
 function mainEngine (_index, _query, _page, _filters, groupedResults) {
   return makeRequest(_index, _query, _page, _filters)
     .then((results) => {
-      let normalizeddata = merger(groupedResults, dataNormalizer(groupByProductUid(results)), 'productUid')
+      let normalizeddata = groupByGroupId(results)
       if (normalizeddata.length < RESULTS_PER_PAGE) {
         // do recall here
         // let requiredlength = RESULTS_PER_PAGE - normalizeddata.length
