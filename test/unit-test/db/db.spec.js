@@ -15,7 +15,7 @@ describe('firebase admin sdk', () => {
     expect(() => admin).to.not.throw()
   })
 })
-describe('db', async () => {
+describe('db', () => {
   describe('#firestore', function () {
     let firestore = admin.firestore()
     it('should have collection property', () => {

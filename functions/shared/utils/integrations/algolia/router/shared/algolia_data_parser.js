@@ -2,8 +2,7 @@
 // essential imports
 const _ = require('lodash')
 // GLOBAl CONSTANT
-const RESULTS_PER_PAGE = 20
-const DISTINCT_PRODUCT_PROPERTY = 'productUid'
+const DISTINCT_PRODUCT_PROPERTY = 'groupId'
 
 // support higher order functions
 /**
@@ -11,7 +10,11 @@ const DISTINCT_PRODUCT_PROPERTY = 'productUid'
  * @param {Array} AlgoliaData
  * @returns {Array} grouped results
  */
-const groupByGroupId = (AlgoliaData) => convertObjToArr((_.groupBy(AlgoliaData, DISTINCT_PRODUCT_PROPERTY)))
+const groupByGroupId = (AlgoliaData) => convertObjToArr(_.groupBy(AlgoliaData, DISTINCT_PRODUCT_PROPERTY))
+/**
+ * converts object into array
+ * @param {object} obj
+ */
 const convertObjToArr = (obj) => _.values(obj)
 
 /**
@@ -46,20 +49,12 @@ function makeRequest (_index, _query, _page, _filters) {
  * @param {number} _page page no
  * @param {String} _filters filter String supported by algolia API
  * @param {Array} groupedResults just pass the empty array
+ * @async
  * @returns {Array} results
  */
-function mainEngine (_index, _query, _page, _filters, groupedResults) {
-  return makeRequest(_index, _query, _page, _filters)
-    .then((results) => {
-      let normalizeddata = groupByGroupId(results)
-      if (normalizeddata.length < RESULTS_PER_PAGE) {
-        // do recall here
-        // let requiredlength = RESULTS_PER_PAGE - normalizeddata.length
-        // return mainEngine(_index, _query, _page + 1, _filters, normalizeddata)
-        return normalizeddata
-      } else {
-        return normalizeddata
-      }
-    })
+async function mainEngine (_index, _query, _page, _filters) {
+  let results = await makeRequest(_index, _query, _page, _filters)
+  let normalizeddata = groupByGroupId(results)
+  return normalizeddata
 }
 module.exports = mainEngine
