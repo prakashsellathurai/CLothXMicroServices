@@ -20,14 +20,15 @@ function setCredentials () {
       credential: admin.credential.cert(serviceAccount),
       storageBucket: storageBucket
     })
-    let firestore = admin.firestore()
-    let db = admin.database()
-    firestore.settings(env.FIRESTORE_SETTINGS)
     return admin
   } catch (e) {
     console.error(e)
   }
 }
+/**
+ * initializes firebase admin sdk without any cloud functions on them
+ * @returns {Object}firebaseAdmin => admin with credentials
+ */
 function withrawdb () {
   try {
     let rawdb = env.FIREBASE_PROJECT.rawdb
@@ -36,9 +37,6 @@ function withrawdb () {
       credential: admin.credential.cert(rawdb.serviceAccount),
       storageBucket: rawdb.storageBucket
     })
-    let firestore = admin.firestore()
-    let db = admin.database()
-    firestore.settings(env.FIRESTORE_SETTINGS)
     return admin
   } catch (e) {
     console.error(e)
