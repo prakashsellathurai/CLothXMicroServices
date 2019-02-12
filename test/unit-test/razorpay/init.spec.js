@@ -7,5 +7,22 @@ describe('razorpay client', () => {
   it('should initiate without error', () => {
     expect(() => init.withCredentials()).to.not.throw()
   })
-  
+  it('should have razorpay instance properties', () => {
+    let instance = init.withCredentials()
+    let properties = [
+      'payments',
+      'refunds',
+      'orders',
+      'customers',
+      'transfers',
+      'virtualAccounts',
+      'invoices',
+      'plans',
+      'subscriptions',
+      'addons'
+    ]
+    properties.forEach(property => {
+      expect(instance).to.have.property(property)
+    })
+  })
 })
