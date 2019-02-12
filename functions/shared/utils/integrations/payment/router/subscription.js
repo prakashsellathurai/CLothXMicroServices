@@ -9,23 +9,23 @@ subscriptionRouter.post('/verify', (req, res) => {
   let razorpaySubscriptionId = req.body.razorpay_subscription_id
   let razorpaySignature = req.body.razorpay_signature
   if (razorpayPaymentId == null) {
-    res.json({error: 'unauthorized', error_description: 'razorpay_payment_id is required'})
+    res.json({ error: 'unauthorized', error_description: 'razorpay_payment_id is required' })
   } else if (razorpaySubscriptionId == null) {
-    res.json({error: 'unauthorized', error_description: 'razorpay_subscription_id is required'})
+    res.json({ error: 'unauthorized', error_description: 'razorpay_subscription_id is required' })
   } else if (razorpaySignature == null) {
-    res.json({error: 'unauthorized', error_description: 'razorpay_signature is required'})
+    res.json({ error: 'unauthorized', error_description: 'razorpay_signature is required' })
   } else if (storeId == null) {
-    res.json({error: 'unauthorized', error_description: 'store_id is required'})
+    res.json({ error: 'unauthorized', error_description: 'store_id is required' })
   } else if (razorpayApi
     .verifyAuthTransaction(razorpayPaymentId, razorpaySubscriptionId, razorpaySignature)) {
     return db
       .logPaymentAuthVerification(storeId, razorpaySubscriptionId, razorpaySignature)
       .then((docRef) => {
         let docId = docRef.id
-        res.json({doc_id: docId})
+        res.json({ doc_id: docId })
       })
   } else {
-    res.json({error: 'unauthorized', error_description: 'credentials not valid'})
+    res.json({ error: 'unauthorized', error_description: 'credentials not valid' })
   }
 })
 subscriptionRouter.post('/create', (req, res) => {

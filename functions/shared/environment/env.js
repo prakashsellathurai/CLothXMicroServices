@@ -68,8 +68,14 @@ module.exports = {
     }
   },
   RAZOR_PAY: {
-    KEY_ID: 'rzp_test_yN3pbgVEDqojtv',
-    KEY_SECRET: 'Z1mUElL13QliOwNixNn9MSif'
+    test: {
+      key_id: 'rzp_test_lzCc8yp7SmyC5v',
+      key_secret: 'SWCYisRZB3rUl9dk54bo1xuv'
+    },
+    prod: {
+      key_id: 'rzp_live_yaj6535Ldfkbxz',
+      key_secret: 'Rcm4Hs6ZwiKRS3SAVVQHc19j'
+    }
   },
   OMNI_CHANNEL_INTEGRATION: {
     FLIKART: {
