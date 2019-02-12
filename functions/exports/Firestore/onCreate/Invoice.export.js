@@ -51,13 +51,7 @@ function MainHandler (snap, context) {
         }
       })
     })
-    .catch((err) => {
-      if (err) {
-        return db.set.invoicePendingStatusToFalse(invoiceId)
-      } else {
-        console.error(err)
-      }
-    })
+    .catch((err) => console.error(err))
 }
 
 // ==================================================================================================
