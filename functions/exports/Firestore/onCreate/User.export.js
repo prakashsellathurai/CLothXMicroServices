@@ -1,9 +1,9 @@
 
 'use strict'
 const functions = require('firebase-functions')
-const razorpayApi = require('./../../../shared/utils/payment/razorpay')
-const db = require('./../../../shared/firestore/CRUD/index')
-const createRazorpayCustomer = (name, email, contactNo) => razorpayApi.CreateCustomer(name, email, contactNo)
+const razorpayApi = require('./../../../shared/utils/integrations/razorpay')
+const db = require('./../../../shared/firestore/CRUD')
+const createRazorpayCustomer = (name, email, contactNo) => razorpayApi.create.customer(name, email, contactNo)
 const saveTodb = (razorPayId, email) => db.utils.razorpay.save.id(email, razorPayId)
 
 function mainHandler (snap) {

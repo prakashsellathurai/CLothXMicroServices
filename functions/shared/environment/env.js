@@ -84,7 +84,6 @@ module.exports = {
       FLIPKART_SELLER_API_BASE_URL: 'https://api.flipkart.net/sellers'
     }
   },
-
   CLOUDINARY: {
     prod: {
       cloud_name: 'spoteasy',

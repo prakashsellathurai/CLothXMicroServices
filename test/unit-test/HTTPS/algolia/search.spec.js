@@ -12,7 +12,6 @@ describe('/Get product', () => {
   beforeEach(() => {
     request = chai.request(server)
   })
-
   it('should respond with status 400', (done) => {
     request
       .get('/product')

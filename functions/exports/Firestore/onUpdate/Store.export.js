@@ -1,9 +1,9 @@
 const functions = require('firebase-functions')
-const algolia = require('./../../../shared/utils/integrations/algolia/index')
+const algolia = require('./../../../shared/utils/integrations/algolia')
 const storeIndex = algolia.initIndex.store.unsorted
 
 const _ = require('lodash')
-const cloudinary = require('./../../../shared/utils/integrations/cloudinary/index')
+const cloudinary = require('./../../../shared/utils/integrations/cloudinary')
 const db = require('../../../shared/firestore/CRUD/index')
 
 module.exports = functions
