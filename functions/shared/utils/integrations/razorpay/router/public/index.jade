@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title payment Page
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', type='text/css', media='screen', href='main.css')
+  body
+    form(action='/purchase', method='POST')
+      script(src='https://checkout.razorpay.com/v1/checkout.js', data-key='<YOUR_KEY_ID>', data-amount='5000', data-buttontext='Pay with Razorpay', data-name='Merchant Name', data-description='Purchase Description', data-image='https://your-awesome-site.com/your_logo.jpg', data-prefill.name='Gaurav Kumar', data-prefill.email='test@test.com', data-theme.color='#F37254')
+      input(type='hidden', value='Hidden Element', name='hidden')

@@ -19,7 +19,7 @@ describe('#firestore', async () => {
   })
 })
 describe('db', () => {
-  it('should export files ' , () => {
+  it('should export files ', () => {
     expect(Object.keys(db)).to.eql([ 'create',
       'update',
       'reduce',
