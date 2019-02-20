@@ -23,28 +23,30 @@ function MainHandler (snap, context) {
     totalPrice: snap.data().totalPrice,
     createdOn: new Date()
   }
-  return utils
-    .checkEnv()
-    .then(() => db.update.customerReward(customer))
-    .then((bool) => (bool) ? `https://www.spoteasy.in/u/invoice/${invoiceId}` : `https://spoteasytest.firebaseapp.com/u/invoice/${invoiceId}`)
-    .then((link) => generateMessage(link))
-    .then((Message) => {
-      if (sendSmsBoolean) {
-        return sendMessage(customerNo, Message)
-          .then((body) => JSON.parse(body))
-          .then((body) => {
-            let messageSuccess = (body.type === 'success')
-            let smsId = (messageSuccess) ? body.message : utils.generateId()
-            let status = body.type
-            let errorDescription = body.message
-            return db.utils.sms.log.OnInvoiceReport(storeId, smsId, customerNo, status, errorDescription)
-          })
-      } else {
-        return Promise.resolve(0)
-      }
-    })
+  return db.update.customerReward(customer)
+    .then(() => utils
+      .checkEnv()
+      .then((bool) => (bool) ? `https://www.spoteasy.in/u/invoice/${invoiceId}` : `https://spoteasytest.firebaseapp.com/u/invoice/${invoiceId}`)
+      .then((link) => generateMessage(link))
+      .then((Message) => {
+        if (sendSmsBoolean) {
+          return sendMessage(customerNo, Message)
+            .then((body) => JSON.parse(body))
+            .then((body) => {
+              let messageSuccess = (body.type === 'success')
+              let smsId = (messageSuccess) ? body.message : utils.generateId()
+              let status = body.type
+              let errorDescription = body.message
+              return db.utils.sms.log.OnInvoiceReport(storeId, smsId, customerNo, status, errorDescription)
+            })
+        } else {
+          return Promise.resolve(0)
+        }
+      })
 
-    .catch((err) => console.error(err))
+      .catch((err) => console.error(err))
+
+    )
 }
 
 // ==================================================================================================
