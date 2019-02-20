@@ -21,7 +21,7 @@ function IndexItInAlgolia (data) {
 }
 
 async function MainHandler (snap, context) {
-  let cloudinaryUrl = await saveToCloudinary(snap.data().picturesUrl, snap.id)
+  let cloudinaryUrl = await saveToCloudinary(snap.data().pictures.url, snap.id)
   let data = await ObjectIdAssigner(context, cloudinaryUrl)
 
   return IndexItInAlgolia(data)
