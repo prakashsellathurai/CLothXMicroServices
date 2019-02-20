@@ -1,6 +1,6 @@
 //= ===================================== IMPORTS ===============================================//
 var functions = require('firebase-functions')
-var db = require('./../../../shared/firestore/CRUD/index')
+var db = require('./../../../shared/firestore/CRUD')
 var sendMessage = require('./../../../shared/utils/message/SendMessage')
 var utils = require('./../../../shared/utils/general_utils')
 
@@ -17,8 +17,15 @@ function MainHandler (snap, context) {
   const invoiceId = context.params.invoiceId
   const customerNo = snap.data().customerNumber
   const storeId = snap.data().storeUid
+  const customer = {
+    customerName: snap.data().customerName,
+    totalQuantity: snap.data().totalQuantity,
+    totalPrice: snap.data().totalPrice,
+    createdOn: new Date()
+  }
   return utils
     .checkEnv()
+    .then(() => db.update.customerReward(customer))
     .then((bool) => (bool) ? `https://www.spoteasy.in/u/invoice/${invoiceId}` : `https://spoteasytest.firebaseapp.com/u/invoice/${invoiceId}`)
     .then((link) => generateMessage(link))
     .then((Message) => {
