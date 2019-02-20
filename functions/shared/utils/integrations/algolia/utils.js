@@ -51,10 +51,15 @@ function updateVariantWithObjectId (variant, objectId) {
   variant['objectID'] = objectId
   return Promise.resolve(variant)
 }
+function addObjectIdToData (data) {
+  data.objectID = data.productUid
+  return data
+}
 module.exports = {
   filterVariantInProduct: filterVariantInProduct,
   DeNormalizeTheProductData: DeNormalizeTheProductData,
   extractVariantInProduct: extractVariantInProduct,
   dataPreprocessor: dataPreprocessor,
-  updateVariantWithObjectId: updateVariantWithObjectId
+  updateVariantWithObjectId: updateVariantWithObjectId,
+  addObjectIdToData: addObjectIdToData
 }
