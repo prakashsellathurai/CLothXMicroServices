@@ -1,5 +1,6 @@
 'use strict'
 const productIndex = require('./initIndex').product.unsorted
+const utils = require('./utils')
 // const utils = require('./utils')
 
 // function product (data) {
@@ -15,6 +16,7 @@ const productIndex = require('./initIndex').product.unsorted
 // }
 
 function product (data) {
+  data = utils.addObjectIdToData(data)
   return productIndex.deleteObject(data.objectID)
 }
 module.exports = {
