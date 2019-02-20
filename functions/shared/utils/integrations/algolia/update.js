@@ -1,5 +1,4 @@
 'use strict'
-const utils = require('./utils')
 const ProductIndex = require('./initIndex').product.unsorted
 /**
  *

@@ -15,7 +15,7 @@ const productIndex = require('./initIndex').product.unsorted
 // }
 
 function product (data) {
-  return productIndex.deleteObject(data.productUid)
+  return productIndex.deleteObject(data.objectID)
 }
 module.exports = {
   product: product

@@ -2,7 +2,7 @@
 const productIndex = require('./initIndex').product.unsorted
 
 function product (data) {
-  data.objectId = data.productUid
+  data.objectID = data.productUid
   return addProductInalgolia(data)
 }
 
