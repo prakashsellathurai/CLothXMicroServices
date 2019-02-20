@@ -5,9 +5,9 @@ const reduce = require('./reduce')
 
 function customerReward (customer) {
   let customerDocRef = firestore
-    .doc(`customers/${customer.customerNo}`)
+    .doc(`customers/${customer.customerNumber}`)
   let customerOnStoreDocRef = firestore
-    .doc(`stores/${customer.storeId}/customers/${customer.customerNo}`)
+    .doc(`stores/${customer.storeId}/customers/${customer.customerNumber}`)
 
   return firestore
     .runTransaction(transaction => {
@@ -99,9 +99,9 @@ function invoicePendingStatus (invoiceId, UPDATE_STATUS_BOOLEAN) {
     })
 }
 
-function returnCountInReward (customerNo, totalReturn) {
+function returnCountInReward (customerNumber, totalReturn) {
   let customerDocRef = firestore
-    .doc(`customers/${customerNo}`)
+    .doc(`customers/${customerNumber}`)
   return firestore
     .runTransaction(t => {
       return t.get(customerDocRef)
