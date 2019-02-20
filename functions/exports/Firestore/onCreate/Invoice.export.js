@@ -15,7 +15,7 @@ function generateMessage (link) {
 function MainHandler (snap, context) {
   const sendSmsBoolean = snap.data().sendSms
   const invoiceId = context.params.invoiceId
-  const customerNo = snap.data().customerNumber
+  const customerNumber = snap.data().customerNumber
   const storeId = snap.data().storeUid
   const customer = {
     customerNumber: snap.data().customerNumber,
@@ -31,14 +31,14 @@ function MainHandler (snap, context) {
       .then((link) => generateMessage(link))
       .then((Message) => {
         if (sendSmsBoolean) {
-          return sendMessage(customerNo, Message)
+          return sendMessage(customerNumber, Message)
             .then((body) => JSON.parse(body))
             .then((body) => {
               let messageSuccess = (body.type === 'success')
               let smsId = (messageSuccess) ? body.message : utils.generateId()
               let status = body.type
               let errorDescription = body.message
-              return db.utils.sms.log.OnInvoiceReport(storeId, smsId, customerNo, status, errorDescription)
+              return db.log.sms(storeId, customerNumber, smsId, status, errorDescription)
             })
         } else {
           return Promise.resolve(0)

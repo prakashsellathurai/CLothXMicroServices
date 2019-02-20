@@ -11,14 +11,26 @@ const productSearch = (query) => db
     ...query,
     timestamp: admin.database.ServerValue.TIMESTAMP
   })
-
+/**
+ * log the store search queries
+ * @param {String} query
+ * @param {String} storId
+ */
 const storeSearch = (query, storId) => db
   .ref(`logs/searches/stores/${storId}`)
   .push({
     ...query,
     timestamp: admin.database.ServerValue.TIMESTAMP
   })
+const sms = (storeId, customerNumber, smsId, status, errorDescription) => db
+  .ref(`logs/sms/stores/${storeId}/customers/${customerNumber}`)
+  .push({
+    smsId: smsId,
+    status: status,
+    errorDescription: errorDescription
+  })
 module.exports = {
   productSearch: productSearch,
-  storeSearch: storeSearch
+  storeSearch: storeSearch,
+  sms
 }
