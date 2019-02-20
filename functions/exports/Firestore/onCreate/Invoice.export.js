@@ -18,6 +18,7 @@ function MainHandler (snap, context) {
   const customerNo = snap.data().customerNumber
   const storeId = snap.data().storeUid
   const customer = {
+    customerNumber: snap.data().customerNumber,
     customerName: snap.data().customerName,
     totalQuantity: snap.data().totalQuantity,
     totalPrice: snap.data().totalPrice,
