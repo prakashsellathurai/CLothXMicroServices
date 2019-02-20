@@ -12,6 +12,7 @@ async function checkEnv () {
   let deploymentProjectConfig = await JSON.parse(fs.readFileSync(path.join(__dirname, './../environment/.deployenv'), 'utf8'))
   return deploymentProjectConfig.production
 }
+
 module.exports = {
   functionNameGenerator: functionNameGenerator,
   checkEnv: checkEnv

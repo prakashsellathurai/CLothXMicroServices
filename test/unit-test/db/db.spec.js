@@ -1,8 +1,8 @@
 const chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
-let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
-let db = require('../../../functions/shared/firestore/CRUD/index')
+let admin = require('./../../../functions/shared/environment/initAdmin').withrawdb()
+let db = require('../../../functions/shared/firestore/CRUD')
 const assert = chai.assert
 var expect = chai.expect
 let test_data = {
@@ -15,7 +15,7 @@ describe('firebase admin sdk', () => {
     expect(() => admin).to.not.throw()
   })
 })
-describe('db', async () => {
+describe('db', () => {
   describe('#firestore', function () {
     let firestore = admin.firestore()
     it('should have collection property', () => {
@@ -24,8 +24,16 @@ describe('db', async () => {
     it('should have doc property', () => {
       expect(firestore).to.have.property('doc')
     })
-    it('should update the invoice on return of products', async () => {
-   
+    it('should set product', async () => {
+      let productid = 'gchgvgc'
+      let data = {}
+      let createProduct = await db.create.product(productid, data)
+      let setProduct = await db.set.RandomObjectIdToProduct(productid, 'yuuyvuvu')
+      if (createProduct) {
+        expect(setProduct).to.be.an('Object')
+        expect(setProduct).to.have.property('objectID')
+        expect(setProduct).to.have.property('cloudinaryUrl')
+      }
     })
   })
 })

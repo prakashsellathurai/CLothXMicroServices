@@ -34,7 +34,7 @@ searchRouter
 
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
-        return dataParser(index, query, page, filters, [])
+        return dataParser(index, query, page, filters)
           .then((response) => Promise.all([
             Promise.resolve(res.json(response)),
             Promise.resolve((notValidToLog(query)) ? 0 : db.log.productSearch(logObject))
@@ -72,7 +72,7 @@ searchRouter.post('/store', (req, res) => {
       let filters = GENERATE_FILTER_STRING._for._post.store(storeId, reqFilters)
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
-        return dataParser(index, query, page, filters, [])
+        return dataParser(index, query, page, filters)
           .then((response) => Promise.all([
             Promise.resolve(res.json(response)),
             Promise.resolve((notValidToLog(query)) ? 0 : db.log.storeSearch(logObject, storeId))
@@ -112,7 +112,7 @@ searchRouter.post('/store_all', (req, res) => {
       if (typeof filters === 'string') {
         let index = sortByProductIndexSelector(reqSortBy)
 
-        return dataParser(index, query, page, filters, [])
+        return dataParser(index, query, page, filters)
           .then((response) => Promise.all([
             Promise.resolve(res.json(response)),
             Promise.resolve((notValidToLog(query)) ? 0 : db.log.storeSearch(logObject, storeId))

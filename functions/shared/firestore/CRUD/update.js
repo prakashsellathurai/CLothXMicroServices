@@ -1,7 +1,7 @@
 'use strict'
 const admin = require('firebase-admin')
 const firestore = admin.firestore()
-const reduce = require('./reduce.js')
+const reduce = require('./reduce')
 
 function customerReward (customer) {
   let customerDocRef = firestore
@@ -41,7 +41,7 @@ function customerReward (customer) {
                   'lastVisitInMilli': Date.now(),
                   'differenceInVisits': Date.now() - currentStateOfCustomerReward.lastVisitInMilli
                 }
-                transaction.set(customerDocRef, data, {merge: true})
+                transaction.set(customerDocRef, data, { merge: true })
               }
               if (!storeDocDataSnapshot.exists) {
                 const rewardData = {
@@ -79,10 +79,10 @@ function invoiceOnProductsReturn (invoiceId, cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    let size = cartProduct.size
+    // let size = cartProduct.size
     let singleUnitPrize = cartProduct.singleUnitPrice
     let quantityToReturn = cartProduct.totalQuantity
-    promises.push(reduce.productsOnInvoice(invoiceId, productUid, size, singleUnitPrize, quantityToReturn))
+    promises.push(reduce.productsOnInvoice(invoiceId, productUid, singleUnitPrize, quantityToReturn))
   }
   return Promise.all(promises)
 }
@@ -108,7 +108,7 @@ function returnCountInReward (customerNo, totalReturn) {
         .then((customerDoc) => {
           let currentProductsReturn = customerDoc.data().totalProductsReturn
           currentProductsReturn = (typeof currentProductsReturn !== 'undefined') ? currentProductsReturn : 0
-          t.update(customerDocRef, {totalProductsReturn: currentProductsReturn + totalReturn})
+          t.update(customerDocRef, { totalProductsReturn: currentProductsReturn + totalReturn })
         })
     })
 }

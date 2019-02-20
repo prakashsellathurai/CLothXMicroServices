@@ -273,7 +273,7 @@ describe('/POST product', () => {
     PossibleInputs.forEach(function (inputObject) {
       it(`${inputObject.description}`, (done) => {
         let body = {
-          query: 'black',
+          query: 'a',
           page: 1,
           sortBy: '',
           filters: inputObject.filters
@@ -289,76 +289,7 @@ describe('/POST product', () => {
       })
     })
   })
-  describe('#response structure test', () => {
-    it(`should respond with firestore data structure`, (done) => {
-      let body = {
-        query: '',
-        page: 1,
-        sortBy: ''
-      }
-      request
-        .post('/product')
-        .send(body)
-        .end((_err, res) => {
-          res.body.should.be.an('array')
-          let firebaseProducts = []
-          res.body.forEach((product) => firebaseProducts.push(product))
-          firebaseProducts.forEach(product => {
-            expect(product).to.contain.keys('picturesUrl',
-              'categories',
-              'hsnCode',
-              'inclusiveAllTaxes',
-              'picturesPath',
-              'productUid',
-              'description',
-              'gender',
-              'hasNoGstNumber',
-              'otherTax',
-              'productName',
-              'storeId',
-              'prn',
-              'createdOn',
-              'storeDetails',
-              'tags',
-              'addedBy',
-              'taxType',
-              'isListable',
-              'isDeleted',
-              'brandName',
-              'isVariantsWithSamePrice',
-              'variants')
-          })
-
-          done()
-        })
-    })
-    let genders = ['Men', 'Women']
-    genders.forEach(gender => {
-      it(`respond with ${gender}`, (done) => {
-        let body = {
-          query: 'black',
-          filters: {
-            allowOutOfStock: false,
-            categories: {
-              gender: gender
-            }
-          }
-        }
-        request
-          .post('/product')
-          .send(body)
-          .end((_err, res) => {
-            let firebaseProducts = []
-            res.body.forEach((product) => firebaseProducts.push(product))
-            //   console.log(res.body.length)
-            firebaseProducts.forEach(product => {
-              expect(product).to.have.property('gender', gender)
-            })
-            done()
-          })
-      })
-    })
-  })
+  
   afterEach(function () {
     request.close()
   })

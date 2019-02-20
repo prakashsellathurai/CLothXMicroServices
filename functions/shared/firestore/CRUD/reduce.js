@@ -7,7 +7,6 @@ function productsOnLocalInventory (cartProducts) {
   for (let index = 0; index < cartProducts.length; index++) {
     const cartProduct = cartProducts[index]
     let productUid = cartProduct.productUid
-    let size = cartProduct.size
     let quantityToReduce = cartProduct.totalQuantity
     promises.push(reduceProductQuantity(productUid, size, quantityToReduce))
   }
@@ -22,9 +21,8 @@ function reduceProductQuantity (productUid, size, quantityToReduce) {
       return transaction
         .get(productDocRef)
         .then((doc) => {
-          let variants = doc.data().variants
-          let reducedVariants = reduceStock(variants, size, quantityToReduce)
-          return transaction.update(doc.ref, { variants: reducedVariants })
+          let reducedStock = doc.data().stock - quantityToReduce
+          return transaction.update(doc.ref, { stock: reducedStock })
         })
     })
 }
