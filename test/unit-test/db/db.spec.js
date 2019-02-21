@@ -10,21 +10,21 @@ let test_data = {
   user_UID: 'w2DUjxHxBIQCuYg4LB0ZlALpD7r2',
   userEmail: 'nponmuthuselvam@gmail.com'
 }
-describe('firebase admin sdk', () => {
-  it('should intiliaze admin', () => {
+describe('firebase admin sdk', function () {
+  it('should intiliaze admin', function () {
     expect(() => admin).to.not.throw()
   })
 })
-describe('db', () => {
+describe('db', function () {
   describe('#firestore', function () {
     let firestore = admin.firestore()
-    it('should have collection property', () => {
+    it('should have collection property', function () {
       expect(firestore).to.have.property('collection')
     })
-    it('should have doc property', () => {
+    it('should have doc property', function () {
       expect(firestore).to.have.property('doc')
     })
-    it('should set product', async () => {
+    it('should set product', async function () {
       let productid = 'gchgvgc'
       let data = {}
       let createProduct = await db.create.product(productid, data)
@@ -35,7 +35,7 @@ describe('db', () => {
         expect(setProduct).to.have.property('cloudinaryUrl')
       }
     })
-    it('should update customer reward', async () => {
+    it('should update customer reward', async function () {
       const givenCustomerData = {
         'storeId': `5555555`,
         'customerNumber': `jdjcdbbdcbd`,
@@ -54,5 +54,9 @@ describe('db', () => {
       )
       expect(_update).to.equal(200)
     })
+  })
+  it('should get ProductsIn Store', async function () {
+    let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
+    expect(Products).to.be.an('Array')
   })
 })
