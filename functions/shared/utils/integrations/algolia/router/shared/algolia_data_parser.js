@@ -54,7 +54,8 @@ function makeRequest (_index, _query, _page, _filters) {
  */
 async function mainEngine (_index, _query, _page, _filters) {
   let results = await makeRequest(_index, _query, _page, _filters)
-  let normalizeddata = groupByGroupId(results)
-  return normalizeddata
+  // @depreceted let normalizeddata = groupByGroupId(results)
+  console.log(results)
+  return results
 }
 module.exports = mainEngine
