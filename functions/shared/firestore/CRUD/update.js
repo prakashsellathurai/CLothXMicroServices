@@ -2,12 +2,22 @@
 const admin = require('firebase-admin')
 const firestore = admin.firestore()
 const reduce = require('./reduce')
-
-function customerReward (customer) {
+/**
+ * updates the customer reward in the firestore database
+ * @param {number} customerNumber
+ * @param {String} storeId
+ * @param {String} customerName
+ * @param {number} totalQuantity
+ * @param {number} totalPrice
+ * @param {Date} createdOn
+ * @async
+ * @returns {Promise} resolved Promise
+ */
+function customerReward (customerNumber, storeId, customerName, totalQuantity, totalPrice, createdOn) {
   let customerDocRef = firestore
-    .doc(`customers/${customer.customerNumber}`)
+    .doc(`customers/${customerNumber}`)
   let customerOnStoreDocRef = firestore
-    .doc(`stores/${customer.storeId}/customers/${customer.customerNumber}`)
+    .doc(`stores/${storeId}/customers/${customerNumber}`)
 
   return firestore
     .runTransaction(transaction => {
@@ -19,10 +29,10 @@ function customerReward (customer) {
             .then((storeDocDataSnapshot) => {
               if (!customerDataSnapshot.exists) {
                 let data = {
-                  'customerName': customer.customerName,
-                  'noOfItemsPurchased': customer.totalQuantity,
-                  'totalCostOfPurchase': customer.totalPrice,
-                  'firstVisit': customer.createdOn,
+                  'customerName': customerName,
+                  'noOfItemsPurchased': totalQuantity,
+                  'totalCostOfPurchase': totalPrice,
+                  'firstVisit': createdOn,
                   'totalNoOfVisit': 1,
                   'totalProductsReturn': 0,
                   'lastVisitInMilli': Date.now(),
@@ -31,13 +41,12 @@ function customerReward (customer) {
                 transaction.set(customerDocRef, data)
               } else {
                 let currentStateOfCustomerReward = customerDataSnapshot.data()
-                let exitingCustomerData = customer
                 let data = {
-                  'customerName': customer.customerName,
-                  'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
-                  'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
+                  'customerName': customerName,
+                  'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + totalQuantity,
+                  'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + totalPrice,
                   'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-                  'lastVisit': exitingCustomerData.createdOn,
+                  'lastVisit': createdOn,
                   'lastVisitInMilli': Date.now(),
                   'differenceInVisits': Date.now() - currentStateOfCustomerReward.lastVisitInMilli
                 }
@@ -45,10 +54,10 @@ function customerReward (customer) {
               }
               if (!storeDocDataSnapshot.exists) {
                 const rewardData = {
-                  'customerName': customer.customerName,
-                  'noOfItemsPurchased': customer.totalQuantity,
-                  'totalCostOfPurchase': customer.totalPrice,
-                  'firstVisit': customer.createdOn,
+                  'customerName': customerName,
+                  'noOfItemsPurchased': totalQuantity,
+                  'totalCostOfPurchase': totalPrice,
+                  'firstVisit': createdOn,
                   'totalNoOfVisit': 1,
                   'lastVisitInMilli': Date.now(),
                   'differenceInVisits': null
@@ -56,13 +65,12 @@ function customerReward (customer) {
                 transaction.set(customerOnStoreDocRef, rewardData)
               } else {
                 let currentStateOfCustomerReward = storeDocDataSnapshot.data()
-                let exitingCustomerData = customer
                 let rewardData = {
-                  'customerName': customer.customerName,
-                  'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + exitingCustomerData.totalQuantity,
-                  'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + exitingCustomerData.totalPrice,
+                  'customerName': customerName,
+                  'noOfItemsPurchased': currentStateOfCustomerReward.noOfItemsPurchased + totalQuantity,
+                  'totalCostOfPurchase': currentStateOfCustomerReward.totalCostOfPurchase + totalPrice,
                   'totalNoOfVisit': currentStateOfCustomerReward.totalNoOfVisit + 1,
-                  'lastVisit': exitingCustomerData.createdOn,
+                  'lastVisit': createdOn,
                   'lastVisitInMilli': Date.now(),
                   'differenceInVisits': Date.now() - currentStateOfCustomerReward
                 }
@@ -71,7 +79,7 @@ function customerReward (customer) {
             })
             .then(() => Promise.resolve())
         })
-    })
+    }).then(() => Promise.resolve(200))
 }
 
 function invoiceOnProductsReturn (invoiceId, cartProducts) {

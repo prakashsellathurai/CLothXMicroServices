@@ -17,14 +17,20 @@ function MainHandler (snap, context) {
   const invoiceId = context.params.invoiceId
   const customerNumber = snap.data().customerNumber
   const storeId = snap.data().storeUid
-  const customer = {
-    customerNumber: snap.data().customerNumber,
-    customerName: snap.data().customerName,
-    totalQuantity: snap.data().totalQuantity,
-    totalPrice: snap.data().totalPrice,
-    createdOn: new Date()
-  }
-  return db.update.customerReward(customer)
+  const customerName = snap.data().customerName
+  const totalQuantity = snap.data().totalQuantity
+  const totalPrice = snap.data().totalPrice
+  const createdOn = new Date()
+
+  return db
+    .update
+    .customerReward(
+      customerNumber,
+      storeId,
+      customerName,
+      totalQuantity,
+      totalPrice,
+      createdOn)
     .then(() => utils
       .checkEnv()
       .then((bool) => (bool) ? `https://www.spoteasy.in/u/invoice/${invoiceId}` : `https://spoteasytest.firebaseapp.com/u/invoice/${invoiceId}`)
