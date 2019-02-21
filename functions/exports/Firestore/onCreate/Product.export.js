@@ -1,8 +1,9 @@
-//= ===================================== IMPORTS ===============================================//
+// ======================================= IMPORTS ===============================================//
 const db = require('./../../../shared/firestore/CRUD/index')
 const functions = require('firebase-functions')
 const algolia = require('./../../../shared/utils/integrations/algolia/index')
 const cloudinary = require('./../../../shared/utils/integrations/cloudinary/index')
+const _ = require('lodash')
 
 function ObjectIdAssigner (context, cloudinaryUrl) {
   let productId = context.params.productId
@@ -21,7 +22,8 @@ function IndexItInAlgolia (data) {
 }
 
 async function MainHandler (snap, context) {
-  let cloudinaryUrl = await saveToCloudinary(snap.data().pictures.url, snap.id)
+  let urlArray = _.get(snap.data(), 'pictures.url')
+  let cloudinaryUrl = await saveToCloudinary(urlArray, snap.id)
   let data = await ObjectIdAssigner(context, cloudinaryUrl)
 
   return IndexItInAlgolia(data)

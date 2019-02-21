@@ -52,7 +52,7 @@ function updateVariantWithObjectId (variant, objectId) {
   return Promise.resolve(variant)
 }
 function addObjectIdToData (data) {
-  data.objectID = data.productUid
+  data['objectID'] = data.productUid
   return data
 }
 module.exports = {

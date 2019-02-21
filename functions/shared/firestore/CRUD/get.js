@@ -19,7 +19,27 @@ function UserEmailByUUID (uid) {
     .then(array => array[0])
     .then((doc) => doc.email)
 }
-
+/**
+ *gets the products related to storeId
+ * @param {String} storeId String representing the store
+ */
+function ProductInStore (storeId) {
+  return firestore
+    .collection('products')
+    .where('storeId', '==', storeId)
+    .get()
+    .then((docs) => {
+      let promises = []
+      docs
+        .forEach(doc => {
+          promises
+            .push(doc
+              .data())
+        })
+      return promises
+    })
+}
 module.exports = {
-  UserEmailByUUID: UserEmailByUUID
+  UserEmailByUUID: UserEmailByUUID,
+  ProductInStore: ProductInStore
 }

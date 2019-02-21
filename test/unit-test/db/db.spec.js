@@ -55,4 +55,8 @@ describe('db', function () {
       expect(_update).to.equal(200)
     })
   })
+  it('should get ProductsIn Store', async function () {
+    let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
+    expect(Products).to.be.an('Array')
+  })
 })
