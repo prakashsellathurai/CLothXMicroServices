@@ -79,7 +79,7 @@ function customerReward (customerNumber, storeId, customerName, totalQuantity, t
             })
             .then(() => Promise.resolve())
         })
-    })
+    }).then(() => Promise.resolve(200))
 }
 
 function invoiceOnProductsReturn (invoiceId, cartProducts) {

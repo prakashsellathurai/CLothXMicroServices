@@ -35,5 +35,24 @@ describe('db', () => {
         expect(setProduct).to.have.property('cloudinaryUrl')
       }
     })
+    it('should update customer reward', async () => {
+      const givenCustomerData = {
+        'storeId': `5555555`,
+        'customerNumber': `jdjcdbbdcbd`,
+        'customerName': 515115151,
+        'createdOn': new Date(),
+        'totalPrice': 8425,
+        'totalQuantity': 455
+      }
+      let _update = await db.update.customerReward(
+        givenCustomerData.customerNumber,
+        givenCustomerData.storeId,
+        givenCustomerData.customerName,
+        givenCustomerData.totalQuantity,
+        givenCustomerData.totalPrice,
+        givenCustomerData.createdOn
+      )
+      expect(_update).to.equal(200)
+    })
   })
 })
