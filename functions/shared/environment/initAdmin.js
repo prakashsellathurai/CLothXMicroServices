@@ -20,8 +20,8 @@ function setCredentials () {
       credential: admin.credential.cert(serviceAccount),
       storageBucket: storageBucket
     })
-    let firestore = admin.firestore()
-    firestore.settings(env.FIRESTORE_SETTINGS)
+    // let firestore = admin.firestore()
+    // firestore.settings(env.FIRESTORE_SETTINGS)
     return admin
   } catch (e) {
     console.error(e)
@@ -39,8 +39,8 @@ function withrawdb () {
       credential: admin.credential.cert(rawdb.serviceAccount),
       storageBucket: rawdb.storageBucket
     })
-    let firestore = admin.firestore()
-    firestore.settings(env.FIRESTORE_SETTINGS)
+    // let firestore = admin.firestore()
+    // firestore.settings(env.FIRESTORE_SETTINGS)
     return admin
   } catch (e) {
     console.error(e)

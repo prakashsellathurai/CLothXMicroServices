@@ -1,7 +1,7 @@
 const chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
-let admin = require('./../../../functions/shared/environment/initAdmin').withrawdb()
+let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
 let db = require('../../../functions/shared/firestore/CRUD')
 const assert = chai.assert
 var expect = chai.expect

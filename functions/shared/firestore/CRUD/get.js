@@ -26,17 +26,17 @@ function UserEmailByUUID (uid) {
 function ProductInStore (storeId) {
   return firestore
     .collection('products')
-    .where('storeId', '==', storeId)
+    .where('storeId', '==', `${storeId}`)
     .get()
     .then((docs) => {
       let promises = []
-      docs
+      docs.docs
         .forEach(doc => {
           promises
             .push(doc
               .data())
         })
-      return promises
+      return Promise.all(promises)
     })
 }
 module.exports = {
