@@ -12,14 +12,30 @@ describe('csv generator', function () {
   })
   it('should generate csv with store post the products for the first time', async function () {
     let generatedCSV = await csv.generateCSV.WithStoreId('8mLZEPfE0rowuNJAqINj')
-    console.log(generatedCSV)
     let isCSV = csv.validateCSV(generatedCSV)
     expect(isCSV).to.eql(true)
   })
 })
 
 describe('csv parser', function () {
-  it('should parse csv', function () {
-
+  it('should parse csv', async function () {
+    let generatedCSV = await csv.generateCSV.WithStoreId('eIGNV5kDx1JuMCn3td3W')
+    let geneartedJson = await csv.parseCSV(generatedCSV)
+    expect(geneartedJson).to.be.an('Array')
+    geneartedJson.forEach(
+      product => {
+        expect(Object.keys(product).length).to.eql(csv.CSV_TEMPLATE_AST.length)
+      }
+    )
+  })
+  it('should parse template csv', async function () {
+    let generatedCSV = await csv.generateCSV.WithStoreId('mLZEPfE0rowuNJAqINj')
+    let geneartedJson = await csv.parseCSV(generatedCSV)
+    expect(geneartedJson).to.be.an('Array')
+    geneartedJson.forEach(
+      product => {
+        expect(Object.keys(product).length).to.eql(csv.CSV_TEMPLATE_AST.length)
+      }
+    )
   })
 })
