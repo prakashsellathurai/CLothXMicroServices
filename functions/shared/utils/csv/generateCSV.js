@@ -13,7 +13,7 @@ const CSV_TEMPLATE_ABSTRACT = require('./CSV_TEMPLATE_AST')
  */
 async function WithStoreId (storeId) {
   let products = await db.get.ProductInStore(storeId)
-  let csv = generateCSVString(products)
+  let csv = generateCSVString(products, storeId)
   return csv
 }
 /**
@@ -21,9 +21,14 @@ async function WithStoreId (storeId) {
  * @param {Array} products Array of products representing the products
  * @returns {CSV} csv String representing the products file
  */
-const generateCSVString = (products) => {
-  let ProductDATA = generateProductJSONRows(products)
+const generateCSVString = (products, storeId) => {
   try {
+    let ProductDATA
+    if (products.length <= 0) {
+      ProductDATA = generateTemplateCSVForStore(storeId)
+    } else {
+      ProductDATA = generateProductJSONRows(products)
+    }
     const parser = new Json2csvParser()
     const csv = parser.parse(ProductDATA)
     return csv
@@ -31,10 +36,23 @@ const generateCSVString = (products) => {
     console.error(err)
   }
 }
+const generateTemplateCSVForStore = (storeId) => {
+  let ProductDATA = {}
+  CSV_TEMPLATE_ABSTRACT
+    .forEach(template => {
+      let header = template.csv_header
+      if (header === 'STORE_ID') {
+        ProductDATA[`${header}`] = `${storeId}`
+      } else {
+        ProductDATA[`${header}`] = ''
+      }
+    })
+  return [ProductDATA]
+}
 /**
- * geneartes  products in json format
- * @param {array} products
- * @returns {JSON} json document representing the products data
+ * generates  products in json format
+ * @param {Array} products
+ * @returns {Array} json document representing the products data
  */
 const generateProductJSONRows = (products) => {
   let productsArray = []
