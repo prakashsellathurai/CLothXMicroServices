@@ -1,52 +1,71 @@
 'use strict'
-var db = require('./../../firestore/CRUD')
-const createCsvStringifier = require('csv-writer')
-  .createObjectCsvStringifier
-const HEADERS = [
-  'PRODUCT_UID',
-  'PRN',
-  'PRODUCT_NAME',
-  'BRAND_NAME',
-  'DESCRIPTION',
-  'SELLING_PRICE',
-  'PURCHASED_PRICE',
-  'STORE_ID',
-  'TAX_IN_PERCENTAGE',
-  'SOLD',
-  'STOCK',
-  'MARGIN_IN_PERCENTAGE',
-  'CATEGORIES',
-  'ATTRIBUTES_VALUES',
-  'ATTRIBUTES_TEMPLATES',
-  'IS_VARIANTS_WITH_SAME_PRICE_AND_TAX'
-]
-
+const Json2csvParser = require('json2csv').Parser
 const _ = require('lodash')
-const joi = require('joi')
+var db = require('./../../firestore/CRUD')
 
-const objectSchema = joi.object({
-  source: joi.string().min(1).required(),
-  path: joi.string().min(1).required()
-}).required()
-
-const arraySchema = joi.array().items(objectSchema)
-
-const csvStringifier = createCsvStringifier({
-  header: HEADERS
-})
+const CSV_TEMPLATE_ABSTRACT = require('./CSV_TEMPLATE_AST')
+/**
+ * generates csv  from the products posted by store provide
+ * given @storeId
+ * @param {String} storeId
+ * @async
+ * @returns {CSV} csv String representing the products file
+ */
 async function WithStoreId (storeId) {
   let products = await db.get.ProductInStore(storeId)
-  generateCSVString(products)
-  return products
+  let csv = generateCSVString(products)
+  return csv
 }
-function generateCSVString (products) {
-  console.log(_.keys(products[0]))
-  console.log(_.values(products[0]))
+/**
+ * generates CSV from the  given array of Products
+ * @param {Array} products Array of products representing the products
+ * @returns {CSV} csv String representing the products file
+ */
+const generateCSVString = (products) => {
+  let ProductDATA = generateProductJSONRows(products)
+  try {
+    const parser = new Json2csvParser()
+    const csv = parser.parse(ProductDATA)
+    return csv
+  } catch (err) {
+    console.error(err)
+  }
 }
-function validateProducts (products) {
-  let arrayResult = joi.validate(products, arraySchema)
-  return arrayResult
+/**
+ * geneartes  products in json format
+ * @param {array} products
+ * @returns {JSON} json document representing the products data
+ */
+const generateProductJSONRows = (products) => {
+  let productsArray = []
+  products
+    .forEach(product => {
+      let ProductRow = generateProductJSONRow(product)
+      productsArray.push(ProductRow)
+    })
+  return productsArray
 }
+/**
+ * generate single product Object
+ * @param {Object} product
+ * @returns {Object} json-product
+ */
+const generateProductJSONRow = (product) => {
+  let productROW = {}
+  for (const PRODUCT_TEMPLATE of CSV_TEMPLATE_ABSTRACT) {
+    if (validKeyValue(product, PRODUCT_TEMPLATE.firestore_field)) {
+      productROW[`${PRODUCT_TEMPLATE.firestore_field}`] = `${product[PRODUCT_TEMPLATE.firestore_field]}`
+    }
+  }
+  return productROW
+}
+/**
+ * validate Product data with CSV_TEPLATE
+ * @param {JSON} product
+ * @param {String} firestoreField key representing firestore field stored in CSV_TEMPLATE
+ */
+const validKeyValue = (product, firestoreField) => _.some(_.intersection([`${firestoreField}`], _.keys(product)))
+
 module.exports = {
   WithStoreId: WithStoreId
 }

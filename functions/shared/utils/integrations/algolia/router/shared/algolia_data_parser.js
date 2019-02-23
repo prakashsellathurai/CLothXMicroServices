@@ -31,16 +31,24 @@ const merger = (arr1, arr2, member) => [...arr1.concat(arr2).reduce((m, o) => m.
  * @param {string} _query String representing the query passed
  * @param {number} _page page no
  * @param {String} _filters filter String supported by algolia API
+ * @async
  * @returns {Array} results
  */
-function makeRequest (_index, _query, _page, _filters) {
-  return _index
-    .search({
+async function makeRequest (_index, _query, _page, _filters) {
+  try {
+    let res = await _index.search({
       query: _query,
       filters: _filters,
       page: _page,
       hitsPerPage: 50
-    }).then((res) => res.hits)
+    })
+    return res.hits
+  } catch (e) {
+    if (e) {
+      console.error(e)
+      return []
+    }
+  }
 }
 /**
  * makes the search request to algolia and returns the sanitized result

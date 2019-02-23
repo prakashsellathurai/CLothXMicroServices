@@ -1,15 +1,14 @@
+var it = require('mocha').it
+var describe = require('mocha').describe
+
 const chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
+
 let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
 let db = require('../../../functions/shared/firestore/CRUD')
-const assert = chai.assert
 var expect = chai.expect
-let test_data = {
-  storeId: 'o5TJXffUXswTmtpEmYcY',
-  user_UID: 'w2DUjxHxBIQCuYg4LB0ZlALpD7r2',
-  userEmail: 'nponmuthuselvam@gmail.com'
-}
+
 describe('firebase admin sdk', function () {
   it('should intiliaze admin', function () {
     expect(() => admin).to.not.throw()
@@ -54,9 +53,9 @@ describe('db', function () {
       )
       expect(_update).to.equal(200)
     })
-  })
-  it('should get ProductsIn Store', async function () {
-    let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
-    expect(Products).to.be.an('Array')
+    it('should get ProductsIn Store', async function () {
+      let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
+      expect(Products).to.be.an('Array')
+    })
   })
 })
