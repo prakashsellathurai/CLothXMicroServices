@@ -11,21 +11,24 @@ const CSV_TEMPLATE_ABSTRACT = require('./CSV_TEMPLATE_AST')
  * @async
  * @returns {CSV} csv String representing the products file
  */
-async function WithStoreId (storeId) {
+async function WithStoreId (storeId, addedBy) {
   let products = await db.get.ProductInStore(storeId)
-  let csv = generateCSVString(products, storeId)
+  let csv = generateCSVString(products, storeId, addedBy)
   return csv
 }
+
 /**
  * generates CSV from the  given array of Products
- * @param {Array} products Array of products representing the products
+ * @param {Array} products Array of products    if (header === 'STORE_ID') {
+        ProductDATA[`${header}`] = `${storeId}`
+      } else  representing the products
  * @returns {CSV} csv String representing the products file
  */
-const generateCSVString = (products, storeId) => {
+const generateCSVString = (products, storeId, addedBy) => {
   try {
     let ProductDATA
     if (products.length <= 0) {
-      ProductDATA = generateTemplateCSVForStore(storeId)
+      ProductDATA = generateTemplateCSVForStore(storeId, addedBy)
     } else {
       ProductDATA = generateProductJSONRows(products)
     }
@@ -36,13 +39,15 @@ const generateCSVString = (products, storeId) => {
     console.error(err)
   }
 }
-const generateTemplateCSVForStore = (storeId) => {
+const generateTemplateCSVForStore = (storeId, addedBy) => {
   let ProductDATA = {}
   CSV_TEMPLATE_ABSTRACT
     .forEach(template => {
       let header = template.csv_header
       if (header === 'STORE_ID') {
         ProductDATA[`${header}`] = `${storeId}`
+      } else if (header === 'ADDED_BY') {
+        ProductDATA[`${header}`] = `${addedBy}`
       } else {
         ProductDATA[`${header}`] = ''
       }
@@ -71,14 +76,13 @@ const generateProductJSONRows = (products) => {
 const generateProductJSONRow = (product) => {
   let productROW = {}
   for (const PRODUCT_TEMPLATE of CSV_TEMPLATE_ABSTRACT) {
-    if (validKeyValue(product, PRODUCT_TEMPLATE.firestore_field)) {
-      productROW[`${PRODUCT_TEMPLATE.firestore_field}`] = `${product[PRODUCT_TEMPLATE.firestore_field]}`
-    }
+    let urlField = PRODUCT_TEMPLATE.firestore_field
+    productROW[PRODUCT_TEMPLATE.csv_header] = _.get(product, urlField)
   }
   return productROW
 }
 /**
- * validate Product data with CSV_TEPLATE
+ * validate Product data with CSV_TEMPLATE
  * @param {JSON} product
  * @param {String} firestoreField key representing firestore field stored in CSV_TEMPLATE
  */

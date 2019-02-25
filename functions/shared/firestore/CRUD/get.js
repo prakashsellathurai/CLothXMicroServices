@@ -39,7 +39,15 @@ function ProductInStore (storeId) {
       return Promise.all(promises)
     })
 }
+function StoreData (storeId) {
+  return firestore
+    .collection('stores')
+    .doc(`${storeId}`)
+    .get()
+    .then(doc => doc.data())
+}
 module.exports = {
   UserEmailByUUID: UserEmailByUUID,
-  ProductInStore: ProductInStore
+  ProductInStore: ProductInStore,
+  StoreData: StoreData
 }

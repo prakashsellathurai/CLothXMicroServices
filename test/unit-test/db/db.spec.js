@@ -58,4 +58,36 @@ describe('db', function () {
       expect(Products).to.be.an('Array')
     })
   })
+  describe('#utils', function () {
+    it('should return false for wrong storeId', async function () {
+      let storeId = 'yfttfu'
+      let isExist = await db.utils.storeIdExists(storeId)
+      expect(isExist).to.eql(false)
+    })
+    it('should return true for correcr storeId', async function () {
+      let storeId = '2rOMoycHlZC3ph5PfSdy'
+      let isExist = await db.utils.storeIdExists(storeId)
+      expect(isExist).to.eql(true)
+    })
+    it('should return true for correct storeIds', async function () {
+      let storeId = ['2rOMoycHlZC3ph5PfSdy', '5BZRRIrHd3jVy6oF9qei']
+      let isExist = await db.utils.storeIdsExists(storeId)
+      expect(isExist).to.eql(true)
+    })
+    it('should return false for incorrect storeIds', async function () {
+      let storeId = ['2rOMoycHlZC3ph5PfSdy', 'ddd']
+      let isExist = await db.utils.storeIdsExists(storeId)
+      expect(isExist).to.eql(false)
+    })
+    it('should return true for uid provided in the database', async function () {
+      let uid = 'RDeKiMgFsLMAHBpqmQ8ZBOM3IPq1'
+      let isExist = await db.utils.uidExist(uid)
+      expect(isExist).to.eql(true)
+    })
+    it('should return true for uid provided in the database', async function () {
+      let uid = 'RDeKiMgFsLMAHdjvhdpqmQ8ZBOM3IPq1'
+      let isExist = await db.utils.uidExist(uid)
+      expect(isExist).to.eql(false)
+    })
+  })
 })
