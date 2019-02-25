@@ -16,5 +16,17 @@ module.exports = async (csvString) => {
           delete product[template.csv_header]
         })
     })
-  return jsonData
+  
+  return sanitizeInputJson(jsonData)
+}
+function sanitizeInputJson (productsInJson) {
+  let sanitizedProdcutsArray = []
+  for (const product of productsInJson) {
+    let sanitizedObject = {}
+    for (const key in product) {
+      _.set(sanitizedObject, key, product[key])
+    }
+    sanitizedProdcutsArray.push(sanitizedObject)
+  }
+  return sanitizedProdcutsArray
 }

@@ -93,8 +93,8 @@ function multipleProductsHandlerRoutine (docRef, storeId, groupId) {
                       productUid: docRef.id,
                       prn: prn,
                       groupId: groupId === '' ? prn : groupId,
-                      createdOn: admin.firestore.Timestamp(),
-                      lastModified: admin.firestore.Timestamp()
+                      createdOn: admin.firestore.FieldValue.serverTimestamp(),
+                      lastModified: admin.firestore.FieldValue.serverTimestamp()
                     })
                 return prn
               }))

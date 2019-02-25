@@ -16,7 +16,6 @@ describe('csv generator', function () {
     expect(isCSV).to.eql(true)
   })
 })
-
 describe('csv parser', function () {
   it('should parse csv', async function () {
     let generatedCSV = await csv.generateCSV.WithStoreId('eIGNV5kDx1JuMCn3td3W', 'uiyugyu')
@@ -37,5 +36,12 @@ describe('csv parser', function () {
         expect(Object.keys(product).length).to.eql(csv.CSV_TEMPLATE_AST.length)
       }
     )
+  })
+})
+describe('multiple products upload module', function () {
+  let uploadModule = require('./../../../functions/shared/modules/uploadMultipleProducts.module')
+  it('should not throw error', async function () {
+    let generatedCSV = await csv.generateCSV.WithStoreId('eIGNV5kDx1JuMCn3td3W', 'fakI1vG8QCdndnpBjeGJx9F4KEp1')
+    expect(await uploadModule({ csvString: `${generatedCSV}` })).to.eql(csv.utils.RESPONSE_CODES.SUCCESS)
   })
 })
