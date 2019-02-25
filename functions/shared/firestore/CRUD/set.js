@@ -59,11 +59,56 @@ function RandomObjectIdToProduct (productId, cloudinaryUrl) {
         })
     })
 }
+const multipleProducts = async (productsInJson) => {
+  let groupId = ''
+  for (const i in productsInJson) {
+    await firestore.collection(`products`)
+      .add(productsInJson[i])
+      .then((docRef) =>
+        multipleProductsHandlerRoutine(docRef, productsInJson[i].storeId, groupId)
+      )
+  }
+}
+function multipleProductsHandlerRoutine (docRef, storeId, groupId) {
+  let prn = ''
+  const possible = 'bcdfghjklmnpqrstvwxyz'
+
+  for (let i = 0; i < 4; i++) {
+    prn += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return firestore.collection('products')
+    .where(storeId, '==', `${storeId}`)
+    .where(prn, '==', `${prn}`)
+    .get()
+    .then((data) => {
+      if (data.size === 0) {
+        return firestore
+          .runTransaction((t) =>
+            t
+              .get(docRef)
+              .then(() => {
+                t
+                  .update(docRef,
+                    {
+                      productUid: docRef.id,
+                      prn: prn,
+                      groupId: groupId === '' ? prn : groupId,
+                      createdOn: admin.firestore.FieldValue.serverTimestamp(),
+                      lastModified: admin.firestore.FieldValue.serverTimestamp()
+                    })
+                return prn
+              }))
+      } else {
+        return multipleProductsHandlerRoutine(docRef, storeId, groupId)
+      }
+    })
+}
 const generateObjectId = (productUid) => productUid + '_' + Math.random().toString(36).substring(7)
 module.exports = {
   invoicePendingStatusToFalse: invoicePendingStatusToFalse,
   productPRN: productPRN,
   objectIDtoProduct: objectIDtoProduct,
   RandomObjectIdToProduct: RandomObjectIdToProduct,
-  cloudUrlInStore: cloudUrlInStore
+  cloudUrlInStore: cloudUrlInStore,
+  multipleProducts: multipleProducts
 }

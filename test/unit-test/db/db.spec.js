@@ -1,15 +1,14 @@
+var it = require('mocha').it
+var describe = require('mocha').describe
+
 const chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
-let admin = require('./../../../functions/shared/environment/initAdmin').withrawdb()
+
+let admin = require('./../../../functions/shared/environment/initAdmin').setCredentials()
 let db = require('../../../functions/shared/firestore/CRUD')
-const assert = chai.assert
 var expect = chai.expect
-let test_data = {
-  storeId: 'o5TJXffUXswTmtpEmYcY',
-  user_UID: 'w2DUjxHxBIQCuYg4LB0ZlALpD7r2',
-  userEmail: 'nponmuthuselvam@gmail.com'
-}
+
 describe('firebase admin sdk', function () {
   it('should intiliaze admin', function () {
     expect(() => admin).to.not.throw()
@@ -54,9 +53,41 @@ describe('db', function () {
       )
       expect(_update).to.equal(200)
     })
+    it('should get ProductsIn Store', async function () {
+      let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
+      expect(Products).to.be.an('Array')
+    })
   })
-  it('should get ProductsIn Store', async function () {
-    let Products = await db.get.ProductInStore('eIGNV5kDx1JuMCn3td3W')
-    expect(Products).to.be.an('Array')
+  describe('#utils', function () {
+    it('should return false for wrong storeId', async function () {
+      let storeId = 'yfttfu'
+      let isExist = await db.utils.storeIdExists(storeId)
+      expect(isExist).to.eql(false)
+    })
+    it('should return true for correcr storeId', async function () {
+      let storeId = '2rOMoycHlZC3ph5PfSdy'
+      let isExist = await db.utils.storeIdExists(storeId)
+      expect(isExist).to.eql(true)
+    })
+    it('should return true for correct storeIds', async function () {
+      let storeId = ['2rOMoycHlZC3ph5PfSdy', '5BZRRIrHd3jVy6oF9qei']
+      let isExist = await db.utils.storeIdsExists(storeId)
+      expect(isExist).to.eql(true)
+    })
+    it('should return false for incorrect storeIds', async function () {
+      let storeId = ['2rOMoycHlZC3ph5PfSdy', 'ddd']
+      let isExist = await db.utils.storeIdsExists(storeId)
+      expect(isExist).to.eql(false)
+    })
+    it('should return true for uid provided in the database', async function () {
+      let uid = 'RDeKiMgFsLMAHBpqmQ8ZBOM3IPq1'
+      let isExist = await db.utils.uidExist(uid)
+      expect(isExist).to.eql(true)
+    })
+    it('should return true for uid provided in the database', async function () {
+      let uid = 'RDeKiMgFsLMAHdjvhdpqmQ8ZBOM3IPq1'
+      let isExist = await db.utils.uidExist(uid)
+      expect(isExist).to.eql(false)
+    })
   })
 })

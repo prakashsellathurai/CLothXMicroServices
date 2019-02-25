@@ -12,7 +12,14 @@ function pendingBill (storeId, PendingBillId) {
     .doc(`stores/${storeId}/pendingbills/${PendingBillId}`)
     .delete()
 }
+function productsPostedByStore (storeId) {
+  return firestore.collection('products')
+    .where('storeId', '==', `${storeId}`)
+    .get()
+    .then(qSnap => qSnap.forEach(doc => doc.ref.delete()))
+}
 module.exports = {
   invoice: invoice,
-  pendingBill: pendingBill
+  pendingBill: pendingBill,
+  productsPostedByStore: productsPostedByStore
 }

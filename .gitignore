@@ -100,3 +100,5 @@ $RECYCLE.BIN/
 .deployenv
 package-lock.json
 /dist
+*.csv
+*.~lock.data.csv#
