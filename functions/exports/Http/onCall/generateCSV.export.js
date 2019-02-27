@@ -2,7 +2,7 @@ const functions = require('firebase-functions')
 const csv = require('./../../../shared/utils/csv')
 /**
  * oncall https function generates the csv file for the storeId
- * @param { storeId: String }
+ * @param { storeId: String, addedBy: String }
  * @async
  * @returns {CSV-String}
  */
@@ -11,4 +11,4 @@ module
     .https
     .onCall((data, context) => csv
       .generateCSV
-      .WithStoreId(data.storeId))
+      .WithStoreId(data.storeId, data.addedBy))
