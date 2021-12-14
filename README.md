@@ -1,3 +1,3 @@
-Backend repo for clothxMicroservices
+Backend for the clothX platform
 
-Imported from gitlab source: https://gitlab.com/clothx/CLothXMicroServices
+Imported from the official gitlab source: https://gitlab.com/clothx/CLothXMicroServices
