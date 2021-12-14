@@ -1,2 +1,3 @@
-[![pipeline status](https://gitlab.com/clothx/CLothXMicroServices/badges/master/pipeline.svg)](https://gitlab.com/clothx/CLothXMicroServices/commits/master)
-official repo for clothxMicroservices
+Backend repo for clothxMicroservices
+
+Imported from gitlab source: https://gitlab.com/clothx/CLothXMicroServices
